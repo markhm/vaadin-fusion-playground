@@ -19,4 +19,6 @@ error-screenshots/
 webpack.generated.js
 package.json
 pnpm-lock.yaml
-
+webpack.config.js
+types.d.ts
+tsconfig.json
