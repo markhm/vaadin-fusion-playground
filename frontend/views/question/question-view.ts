@@ -28,7 +28,7 @@ export class QuestionView extends LitElement {
   question : Question = {
     id: 0,
     text: "This is a client-side question",
-    possibleAnswers: [{id: 1, text: "yes"}, {id: 2, text: "no"}]
+    possibleAnswers: [{id: 99, text: "yes"}, {id: 100, text: "no"}]
   };
 
   @property({ type: Number})
@@ -69,7 +69,7 @@ export class QuestionView extends LitElement {
       <div>The question is:</div> "${question.text}" </br>
       <div>Select your answer:</div>
       ${possibleAnswers.map(answer => html`
-            <vaadin-button class="special" @click="${this.submitAnswer(answer.id)}">${answer.text}</vaadin-button> <br/>
+            <vaadin-button class="special" @click="${ () => this.submitAnswer(answer.id)} " > ${answer.text}</vaadin-button> <br/>
             `)}
       <br/>
     `;
@@ -111,6 +111,7 @@ export class QuestionView extends LitElement {
     }
   }
 
+  // @ts-ignore
   private async submitAnswer(answerId: number) {
     console.log('About to submit answer: ' + answerId);
 
