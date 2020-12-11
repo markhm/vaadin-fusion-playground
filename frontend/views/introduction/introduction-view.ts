@@ -30,7 +30,7 @@ export class IntroductionView extends LitElement {
           <div><vaadin-button @click="${()=>this.clickLogin()}">Login</vaadin-button> using the test credentials or <br/>
             
             <vaadin-button disabled @click="${()=>this.clickLogin()}">Create an account</vaadin-button> 
-                if needed.</div>
+                if needed (not yet implemented).</div>
         ` : html``}
         
         ${this.isAuthenticated ? html`
