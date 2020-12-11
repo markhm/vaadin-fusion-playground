@@ -1,10 +1,10 @@
 import { LitElement, html, css, customElement, internalProperty, } from 'lit-element';
-import Person from '../../generated/fusion/playground/domain/Person';
+import Person from '../../generated/fusion/playground/data/entity/Person';
 
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
 import { Binder, field } from '@vaadin/form';
-import PersonModel from '../../generated/fusion/playground/domain/PersonModel';
+import PersonModel from '../../generated/fusion/playground/data/entity/PersonModel';
 import { addPerson, getPeople } from '../../generated/PeopleEndpoint';
 
 @customElement('people-view')

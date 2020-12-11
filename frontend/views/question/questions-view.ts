@@ -15,7 +15,7 @@ import '@vaadin/vaadin-radio-button';
 import { EndpointError } from '@vaadin/flow-frontend/Connect';
 import * as QuestionEndpoint from "../../generated/QuestionEndpoint";
 import * as AnswerEndpoint from "../../generated/AnswerEndpoint";
-import Question from "../../generated/fusion/playground/domain/Question";
+import Question from "../../generated/fusion/playground/data/entity/Question";
 
 
 @customElement('questions-view')

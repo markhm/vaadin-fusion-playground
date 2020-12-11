@@ -18,7 +18,7 @@ import { showNotification } from '@vaadin/flow-frontend/a-notification';
 
 import { EndpointError } from '@vaadin/flow-frontend/Connect';
 import * as PersonEndpoint from '../../generated/PersonEndpoint';
-import PersonModel from '../../generated/fusion/playground/domain/PersonModel';
+import PersonModel from '../../generated/fusion/playground/data/entity/PersonModel';
 import { Binder, field } from '@vaadin/form';
 
 import { CSSModule } from '@vaadin/flow-frontend/css-utils';
