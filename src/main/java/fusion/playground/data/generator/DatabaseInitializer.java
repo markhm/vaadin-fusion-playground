@@ -55,12 +55,14 @@ public class DatabaseInitializer
      */
     private static void loadUsers(UserRepository userRepository)
     {
-//        User regularUser = new User("testuser", "something", "testuser@test.dk", 1);
-//        User adminUser = new User("admin", "somethingElse", "admin@test.dk", 1);
+        User regularUser = new User("John", "Doe", "testuser",
+                "something", "testuser@test.dk", 1);
+        User adminUser = new User("Admin", "Istrator", "admin",
+                "somethingElse", "admin@test.dk", 1);
 
         List<User> userList = new ArrayList();
-//        userList.add(regularUser);
-//        userList.add(adminUser);
+        userList.add(regularUser);
+        userList.add(adminUser);
 
         userRepository.saveAll(userList);
     }

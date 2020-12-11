@@ -1,24 +1,19 @@
 package fusion.playground.domain;
 
-import javax.persistence.Entity;
 
 import fusion.playground.data.AbstractEntity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import java.time.LocalDate;
 import javax.annotation.Nullable;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Accessors(fluent=true)
-@EqualsAndHashCode
 @ToString
-@Entity
-@Table(name= "person")
 public class Person extends AbstractEntity
 {
   private String firstName;

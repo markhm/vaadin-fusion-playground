@@ -7,13 +7,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.CrudService;
+import org.vaadin.artur.helpers.MongoCrudService;
 
 import java.util.List;
 import java.util.Optional;
 
 
 @Service
-public class QuestionService extends CrudService<Question, Integer>
+public class QuestionService extends MongoCrudService<Question, String>
 {
     @Autowired
     private final QuestionRepository repository;
@@ -41,9 +42,9 @@ public class QuestionService extends CrudService<Question, Integer>
     }
 
     @Cacheable("question")
-    public Optional<Question> getByCategoryAndNumber(String category, Integer number)
+    public Optional<Question> getByCategoryAndOrderNumber(String category, Integer number)
     {
-        return repository.getByCategoryAndNumber(category, number);
+        return repository.getByCategoryAndOrderNumber(category, number);
     }
 
     public int countAllByCategory(String category)

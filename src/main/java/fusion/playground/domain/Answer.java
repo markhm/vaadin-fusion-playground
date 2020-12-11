@@ -1,31 +1,21 @@
 package fusion.playground.domain;
 
+import fusion.playground.data.AbstractEntity;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Accessors(fluent=true)
-@EqualsAndHashCode
 @ToString
-@Entity
-public class Answer implements Serializable
+public class Answer extends AbstractEntity
 {
-    @Id
-    private Integer id;
-
-    @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToOne
     private Question question;
 
-    private int answer;
+    private String answer;
 }

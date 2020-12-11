@@ -4,9 +4,10 @@ import fusion.playground.domain.PossibleAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.CrudService;
+import org.vaadin.artur.helpers.MongoCrudService;
 
 @Service
-public class PossibleAnswerService extends CrudService<PossibleAnswer, Integer>
+public class PossibleAnswerService extends MongoCrudService<PossibleAnswer, String>
 {
     private PossibleAnswerRepository possibleAnswerRepository;
 

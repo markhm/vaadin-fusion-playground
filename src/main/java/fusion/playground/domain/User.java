@@ -4,17 +4,12 @@ import fusion.playground.data.AbstractEntity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
-@Getter @Setter
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Accessors(fluent=true)
-@EqualsAndHashCode @ToString
-@Entity
-@Table(name="app_user")
+@ToString
 public class User extends AbstractEntity
 {
     private @NonNull String firstName;

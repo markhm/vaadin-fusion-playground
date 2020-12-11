@@ -9,13 +9,14 @@ import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import org.springframework.data.domain.Page;
 import org.vaadin.artur.helpers.CrudService;
 import org.vaadin.artur.helpers.GridSorter;
+import org.vaadin.artur.helpers.MongoCrudService;
 import org.vaadin.artur.helpers.PagingUtil;
 
 @AnonymousAllowed
 @EndpointExposed
 public abstract class CrudEndpoint<T, ID> {
 
-    protected abstract CrudService<T, ID> getService();
+    protected abstract MongoCrudService<T, ID> getService();
 
     public List<T> list(int offset, int limit, List<GridSorter> sortOrder) {
         Page<T> page = getService()

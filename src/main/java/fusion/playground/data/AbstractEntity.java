@@ -1,23 +1,18 @@
 package fusion.playground.data;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import org.springframework.data.annotation.Id;
 
 @Getter
-@Setter
 @RequiredArgsConstructor
 @Accessors(fluent=true)
-@MappedSuperclass
+@EqualsAndHashCode
 public class AbstractEntity
 {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 }

@@ -30,7 +30,7 @@ public class DataGenerator {
 
             logger.info("... generating 100 Person entities...");
             ExampleDataGenerator<Person> personRepositoryGenerator = new ExampleDataGenerator<>(Person.class);
-            personRepositoryGenerator.setData(Person::id, DataType.ID);
+            // personRepositoryGenerator.setData(Person::id, DataType.IBAN);
             personRepositoryGenerator.setData(Person::firstName, DataType.FIRST_NAME);
             personRepositoryGenerator.setData(Person::lastName, DataType.LAST_NAME);
             personRepositoryGenerator.setData(Person::email, DataType.EMAIL);

@@ -33,6 +33,6 @@ To get started:
 ### Technology stack
 - OpenJDK 15 (latest)
 - Vaadin 18 (latest)
-- H2, but will be moved to MongoDB
+- MongoDB (embedded !) 
 
 Developed on macOS (11.0.1)

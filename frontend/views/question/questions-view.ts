@@ -26,19 +26,19 @@ export class QuestionsView extends LitElement {
 
   @property({ type: Object })
   question : Question = {
-    id: 0,
-    _number: 0,
+    id: "0",
+    orderNumber: 0,
     category: 'example',
     text: "Loading questions...",
     possibleAnswers: []
   };
 
-  @property({ type: Number})
-  answerId = 1;
-  @property({ type: Number})
-  userId = 2;
-  @property({ type: Number})
-  questionId = 3;
+  @property({ type: String})
+  answerId = "0";
+  @property({ type: String})
+  userId = "1";
+  @property({ type: String})
+  questionId = "3";
 
   @property({ type: Number})
   totalNumberOfQuestions = 0;
@@ -71,12 +71,12 @@ export class QuestionsView extends LitElement {
 
     let result;
     let responseBasis;
-    if (question.id == -1)
+    if (question.id === "-1")
     {
       alreadyAnswered = true;
       responseBasis = 'You have already answered today\'s questions...';
     }
-    else if (question.id == 0)
+    else if (question.id === "0")
     {
       responseBasis = 'Loading questions...';
     }
@@ -84,12 +84,12 @@ export class QuestionsView extends LitElement {
 
     }
 
-    if (alreadyAnswered || question.id == 0) {
+    if (alreadyAnswered || question.id == "0") {
       result = html`${responseBasis}`;
     }
     else
     {
-      result = html`<div>Question ${question.id} of ${this.totalNumberOfQuestions}:</div> "${question.text}" </br></br>
+      result = html`<div>Question ${question.orderNumber} of ${this.totalNumberOfQuestions}:</div> "${question.text}" </br></br>
                <div>Your answer:</div>`
     }
 
@@ -97,8 +97,8 @@ export class QuestionsView extends LitElement {
       <h3>Welcome to today's questions</h3>
       <!-- Show questions when they are available, else show loading warning... -->
       ${result}
-      ${possibleAnswers.map(answer => html`
-            <vaadin-button class="special" @click="${() => this.submitAnswer(answer.id)}">${answer.text}</vaadin-button> <br/>
+      ${possibleAnswers.map(possibleAnswer => html`
+            <vaadin-button class="special" @click="${() => this.submitAnswer(possibleAnswer.id)}">${possibleAnswer.text}</vaadin-button> <br/>
             `)}
       <br/>
     `;
@@ -133,7 +133,7 @@ export class QuestionsView extends LitElement {
     }
   }
 
-  private async submitAnswer(answerId: number) {
+  private async submitAnswer(answerId: string) {
 
     // console.log('About to submit answer: ' + answerId + ' to question ' + this.questionId + ' for user '+this.userId + '.');
     await AnswerEndpoint.addAnswer(this.question.id, this.userId, answerId);
@@ -148,7 +148,8 @@ export class QuestionsView extends LitElement {
 
   private async loadQuestion()
   {
-    this.question = await QuestionEndpoint.getNextQuestion(1, 'example');
+    this.question = await QuestionEndpoint.getNextQuestion("1", 'example');
+    // console.log('Question loaded is: ' + JSON.stringify(this.question));
   }
 
 

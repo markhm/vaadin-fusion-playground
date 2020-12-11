@@ -1,10 +1,10 @@
 package fusion.playground.data.service;
 
 import fusion.playground.domain.PossibleAnswer;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 @Repository
-public interface PossibleAnswerRepository extends JpaRepository<PossibleAnswer, Integer>
+public interface PossibleAnswerRepository extends MongoRepository<PossibleAnswer, String>
 {
 }

@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Endpoint
 @AnonymousAllowed
-public class QuestionEndpoint extends CrudEndpoint<Question, Integer>
+public class QuestionEndpoint extends CrudEndpoint<Question, String>
 {
     private static Log log = LogFactory.getLog(QuestionEndpoint.class);
 
@@ -41,7 +41,7 @@ public class QuestionEndpoint extends CrudEndpoint<Question, Integer>
         return questionService;
     }
 
-    public Question getNextQuestion(int userId, String category)
+    public Question getNextQuestion(String userId, String category)
     {
         // check if questions have already been answered today
 
@@ -56,14 +56,14 @@ public class QuestionEndpoint extends CrudEndpoint<Question, Integer>
                 questionPointer = 1;
             }
 
-            Optional<Question> optionalQuestion = questionService.getByCategoryAndNumber(category, questionPointer);
+            Optional<Question> optionalQuestion = questionService.getByCategoryAndOrderNumber(category, questionPointer);
             questionPointer++;
             nextQuestion = optionalQuestion.get();
         }
         else
         {
             nextQuestion = new Question();
-            nextQuestion.id(-1);
+            // nextQuestion.id("-1");
             nextQuestion.text("You already answered this category today");
         }
 

@@ -4,9 +4,10 @@ import fusion.playground.domain.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.CrudService;
+import org.vaadin.artur.helpers.MongoCrudService;
 
 @Service
-public class AnswerService extends CrudService<Answer, Integer>
+public class AnswerService extends MongoCrudService<Answer, String>
 {
     private AnswerRepository repository;
 

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Endpoint
 @AnonymousAllowed
-public class UserEndpoint extends CrudEndpoint<User, Integer>
+public class UserEndpoint extends CrudEndpoint<User, String>
 {
 
     private UserService service;

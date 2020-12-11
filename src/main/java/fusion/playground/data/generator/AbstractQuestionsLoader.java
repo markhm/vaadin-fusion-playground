@@ -4,9 +4,13 @@ import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
 import fusion.playground.domain.PossibleAnswer;
 import fusion.playground.domain.Question;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public abstract class AbstractQuestionsLoader
 {
+    private static Log log = LogFactory.getLog(AbstractQuestionsLoader.class);
+
     protected String category;
     private int orderCounter = 1;
 
@@ -25,14 +29,22 @@ public abstract class AbstractQuestionsLoader
         Question question = new Question();
         question.text(questionText);
         question.category(category);
-        question.number(orderCounter);
+        question.orderNumber(orderCounter);
+
 
         for (String possibleAnswerText: possibleAnswerTexts)
         {
-            question.addPossibleAnswer(possibleAnswerRepository.save(new PossibleAnswer(possibleAnswerText)));
+            PossibleAnswer possibleAnswer = new PossibleAnswer(possibleAnswerText);
+            possibleAnswerRepository.save(possibleAnswer);
+//            log.info("PossibleAnswer added: "+ possibleAnswer.toString());
+//            log.info("with .id(): "+ possibleAnswer.id());
+            question.addPossibleAnswer(possibleAnswer);
         }
 
         questionRepository.save(question);
+
+//        log.info("Question added: "+ question.toString());
+//        log.info("");
 
         orderCounter++;
     }
