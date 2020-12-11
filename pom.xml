@@ -15,7 +15,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Vaadion Fusion Playground</name>
+    <name>Vaadin Fusion Playground</name>
 
     <properties>
         <maven.compiler.release>11</maven.compiler.release>
