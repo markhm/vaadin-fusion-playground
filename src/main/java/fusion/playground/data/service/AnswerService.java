@@ -20,4 +20,10 @@ public class AnswerService extends MongoCrudService<Answer, String>
         return repository;
     }
 
+    public Answer save(Answer answer)
+    {
+        return getRepository().save(answer);
+    }
+
+
 }

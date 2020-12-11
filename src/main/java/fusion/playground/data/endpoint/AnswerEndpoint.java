@@ -51,7 +51,8 @@ public class AnswerEndpoint extends CrudEndpoint<Answer, String>
         answer.question(question);
         answer.answer(answerId);
 
-        answers.add(answer);
+        answerService.save(answer);
+        // answers.add(answer);
 
         return answer;
     }
