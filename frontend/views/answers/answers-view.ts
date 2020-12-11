@@ -1,15 +1,15 @@
 import '@vaadin/vaadin-button';
 import '@vaadin/vaadin-text-field';
 import {css, customElement, html, LitElement, property} from 'lit-element';
-import Answer from "../../generated/fusion/playground/data/entity/Answer";
 import * as AnswerEndpoint from "../../generated/AnswerEndpoint";
+import AnsweredQuestion from "../../generated/fusion/playground/data/entity/AnsweredQuestion";
 
 @customElement('answers-view')
 export class AnswersView extends LitElement {
   name: string = '';
 
   @property({ type: Array })
-  answers : Answer[] = [];
+  answeredQuestions : AnsweredQuestion[] = [];
 
   static get styles() {
     return css`
@@ -23,14 +23,14 @@ export class AnswersView extends LitElement {
   render() {
     return html`        
       <vaadin-button @click="${this.loadAnswers}">Show answers</vaadin-button> <br/>
-      ${this.answers.map(answer => html`
-            ${answer.id}: ${answer.answer}
+      ${this.answeredQuestions.map(answeredQuestion => html`
+            ${answeredQuestion.questionNumber}: ${answeredQuestion.questionText} <b>${answeredQuestion.answerText}</b> </br>
       `)}
     `;
   }
 
   async loadAnswers() {
-    this.answers = await AnswerEndpoint.getAnswers('1', 'example');
+    this.answeredQuestions = await AnswerEndpoint.getCategoryAnswers('1', 'example');
 
     await this.requestUpdate();
   }

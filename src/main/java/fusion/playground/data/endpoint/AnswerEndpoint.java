@@ -3,6 +3,7 @@ package fusion.playground.data.endpoint;
 import com.vaadin.flow.server.connect.Endpoint;
 import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import fusion.playground.data.CrudEndpoint;
+import fusion.playground.data.entity.AnsweredQuestion;
 import fusion.playground.data.service.AnswerService;
 import fusion.playground.data.service.QuestionService;
 import fusion.playground.data.service.UserService;
@@ -18,13 +19,6 @@ import java.util.List;
 @AnonymousAllowed
 public class AnswerEndpoint extends CrudEndpoint<Answer, String>
 {
-    private List<Answer> answers = new ArrayList<>();
-
-    public List<Answer> getAnswers()
-    {
-        return answers;
-    }
-
     private AnswerService answerService;
     private UserService userService;
     private QuestionService questionService;
@@ -38,6 +32,11 @@ public class AnswerEndpoint extends CrudEndpoint<Answer, String>
     @Override
     protected AnswerService getService() {
         return answerService;
+    }
+
+    public List<AnsweredQuestion> getCategoryAnswers(String userId, String category)
+    {
+        return answerService.getAnswers(userId, category);
     }
 
     public Answer addAnswer(String questionId, String userId, String answerId)
@@ -55,11 +54,6 @@ public class AnswerEndpoint extends CrudEndpoint<Answer, String>
         Answer savedAnswer = answerService.save(answer);
 
         return savedAnswer;
-    }
-
-    public Answer[] getAnswers(String userId, String category)
-    {
-        return (Answer[]) answerService.getAnswers(userId, category).toArray();
     }
 
 }

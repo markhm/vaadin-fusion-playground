@@ -34,3 +34,7 @@ To get started:
 - MongoDB (embedded !) 
 
 Developed on macOS (11.0.1)
+
+---
+### Things we learned
+- It seems methods in an Endpoint cannot be overloaded. Bug of Feature...?
