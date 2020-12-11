@@ -15,6 +15,7 @@ public class Answer extends AbstractEntity
     private User user;
 
     private Question question;
+    private String category;
 
     private String answer;
 }

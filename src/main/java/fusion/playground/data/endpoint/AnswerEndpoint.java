@@ -50,10 +50,16 @@ public class AnswerEndpoint extends CrudEndpoint<Answer, String>
         answer.user(user);
         answer.question(question);
         answer.answer(answerId);
+        answer.category(question.category());
 
-        answerService.save(answer);
-        // answers.add(answer);
+        Answer savedAnswer = answerService.save(answer);
 
-        return answer;
+        return savedAnswer;
     }
+
+    public Answer[] getAnswers(String userId, String category)
+    {
+        return (Answer[]) answerService.getAnswers(userId, category).toArray();
+    }
+
 }

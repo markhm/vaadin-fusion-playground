@@ -184,6 +184,7 @@ export class MainView extends LitElement {
       this.menuTabs = [
         {route: '', name: 'Introduction'},
         {route: 'questions', name: 'Questions'},
+        {route: 'answers', name: 'Answers'},
         {route: 'add-achievement', name: 'Add Achievement'},
         {route: 'achievements', name: 'Achievements'},
       ];

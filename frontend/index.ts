@@ -69,6 +69,16 @@ const routes: Route[] = [
 				},
 			},
 			{
+				path: 'answers',
+				component: 'answers-view',
+				action: async (context: Context, commands: Commands) => {
+					const authRedirect = await authGuard(context, commands);
+					if (authRedirect) return authRedirect;
+					await import('./views/answers/answers-view');
+					return undefined;
+				},
+			},
+			{
 				path: 'add-achievement',
 				component: 'add-achievement-view',
 				// action: async () => { await import ('./views/question/questions-view')}
