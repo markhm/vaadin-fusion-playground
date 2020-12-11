@@ -1,6 +1,6 @@
 package fusion.playground.data.service;
 
-import fusion.playground.domain.Question;
+import fusion.playground.data.entity.Question;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

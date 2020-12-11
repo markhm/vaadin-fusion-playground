@@ -6,9 +6,9 @@ import fusion.playground.data.CrudEndpoint;
 import fusion.playground.data.service.AnswerService;
 import fusion.playground.data.service.QuestionService;
 import fusion.playground.data.service.UserService;
-import fusion.playground.domain.Answer;
-import fusion.playground.domain.Question;
-import fusion.playground.domain.User;
+import fusion.playground.data.entity.Answer;
+import fusion.playground.data.entity.Question;
+import fusion.playground.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;

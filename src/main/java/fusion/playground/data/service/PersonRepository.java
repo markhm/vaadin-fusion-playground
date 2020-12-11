@@ -1,6 +1,6 @@
 package fusion.playground.data.service;
 
-import fusion.playground.domain.Person;
+import fusion.playground.data.entity.Person;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

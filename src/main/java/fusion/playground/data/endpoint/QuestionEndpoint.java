@@ -6,14 +6,11 @@ import fusion.playground.data.CrudEndpoint;
 import fusion.playground.data.service.AnswerService;
 import fusion.playground.data.service.QuestionService;
 import fusion.playground.data.service.UserService;
-import fusion.playground.domain.PossibleAnswer;
-import fusion.playground.domain.Question;
+import fusion.playground.data.entity.Question;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Endpoint

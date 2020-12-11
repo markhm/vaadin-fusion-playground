@@ -1,8 +1,7 @@
 package fusion.playground.data.service;
 
-import fusion.playground.domain.User;
+import fusion.playground.data.entity.User;
 import org.springframework.stereotype.Service;
-import org.vaadin.artur.helpers.CrudService;
 import org.vaadin.artur.helpers.MongoCrudService;
 
 import java.util.Optional;

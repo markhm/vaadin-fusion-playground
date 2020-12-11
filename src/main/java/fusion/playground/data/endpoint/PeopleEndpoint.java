@@ -1,7 +1,7 @@
 package fusion.playground.data.endpoint;
 
 import com.vaadin.flow.server.connect.Endpoint;
-import fusion.playground.domain.Person;
+import fusion.playground.data.entity.Person;
 
 import java.util.ArrayList;
 import java.util.List;

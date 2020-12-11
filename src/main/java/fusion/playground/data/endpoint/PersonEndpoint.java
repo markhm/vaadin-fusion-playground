@@ -2,7 +2,7 @@ package fusion.playground.data.endpoint;
 
 
 import fusion.playground.data.CrudEndpoint;
-import fusion.playground.domain.Person;
+import fusion.playground.data.entity.Person;
 import fusion.playground.data.service.PersonService;
 import com.vaadin.flow.server.connect.Endpoint;
 

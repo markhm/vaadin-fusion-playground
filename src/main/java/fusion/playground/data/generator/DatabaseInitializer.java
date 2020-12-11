@@ -1,10 +1,9 @@
 package fusion.playground.data.generator;
 
-import fusion.playground.Application;
 import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
 import fusion.playground.data.service.UserRepository;
-import fusion.playground.domain.User;
+import fusion.playground.data.entity.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;

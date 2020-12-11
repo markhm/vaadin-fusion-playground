@@ -2,8 +2,8 @@ package fusion.playground.data.generator;
 
 import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
-import fusion.playground.domain.PossibleAnswer;
-import fusion.playground.domain.Question;
+import fusion.playground.data.entity.PossibleAnswer;
+import fusion.playground.data.entity.Question;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

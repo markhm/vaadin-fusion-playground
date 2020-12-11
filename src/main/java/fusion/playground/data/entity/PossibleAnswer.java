@@ -1,4 +1,4 @@
-package fusion.playground.domain;
+package fusion.playground.data.entity;
 
 import fusion.playground.data.AbstractEntity;
 import lombok.*;

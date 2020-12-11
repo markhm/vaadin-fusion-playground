@@ -1,9 +1,11 @@
-package fusion.playground.domain;
+package fusion.playground.data.entity;
 
 public enum QuestionCategory
 {
     example,
     daily,
+    weekly,
+    monthly
 
 //    public static String[] names()
 //    {

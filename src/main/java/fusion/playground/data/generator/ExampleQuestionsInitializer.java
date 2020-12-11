@@ -2,7 +2,7 @@ package fusion.playground.data.generator;
 
 import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
-import fusion.playground.domain.QuestionCategory;
+import fusion.playground.data.entity.QuestionCategory;
 
 public class ExampleQuestionsInitializer extends AbstractQuestionsLoader
 {

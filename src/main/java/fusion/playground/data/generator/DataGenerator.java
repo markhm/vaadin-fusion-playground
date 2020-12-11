@@ -3,7 +3,7 @@ package fusion.playground.data.generator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 
 import fusion.playground.data.service.PersonRepository;
-import fusion.playground.domain.Person;
+import fusion.playground.data.entity.Person;
 
 
 import org.slf4j.Logger;

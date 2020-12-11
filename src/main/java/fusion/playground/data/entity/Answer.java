@@ -1,9 +1,8 @@
-package fusion.playground.domain;
+package fusion.playground.data.entity;
 
 import fusion.playground.data.AbstractEntity;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
 
 
 @Data

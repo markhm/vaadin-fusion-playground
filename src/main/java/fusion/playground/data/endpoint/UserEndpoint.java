@@ -4,8 +4,7 @@ import com.vaadin.flow.server.connect.Endpoint;
 import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import fusion.playground.data.CrudEndpoint;
 import fusion.playground.data.service.UserService;
-import fusion.playground.domain.Person;
-import fusion.playground.domain.User;
+import fusion.playground.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Endpoint
