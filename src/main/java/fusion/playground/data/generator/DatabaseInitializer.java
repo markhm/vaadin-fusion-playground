@@ -1,11 +1,13 @@
 package fusion.playground.data.generator;
 
+import fusion.playground.data.service.AnswerRepository;
 import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
 import fusion.playground.data.service.UserRepository;
 import fusion.playground.data.entity.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bson.Document;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,11 +24,15 @@ public class DatabaseInitializer
     @Bean
     public InitializingBean initializeDatabase(@Autowired UserRepository userRepository,
                                                @Autowired QuestionRepository questionRepository,
-                                               @Autowired PossibleAnswerRepository possibleAnswerRepository)
+                                               @Autowired PossibleAnswerRepository possibleAnswerRepository,
+                                               @Autowired AnswerRepository answerRepository)
     {
         log.info("Initializing database");
 
         return () -> {
+
+            // Start with a clean database;
+            dropAllCollections(questionRepository, possibleAnswerRepository, userRepository, answerRepository);
 
             loadUsers(userRepository);
 
@@ -48,6 +54,21 @@ public class DatabaseInitializer
         };
     }
 
+    private void dropAllCollections(QuestionRepository questionRepository,
+                                    PossibleAnswerRepository possibleAnswerRepository,
+                                    UserRepository userRepository,
+                                    AnswerRepository answerRepository)
+    {
+        questionRepository.deleteAll();
+
+        possibleAnswerRepository.deleteAll();
+
+        userRepository.deleteAll();
+
+        answerRepository.deleteAll();
+    }
+
+
     /** Users are loaded from Okta
      *
      * @param userRepository
@@ -55,9 +76,9 @@ public class DatabaseInitializer
     private static void loadUsers(UserRepository userRepository)
     {
         User regularUser = new User("John", "Doe", "testuser",
-                "something", "testuser@test.dk", 1);
+                "testuser@test.dk", "something",1);
         User adminUser = new User("Admin", "Istrator", "admin",
-                "somethingElse", "admin@test.dk", 1);
+                "admin@test.dk", "somethingElse", 1);
 
         List<User> userList = new ArrayList();
         userList.add(regularUser);
