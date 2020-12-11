@@ -23,7 +23,7 @@ import org.vaadin.artur.helpers.LaunchUtil;
         @ComponentScan(basePackages = "fusion.playground"),
 })
 @EntityScan(basePackages = {"fusion.playground.domain", "fusion.playground.data.entity"})
-@PWA(name = "Playground", shortName = "Playground", iconPath = "/META-INF/resources/icons/logo.png")
+@PWA(name = "Playground", shortName = "Playground")
 @EnableCaching
 public class Application extends SpringBootServletInitializer implements AppShellConfigurator
 {

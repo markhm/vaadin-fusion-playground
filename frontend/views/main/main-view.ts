@@ -129,7 +129,7 @@ export class MainView extends LitElement {
 
         <div slot="drawer">
           <div id="logo">
-            <img src="images/question-mark.jpg" alt="${this.projectName} logo" />
+            <img src="images/fusion-playground.png" alt="${this.projectName} logo" />
             <!-- <span>$ { this.projectName}</span> -->
           </div>
           <hr />
