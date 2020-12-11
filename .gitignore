@@ -23,3 +23,4 @@ webpack.config.js
 types.d.ts
 tsconfig.json
 /src/main/resources-filtered/env/application.heroku.properties
+docs/logo.pptx
