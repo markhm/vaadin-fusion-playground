@@ -2,80 +2,76 @@ package fusion.playground.data.endpoint;
 
 import com.vaadin.flow.server.connect.Endpoint;
 import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
+import fusion.playground.data.CrudEndpoint;
+import fusion.playground.data.service.AnswerService;
+import fusion.playground.data.service.QuestionService;
+import fusion.playground.data.service.UserService;
 import fusion.playground.domain.PossibleAnswer;
 import fusion.playground.domain.Question;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Endpoint
 @AnonymousAllowed
-public class QuestionEndpoint // extends CrudEndpoint<Question, Integer>
+public class QuestionEndpoint extends CrudEndpoint<Question, Integer>
 {
-//    private QuestionService service;
-//
-//    public QuestionEndpoint(@Autowired QuestionService service) {
-//        this.service = service;
-//    }
-//
-//    @Override
-//    protected QuestionService getService() {
-//        return service;
-//    }
+    private static Log log = LogFactory.getLog(QuestionEndpoint.class);
 
-    private static List<Question> questions = new ArrayList<>();
+    private QuestionService questionService;
+    private AnswerService answerService;
+    private UserService userService;
 
-    private int questionPointer = 0;
+    private int questionPointer = 1;
 
-    public QuestionEndpoint()
+    public QuestionEndpoint(@Autowired QuestionService questionService,
+                            AnswerService answerService,
+                            UserService userService)
     {
-        loadInitialQuestions();
+        this.questionService = questionService;
+        this.answerService = answerService;
+        this.userService = userService;
     }
 
-    public Question getNextQuestion()
-    {
-        Question question = questions.get(questionPointer);
+    protected QuestionService getService() {
+        return questionService;
+    }
 
-        questionPointer++;
-        if (questionPointer >= questions.size() - 1) {
-            questionPointer = 0;
+    public Question getNextQuestion(int userId, String category)
+    {
+        // check if questions have already been answered today
+
+        // boolean alreadyComplete = answerService.answersAlreadyCompleted(category, userId, LocalDate.now());
+
+        Question nextQuestion = null;
+        if (true)
+        {
+            int totalNumberOfQuestions = questionService.countAllByCategory(category);
+            if (questionPointer > totalNumberOfQuestions)
+            {
+                questionPointer = 1;
+            }
+
+            Optional<Question> optionalQuestion = questionService.getByCategoryAndNumber(category, questionPointer);
+            questionPointer++;
+            nextQuestion = optionalQuestion.get();
+        }
+        else
+        {
+            nextQuestion = new Question();
+            nextQuestion.id(-1);
+            nextQuestion.text("You already answered this category today");
         }
 
-        return question;
+        return nextQuestion;
     }
 
-    private void loadInitialQuestions()
+    public int getTotalNumberOfQuestions(String category)
     {
-        Question firstQuestion = new Question();
-        firstQuestion.id(1);
-        firstQuestion.text("Is it a sunny day today...?");
-
-        PossibleAnswer yes = new PossibleAnswer(1, "Yes");
-        PossibleAnswer no = new PossibleAnswer(2, "No");
-
-        List<PossibleAnswer> possibleAnswers_1 = new ArrayList<>();
-        possibleAnswers_1.add(yes);
-        possibleAnswers_1.add(no);
-        firstQuestion.possibleAnswers(possibleAnswers_1);
-
-        Question secondQuestion = new Question();
-        secondQuestion.id(2);
-        secondQuestion.text("What is the meaning of life...?");
-
-        PossibleAnswer answer42 = new PossibleAnswer(3, "42");
-        PossibleAnswer carpeDiem = new PossibleAnswer(4, "Carpe diem");
-        PossibleAnswer mementoMori = new PossibleAnswer(5, "Memento mori");
-
-        List<PossibleAnswer> possibleAnswers_2 = new ArrayList<>();
-        possibleAnswers_2.add(answer42);
-        possibleAnswers_2.add(carpeDiem);
-        possibleAnswers_2.add(mementoMori);
-        secondQuestion.possibleAnswers(possibleAnswers_2);
-
-        questions.add(secondQuestion);
-        questions.add(firstQuestion);
-
+        return questionService.countAllByCategory(category);
     }
-
-
 }

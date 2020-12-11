@@ -1,26 +1,21 @@
 package fusion.playground.domain;
 
+import fusion.playground.data.AbstractEntity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Setter
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor
+@RequiredArgsConstructor
 @Accessors(fluent=true)
 @EqualsAndHashCode
 @ToString
 @Entity
-public class PossibleAnswer
+@Table(name="possible_answer")
+public class PossibleAnswer extends AbstractEntity
 {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
-
-    private String text;
+    private @NonNull String text;
 }

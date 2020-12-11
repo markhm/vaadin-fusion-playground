@@ -1,6 +1,6 @@
 package fusion.playground.data.service;
 
-import fusion.playground.data.entity.Person;
+import fusion.playground.domain.Person;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

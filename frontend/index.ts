@@ -1,76 +1,123 @@
 import { Flow } from '@vaadin/flow-frontend/Flow';
-import { Router } from '@vaadin/router';
-import { isAuthenticated } from "../frontend/utils/security";
+import { Commands, Context, Route, Router } from '@vaadin/router';
+
+import './views/main/main-view';
+import './views/login/login-view';
+import './views/helloworld/hello-world-view';
+import { handleAuthentication, isAuthenticated, signOut } from './auth';
 
 import './global-styles';
 
-const COOKIE_DOMAIN = 'https://vaadin-fusion-playground.herokuapp.com';
+const authGuard = async (context: Context, commands: Commands) => {
+	if (!(await isAuthenticated())) {
+		// Save requested path
+		sessionStorage.setItem('login-redirect-path', context.pathname);
+		return commands.redirect('/login');
+	}
+	return undefined;
+};
 
 const { serverSideRoutes } = new Flow({
-  imports: () => import('../target/frontend/generated-flow-imports'),
+	imports: () => import('../target/frontend/generated-flow-imports'),
 });
 
-let routes;
-
-if (isAuthenticated(COOKIE_DOMAIN)) {
-
-	console.log('At index.ts: User is authenticated, approving all routes.');
-
-	routes = [
-		// for client-side, place routes below (more info https://vaadin.com/docs/v15/flow/typescript/creating-routes.html)
-		{
-			path: '',
-			component: 'main-view',
-			action: async () => { await import ('./views/main/main-view'); },
-			children: [
-				{
-					path: 'account/create',
-					component: 'person-form-view',
-					action: async () => { await import ('./views/personform/person-form-view'); }
-				},
-				{
-					path: 'test/hello-world',
-					component: 'hello-world-view',
-					action: async () => { await import ('./views/helloworld/hello-world-view'); }
-				},
-				{
-					path: 'events',
-					component: 'events-view',
-					action: async () => { await import ('./views/events/events-view'); }
-				},
-				{
-					path: 'question',
-					component: 'question-view',
-					action: async () => { await import ('./views/question/question-view'); }
-				},
-				// for server-side, the next magic line sends all unmatched routes:
-				...serverSideRoutes // IMPORTANT: this must be the last entry in the array
-			]
+const routes: Route[] = [
+	{
+		path: '/login',
+		component: 'login-view'
+	},
+	{
+		path: '/callback',
+		action: async (_: Context, commands: Commands) => {
+			if (await handleAuthentication()) {
+				return commands.redirect(
+					sessionStorage.getItem('login-redirect-path') || '/'
+				);
+			} else {
+				return commands.redirect('/login?error');
+			}
 		},
-	];
-}
-else {
-
-	console.log('At index.ts: No, user is NOT authenticated.');
-
-	routes = [
-		// for client-side, place routes below (more info https://vaadin.com/docs/v15/flow/typescript/creating-routes.html)
-		{
-			path: '',
-			component: 'main-view',
-			action: async () => { await import ('./views/main/main-view'); },
-			children: [
-				{
-					path: 'account/create',
-					component: 'person-form-view',
-					action: async () => { await import ('./views/personform/person-form-view'); }
-				},
-				// for server-side, the next magic line sends all unmatched routes:
-				...serverSideRoutes // IMPORTANT: this must be the last entry in the array
-			]
+	},
+	{
+		path: '/logout',
+		action: async (_: Context, commands: Commands) => {
+			signOut();
+			location.reload();
+			return commands.prevent();
 		},
-	];
-}
+	},
+	{
+		path: '',
+		component: 'main-view',
+		// action: authGuard, // Require a logged in user to access
+		children: [
+			{
+				path: '',
+				component: 'introduction-view',
+				action: async() => { await import ('./views/introduction/introduction-view')}
+			},
+			{
+				path: 'questions',
+				component: 'questions-view',
+				// action: async () => { await import ('./views/question/questions-view')}
+				// action: authAndImport('./views/question/questions-view')
+				action: async (context: Context, commands: Commands) => {
+					const authRedirect = await authGuard(context, commands);
+					if (authRedirect) return authRedirect;
+					await import('./views/question/questions-view');
+					return undefined;
+				},
+			},
+			{
+				path: 'add-achievement',
+				component: 'add-achievement-view',
+				// action: async () => { await import ('./views/question/questions-view')}
+				// action: async () => { await import ('./views/achievement/add-achievement-view'); }
+				// action: authAndImport('./views/achievement/add-achievement-view')
+				action: async (context: Context, commands: Commands) => {
+					const authRedirect = await authGuard(context, commands);
+					if (authRedirect) return authRedirect;
+					await import('./views/achievement/add-achievement-view');
+					return undefined;
+				},
+			},
+			{
+				path: 'achievements',
+				component: 'achievements-view',
+				// action: async () => { await import ('./views/achievement/achievements-view'); }
+				// action: authAndImport('./views/achievement/achievements-view')
+				action: async (context: Context, commands: Commands) => {
+					const authRedirect = await authGuard(context, commands);
+					if (authRedirect) return authRedirect;
+					await import('./views/achievement/achievements-view');
+					return undefined;
+				},
+			},
+			{
+				path: 'create-account',
+				component: 'create-account-view',
+				action: async() => { await import ('./views/login/create-account-view')}
+			},
+			{ path: 'hello', component: 'hello-world-view' },
+			{
+				path: 'people',
+				component: 'people-view',
+				action: async () => { await import('./views/people/people-view'); },
+			},
+			{
+				path: 'test/hello-world',
+				component: 'hello-world-view',
+				action: async () => { await import ('./views/helloworld/hello-world-view'); }
+			},
+			{
+				path: 'events',
+				component: 'events-view',
+				action: async () => { await import ('./views/events/events-view'); }
+			},
+			...serverSideRoutes
+		],
+	},
+];
 
 export const router = new Router(document.querySelector('#outlet'));
 router.setRoutes(routes);

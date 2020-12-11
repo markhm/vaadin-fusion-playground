@@ -1,0 +1,17 @@
+    https://stackoverflow.com/questions/30755220/how-to-create-csr-with-sans-using-keytool
+
+# Step 1: Generate keypairs (for the test and production environments)
+    keytool -genkeypair -alias vaadin-fusion-playground -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -storetype PKCS12 -keystore vaadin-fusion-playground.p12 -dname "CN=vaadin-fusion-playground" -ext SAN=dns:vaadin-fusion-playground -validity 3650
+
+# Step 2: Export certificate signing request (optional)
+    keytool -certreq -alias vaadin-fusion-playground -keystore vaadin-fusion-playground.p12 -file vaadin-fusion-playground_certrequest.csr -ext SAN=dns:vaadin-fusion-playground
+
+# Step 3: Send exported signing request to Cert Auth (optional)
+
+# Step 4: Import signed chain again (optional)
+    keytool -importcert -file vaadin-fusion-playground_signed_chain.p7b -keystore vaadin-fusion-playground.p12 -alias vaadin-fusion-playground
+
+Export the certificate with Keystore Explorer (https://keystore-explorer.org/)
+
+# Of course, the Java Web application points to the keystores mentioned, so it can use the certificates for secure communication.
+

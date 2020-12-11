@@ -6,8 +6,6 @@ import '@vaadin/vaadin-icons/vaadin-icons.js';
 import '@vaadin/vaadin-lumo-styles/all-imports.js';
 import '@vaadin/vaadin-ordered-layout/vaadin-horizontal-layout.js';
 import '@vaadin/vaadin-ordered-layout/vaadin-vertical-layout.js';
-import { isAuthenticated } from "../../utils/security";
-import { Router } from '@vaadin/router';
 
 // import {router} from '../../index';
 
@@ -91,12 +89,6 @@ export class EventsView extends LitElement {
   }
 
   render() {
-
-   if (! isAuthenticated('https://vaadin-fusion-playground.herokuapp.com')) {
-    Router.go('/');
-    return;
-   }
-
     return html`
       <vaadin-grid id="grid" theme="no-border no-row-borders" .items="${this.items}">
         <vaadin-grid-column>

@@ -8,8 +8,12 @@ import '@vaadin/vaadin-tabs/theme/lumo/vaadin-tabs';
 import { CSSModule } from '@vaadin/flow-frontend/css-utils';
 import { router } from '../../index';
 
-import { setCookie, getCookie } from "../../utils/security";
-import { isAuthenticated } from "../../utils/security";
+// security
+import { isAuthenticated } from '../../auth';
+
+//debugging
+// import { Router } from '@vaadin/router';
+import {Route} from "@vaadin/router";
 
 // Rename to something more appropriate.
 interface MenuTab {
@@ -17,15 +21,17 @@ interface MenuTab {
   name: string;
 }
 
-const COOKIE_DOMAIN = 'https://vaadin-fusion-playground.herokuapp.com';
-
 @customElement('main-view')
 export class MainView extends LitElement {
   @property({ type: Object }) location = router.location;
 
   @property({ type: Array }) menuTabs : MenuTab[] = [];
 
-  @property({ type: String }) projectName = '';
+  @property({ type: String }) projectName = 'Vaadin Fusion Playground';
+
+  @property( {type: Boolean }) isAuthenticated = false;
+
+  @property( {type: Boolean }) debug = false;
 
   static get styles() {
     return [
@@ -50,7 +56,11 @@ export class MainView extends LitElement {
           font-size: var(--lumo-font-size-l);
           margin: 0;
         }
-
+        
+        header .logout {
+          margin-right: 12px;
+        }
+        
         header img {
           border-radius: 50%;
           height: var(--lumo-size-s);
@@ -113,30 +123,36 @@ export class MainView extends LitElement {
           <vaadin-drawer-toggle></vaadin-drawer-toggle>
           <h1>${this.getSelectedTabName(this.menuTabs)}</h1>
           <div style=""></div>
-          <div><a href="/login"><img src="images/user.svg" alt="Avatar" /></a></div>
+          <img src="images/user.svg" alt="Avatar" />
+          ${this.isAuthenticated ? html`<vaadin-tab> <a href="/logout">Logout</a> </vaadin-tab>` : html``}
         </header>
 
         <div slot="drawer">
           <div id="logo">
             <img src="images/question-mark.jpg" alt="${this.projectName} logo" />
-            <span>${this.projectName}</span>
+            <!-- <span>$ { this.projectName}</span> -->
           </div>
           <hr />
           <vaadin-tabs orientation="vertical" theme="minimal" id="tabs" .selected="${this.getIndexOfSelectedTab()}">
             ${this.menuTabs.map(
-              (menuTab) => html`
-                <vaadin-tab>
-                  <a href="${router.urlForPath(menuTab.route)}" tabindex="-1">${menuTab.name}</a>
-                </vaadin-tab>
-              `
-            )}
-             <vaadin-tab>...</vaadin-tab>
-             <vaadin-tab> <a href="#" @click="${this.login}">Login</a> </vaadin-tab>
-             <vaadin-tab> <a href="#" @click="${this.logout}">Logout</a> </vaadin-tab>
+        (menuTab) =>
+            html`
+                    <vaadin-tab>
+                      <a href="${router.urlForPath(menuTab.route)}" tabindex="-1">${menuTab.name}</a>
+                    </vaadin-tab>
+                  `
+    )}
+            <vaadin-tab>...</vaadin-tab>
+
+            ${!this.isAuthenticated ? html`<vaadin-tab> <a href="login">Login</a> </vaadin-tab>` : html``}
+            ${!this.isAuthenticated ? html`<vaadin-tab> <a href="create-account">Create account</a> </vaadin-tab>` : html``}
+            ${this.isAuthenticated ? html`<vaadin-tab> <a href="logout">Logout</a> </vaadin-tab>` : html``}
+             
              <vaadin-tab>--------</vaadin-tab>
-             <vaadin-tab> <a href="#" @click="${this.cookieStatus}">cookieStatus()</a> </vaadin-tab>
-             <vaadin-tab> <a href="#" @click="${this.simulateLogin}">simulateLogin()</a> </vaadin-tab>
-             <vaadin-tab> <a href="#" @click="${this.simulateLogout}">simulateLogout()</a> </vaadin-tab>
+             <vaadin-tab> <a href="#" @click="${() => this.debugSomething()}">debugSomething()</a> </vaadin-tab>
+             
+             ${!this.isAuthenticated && this.debug ? html`<vaadin-tab> <a href="#" @click="${() => this.simulateLogin}">simulateLogin()</a> </vaadin-tab>` : html``}
+             ${this.isAuthenticated && this.debug ? html`<vaadin-tab> <a href="#" @click="${() => this.simulateLogout}">simulateLogout()</a> </vaadin-tab>` : html``} 
 
           </vaadin-tabs>
         </div>
@@ -145,35 +161,43 @@ export class MainView extends LitElement {
     `;
   }
 
+  // ${!this.isAuthenticated ? html`<vaadin-tab> <a href="#" @click="${() => this.login}">Login</a> </vaadin-tab>` : html``}
+
   private _routerLocationChanged() {
     // @ts-ignore
     AppLayoutElement.dispatchCloseOverlayDrawerEvent();
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback();
     window.addEventListener('vaadin-router-location-changed', this._routerLocationChanged);
-    this.projectName = 'Playground';
+    this.projectName = 'Vaadin Fusion Playground';
 
-    if (isAuthenticated(COOKIE_DOMAIN)) {
+    this.isAuthenticated = await isAuthenticated();
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+
+    this.debug = (urlParams.get('debug') === 'true') ? true : false;
+
+    if (this.isAuthenticated || this.debug) {
       this.menuTabs = [
         {route: '', name: 'Introduction'},
-        {route: 'account/create', name: 'Create account'},
-        {route: 'test/hello-world', name: 'Hello World'},
-        {route: 'events', name: 'Events'},
-        {route: 'question', name: 'Question'},
+        {route: 'questions', name: 'Questions'},
+        {route: 'add-achievement', name: 'Add Achievement'},
+        {route: 'achievements', name: 'Achievements'},
       ];
     }
     else {
       this.menuTabs = [
         {route: '', name: 'Introduction'},
-        // {route: 'account/create', name: 'Create account'},
-        // {route: 'test/hello-world', name: 'Hello World'},
-        // {route: 'events', name: 'Events'},
-        // {route: 'questions', name: 'Questions'},
+        // {route: 'login', name: 'Login'},
+        // {route: 'create-account', name: 'Create account'},
+        {route: 'events', name: 'Events'},
+        {route: 'people', name: 'People view'},
+        {route: 'test/hello-world', name: 'Hello World'},
       ];
     }
-
   }
 
   disconnectedCallback() {
@@ -207,29 +231,41 @@ export class MainView extends LitElement {
     return tabName;
   }
 
-  private cookieStatus() {
-    var userEmail = getCookie(COOKIE_DOMAIN);
-    console.log('getCookie is: ' + userEmail);
-  }
+  // private login() {
+  //   // open Spring login form
+  //   window.location.replace('login');
+  // }
+
 
   private simulateLogin() {
-    setCookie(COOKIE_DOMAIN,'testuser@gmail.com',30);
-    window.location.reload();
+
   }
 
   private simulateLogout() {
-    setCookie(COOKIE_DOMAIN, '',30);
+
   }
 
-  private login() {
-    // open Spring login form
-    window.location.replace('login');
+  private debugSomething() {
+
+    console.log('**** **** **** **** ****');
+    console.log('**  Printing routes   **');
+    console.log('**** **** **** **** ****');
+    var routes : Route[] = router.getRoutes();
+    for (var i = 0; i < routes.length; i++)
+    {
+      console.log(routes[i]);
+    }
+    console.log('');
   }
 
-  private async logout() {
-    // call via ajax to the Spring logout form
-    await fetch('logout');
-    // clean the ui
-    window.location.reload();
-  }
+  // private async logout() {
+  //   // call via ajax to the Spring logout form
+  //
+  //   await signOut();
+  //
+  //   await fetch('logout');
+  //   // clean the ui
+  //   window.location.reload();
+  // }
+
 }

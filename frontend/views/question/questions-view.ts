@@ -18,8 +18,8 @@ import * as AnswerEndpoint from "../../generated/AnswerEndpoint";
 import Question from "../../generated/fusion/playground/domain/Question";
 
 
-@customElement('question-view')
-export class QuestionView extends LitElement {
+@customElement('questions-view')
+export class QuestionsView extends LitElement {
 
   @property({ type: Boolean })
   online: boolean = true;
@@ -27,8 +27,10 @@ export class QuestionView extends LitElement {
   @property({ type: Object })
   question : Question = {
     id: 0,
-    text: "This is a client-side question",
-    possibleAnswers: [{id: 99, text: "yes"}, {id: 100, text: "no"}]
+    _number: 0,
+    category: 'example',
+    text: "Loading questions...",
+    possibleAnswers: []
   };
 
   @property({ type: Number})
@@ -38,6 +40,8 @@ export class QuestionView extends LitElement {
   @property({ type: Number})
   questionId = 3;
 
+  @property({ type: Number})
+  totalNumberOfQuestions = 0;
 
   @property({type: Array}) // local answers
   answers = [
@@ -63,44 +67,62 @@ export class QuestionView extends LitElement {
   render() {
     const question = this.question;
     let possibleAnswers = question.possibleAnswers;
+    let alreadyAnswered = false;
+
+    let result;
+    let responseBasis;
+    if (question.id == -1)
+    {
+      alreadyAnswered = true;
+      responseBasis = 'You have already answered today\'s questions...';
+    }
+    else if (question.id == 0)
+    {
+      responseBasis = 'Loading questions...';
+    }
+    else{
+
+    }
+
+    if (alreadyAnswered || question.id == 0) {
+      result = html`${responseBasis}`;
+    }
+    else
+    {
+      result = html`<div>Question ${question.id} of ${this.totalNumberOfQuestions}:</div> "${question.text}" </br></br>
+               <div>Your answer:</div>`
+    }
 
     return html`
-      <h3>Welcome to today's question</h3>
-      <div>The question is:</div> "${question.text}" </br>
-      <div>Select your answer:</div>
+      <h3>Welcome to today's questions</h3>
+      <!-- Show questions when they are available, else show loading warning... -->
+      ${result}
       ${possibleAnswers.map(answer => html`
-            <vaadin-button class="special" @click="${ () => this.submitAnswer(answer.id)} " > ${answer.text}</vaadin-button> <br/>
+            <vaadin-button class="special" @click="${() => this.submitAnswer(answer.id)}">${answer.text}</vaadin-button> <br/>
             `)}
       <br/>
     `;
   }
 
-  // ${field(this.binder.model.answer)}
-
-  // initialization
   async connectedCallback() {
     super.connectedCallback();
-
-    console.trace('radio-view.ts: firstUpdated() called');
 
     this.online = navigator.onLine;
     window.addEventListener("online", () => (this.online = true));
     window.addEventListener("offline", () => (this.online = false));
 
-    this.question = await QuestionEndpoint.getNextQuestion();
-
-    console.log('received questions from server: '+JSON.stringify(this.question));
+    await this.loadQuestion();
+    this.totalNumberOfQuestions = await QuestionEndpoint.getTotalNumberOfQuestions('example');
   }
 
   // @ts-ignore
   private async submit() {
     try {
 
-      const answer = await AnswerEndpoint.addAnswer(this.questionId, this.userId, this.answerId);
-
-      console.log('@submit: Received new answer from server side: ' + JSON.stringify(answer));
+      await AnswerEndpoint.addAnswer(this.questionId, this.userId, this.answerId);
 
       showNotification('Answer details stored.', { position: 'bottom-start' });
+      await this.loadQuestion();
 
     } catch (error) {
       if (error instanceof EndpointError) {
@@ -111,29 +133,26 @@ export class QuestionView extends LitElement {
     }
   }
 
-  // @ts-ignore
   private async submitAnswer(answerId: number) {
-    console.log('About to submit answer: ' + answerId);
 
-    const answer = await AnswerEndpoint.addAnswer(this.questionId, this.userId, answerId);
+    // console.log('About to submit answer: ' + answerId + ' to question ' + this.questionId + ' for user '+this.userId + '.');
+    await AnswerEndpoint.addAnswer(this.question.id, this.userId, answerId);
 
-    console.log('@submitAnswer: Received new answer from server side: ' + JSON.stringify(answer));
+    // console.log('@submitAnswer: Received new answer from server side: ' + JSON.stringify(answer));
+
+    // load next question from the server
+    await this.loadQuestion();
+    await this.requestUpdate();
+
   }
 
+  private async loadQuestion()
+  {
+    this.question = await QuestionEndpoint.getNextQuestion(1, 'example');
+  }
+
+
 }
-
-
-// this.questions = [
-//   {
-//     text: 'Is there really life beyond a client-side question...?',
-//     possibleAnswers: [{id: 1, text: "yes"}, {id: 2, text: "no"}]
-//   },
-//   {
-//     text: 'Is there meaning in having another client-side question...?',
-//     possibleAnswers: [{id: 1, text: "maybe"}, {id: 2, text: "true"}, {id: 3, text: "false"}]
-//   },
-// ];
-
 
 /// <vaadin-button theme="primary" @click="${this.submit}">Submit</vaadin-button>
 

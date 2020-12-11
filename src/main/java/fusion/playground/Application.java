@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.vaadin.artur.helpers.LaunchUtil;
@@ -23,6 +24,7 @@ import org.vaadin.artur.helpers.LaunchUtil;
 })
 @EntityScan(basePackages = {"fusion.playground.domain", "fusion.playground.data.entity"})
 @PWA(name = "Playground", shortName = "Playground", iconPath = "/META-INF/resources/icons/logo.png")
+@EnableCaching
 public class Application extends SpringBootServletInitializer implements AppShellConfigurator
 {
     public static void main(String[] args) {

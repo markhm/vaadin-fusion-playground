@@ -1,0 +1,27 @@
+package fusion.playground.data.endpoint;
+
+import com.vaadin.flow.server.connect.Endpoint;
+import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
+import fusion.playground.data.CrudEndpoint;
+import fusion.playground.data.service.UserService;
+import fusion.playground.domain.Person;
+import fusion.playground.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
+
+@Endpoint
+@AnonymousAllowed
+public class UserEndpoint extends CrudEndpoint<User, Integer>
+{
+
+    private UserService service;
+
+    public UserEndpoint(@Autowired UserService service) {
+        this.service = service;
+    }
+
+    @Override
+    protected UserService getService() {
+        return service;
+    }
+
+}

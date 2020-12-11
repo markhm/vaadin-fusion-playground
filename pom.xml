@@ -3,6 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.0</version>
+        <relativePath/>
+    </parent>
+
     <groupId>com.github.markhm</groupId>
     <artifactId>vaadin-fusion-playground</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -15,16 +22,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <lombok.version>1.18.16</lombok.version>
-        <vaadin.version>17.0.10</vaadin.version>
-    </properties>
+        <vaadin.version>18.0.2</vaadin.version>
+        <okta.version>1.5.1</okta.version>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.0</version>
-        <relativePath/>
-    </parent>
+        <lombok.version>1.18.16</lombok.version>
+    </properties>
 
     <repositories>
         <!-- The order of definitions matters. Explicitly defining central here to make sure it has the highest priority. -->
@@ -92,10 +94,24 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.okta.spring/okta-spring-boot-starter -->
+        <dependency>
+            <groupId>com.okta.spring</groupId>
+            <artifactId>okta-spring-boot-starter</artifactId>
+            <version>${okta.version}</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.vaadin.crudui</groupId>
             <artifactId>crudui</artifactId>
             <version>4.3.2</version>
         </dependency>
+
 
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -117,7 +133,7 @@
         <dependency>
             <groupId>org.vaadin.artur.exampledata</groupId>
             <artifactId>exampledata</artifactId>
-            <version>2.6.1</version>
+            <version>2.9.0</version>
         </dependency>
 
         <dependency>
@@ -151,9 +167,11 @@
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
 
-        <!-- Map ${} into resources -->
-        <resources>
+        <filters>
+            <filter>src/main/resources-filtered/env/application.${env}.properties</filter>
+        </filters>
 
+        <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
@@ -162,6 +180,16 @@
                 </includes>
             </resource>
 
+            <resource>
+                <directory>src/main/resources-filtered</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>env/**</exclude>
+                </excludes>
+                <includes>
+                    <include>**</include> <!-- Everything including subdirs to include META-INF, which contains Vaadin frontend style files.  -->
+                </includes>
+            </resource>
         </resources>
 
         <plugins>
@@ -202,24 +230,25 @@
                         <fileset>
                             <directory>.</directory>
                             <includes>
-                                <include>package.json</include>
-                                <include>package-lock.json</include>
-                                <include>webpack.config.js</include>
+                                <!-- https://vaadin.com/forum/thread/18344285/vaadin-14-questions-about-package-json-and-pnpm-lock-yaml -->
+                                <!--                                <include>package.json</include>-->
+                                <!--                                <include>package-lock.json</include>-->
+                                <!--                                <include>webpack.config.js</include>-->
                                 <include>webpack.generated.js</include>
                                 <include>types.d.ts</include>
                                 <include>pnpmfile.js</include>
-                                <include>pnpm-lock.yaml</include>
+                                <!--                                <include>pnpm-lock.yaml</include>-->
                                 <include>tsconfig.json</include>
                             </includes>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
-                        <fileset>
-                            <directory>./node_modules</directory>
-                            <includes>
-                                <include>**/**</include>
-                            </includes>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>
+                        <!--                        <fileset>-->
+                        <!--                            <directory>./node_modules</directory>-->
+                        <!--                            <includes>-->
+                        <!--                                <include>**/**</include>-->
+                        <!--                            </includes>-->
+                        <!--                            <followSymlinks>false</followSymlinks>-->
+                        <!--                        </fileset>-->
                     </filesets>
                 </configuration>
             </plugin>
@@ -230,14 +259,14 @@
 
     <profiles>
         <profile>
-            <id>mac</id> <!-- activate if -Pdev -->
+            <id>dev</id> <!-- activate if -Pdev -->
             <activation>
                 <!-- this profile is active by default -->
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
                 <vaadin.productionMode>false</vaadin.productionMode>
-                <env>mac</env>
+                <env>dev</env>
             </properties>
         </profile>
 
@@ -247,7 +276,7 @@
             </activation>
             <properties>
                 <vaadin.productionMode>true</vaadin.productionMode>
-                <env>prod</env>
+                <env>heroku</env>
             </properties>
 
             <dependencies>
@@ -297,50 +326,6 @@
             </build>
         </profile>
 
-        <profile>
-            <id>prod</id> <!-- activate if system properties 'env=prod' or with -Pprod -->
-            <activation>
-            </activation>
-            <properties>
-                <vaadin.productionMode>true</vaadin.productionMode>
-                <env>mac</env>
-            </properties>
-
-            <dependencies>
-                <dependency>
-                    <groupId>com.vaadin</groupId>
-                    <artifactId>flow-server-production-mode</artifactId>
-                </dependency>
-            </dependencies>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <configuration>
-                            <jvmArguments>-Dfile.encoding=UTF-8 -Dvaadin.productionMode=true</jvmArguments>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>com.vaadin</groupId>
-                        <artifactId>vaadin-maven-plugin</artifactId>
-                        <version>${vaadin.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <!--                                    <goal>prepare-frontend</goal>-->
-                                    <goal>build-frontend</goal>
-                                </goals>
-                                <phase>compile</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                </plugins>
-            </build>
-        </profile>
     </profiles>
 
 </project>
