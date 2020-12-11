@@ -28,9 +28,6 @@ export class AnswersView extends LitElement {
       `)}
     `;
   }
-  nameChanged(e: CustomEvent) {
-    this.name = e.detail.value;
-  }
 
   async loadAnswers() {
     this.answers = await AnswerEndpoint.getAnswers('1', 'example');
