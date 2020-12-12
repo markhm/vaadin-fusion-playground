@@ -3,7 +3,7 @@ import { Commands, Context, Route, Router } from '@vaadin/router';
 
 import './views/main/main-view';
 import './views/login/login-view';
-import './views/helloworld/hello-world-view';
+import './views/example/helloworld/hello-world-view';
 import { handleAuthentication, isAuthenticated, signOut } from './auth';
 
 import './global-styles';
@@ -115,17 +115,17 @@ const routes: Route[] = [
 			{
 				path: 'people',
 				component: 'people-view',
-				action: async () => { await import('./views/people/people-view'); },
+				action: async () => { await import('./views/example/people/people-view'); },
 			},
 			{
 				path: 'test/hello-world',
 				component: 'hello-world-view',
-				action: async () => { await import ('./views/helloworld/hello-world-view'); }
+				action: async () => { await import ('./views/example/helloworld/hello-world-view'); }
 			},
 			{
 				path: 'events',
 				component: 'events-view',
-				action: async () => { await import ('./views/events/events-view'); }
+				action: async () => { await import ('./views/example/events/events-view'); }
 			},
 			...serverSideRoutes
 		],
