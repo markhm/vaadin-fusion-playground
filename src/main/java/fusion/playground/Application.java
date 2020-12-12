@@ -28,7 +28,7 @@ import org.vaadin.artur.helpers.CustomLaunchUtil;
 public class Application extends SpringBootServletInitializer implements AppShellConfigurator
 {
     public static void main(String[] args) {
-        CustomLaunchUtil.launchBrowserInDevelopmentMode("https://vaadin-fusion-playground/",
+        CustomLaunchUtil.launchBrowserInDevelopmentMode("https://vaadin-fusion-playground",
                 SpringApplication.run(Application.class, args));
     }
 

@@ -85,7 +85,8 @@ public class CustomLaunchUtil
 
         if (!CustomLaunchUtil.isProductionMode())
         {
-            String location = hostname + app.getEnvironment().getProperty("local.server.port") + "/";
+            // String location = hostname + app.getEnvironment().getProperty("local.server.port") + "/";
+            String location = hostname + "/";
             LaunchUtil.launchBrowser(location, "Application started at " + location);
             setLaunched();
         }
