@@ -41,7 +41,7 @@ export class SurveysView extends LitElement {
                 </template>
             </vaadin-select>
             
-            ${this.selectedSurvey ? html`You selected survey '${this.selectedSurvey}'` : html``}
+            ${this.selectedSurvey ? html`You selected survey '${this.selectedSurvey}'.` : html``}
             
             <br/><br/>
             <vaadin-button @click="${this.submit}">Start survey</vaadin-button>
