@@ -23,8 +23,14 @@ export class IntroductionView extends LitElement {
     return html`
         <h3>Welcome to the Vaadin Fusion Playground!</h3>
         <div></div>
-        <div>Here we will build various Vaadin Fusion examples.</div>
+        <div>Here we will build various Vaadin Fusion examples and constructs and integrate them in a production-ready solution, to explore how close a Fusion-based PWA can get to a native (iOS) experience.</div>
         <br/>
+        <div>Our first goal is to build a Survey system, which will include the following features:</div>
+        <ul>
+          <li>Login via Okta and the ability to see your user profile.</li>
+          <li>Select a survey from a list and take it by answering multiple choice questions.</li>
+          <li>See the survey results and the achievement reflected in your user profile.</li>
+        </ul>
 
         ${!this.isAuthenticated ? html`
           <div><vaadin-button @click="${()=>this.clickLogin()}">Login</vaadin-button> using the test credentials or <br/>
@@ -34,8 +40,11 @@ export class IntroductionView extends LitElement {
         ` : html``}
         
         ${this.isAuthenticated ? html`
-          <div>See <a href="questions">Questions</a> for multiple choice questions.</div>
+          <div>See <a href="questions">questions</a> to take the first survey.</div>
         ` : html``}
+        
+        <br/>
+        Feel welcome to join the fun. The source code and more information is found in <a href="https://github.com/markhm/vaadin-fusion-playground">Github</a>.
         
     `;
   }
