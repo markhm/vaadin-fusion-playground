@@ -14,7 +14,7 @@ import '@vaadin/vaadin-radio-button';
 
 import { EndpointError } from '@vaadin/flow-frontend/Connect';
 import * as QuestionEndpoint from "../../generated/QuestionEndpoint";
-import * as AnswerEndpoint from "../../generated/AnswerEndpoint";
+import * as ResponseEndpoint from "../../generated/ResponseEndpoint";
 import Question from "../../generated/fusion/playground/data/entity/Question";
 
 
@@ -119,7 +119,7 @@ export class QuestionsView extends LitElement {
   private async submit() {
     try {
 
-      await AnswerEndpoint.addAnswer(this.questionId, this.userId, this.answerId);
+      await ResponseEndpoint.addResponse(this.questionId, this.userId, this.answerId);
 
       showNotification('Answer details stored.', { position: 'bottom-start' });
       await this.loadQuestion();
@@ -136,7 +136,7 @@ export class QuestionsView extends LitElement {
   private async submitAnswer(answerId: string) {
 
     // console.log('About to submit answer: ' + answerId + ' to question ' + this.questionId + ' for user '+this.userId + '.');
-    await AnswerEndpoint.addAnswer(this.question.id, this.userId, answerId);
+    await ResponseEndpoint.addResponse(this.question.id, this.userId, answerId);
 
     // console.log('@submitAnswer: Received new answer from server side: ' + JSON.stringify(answer));
 

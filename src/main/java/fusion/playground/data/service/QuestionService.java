@@ -11,7 +11,6 @@ import org.vaadin.artur.helpers.MongoCrudService;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class QuestionService extends MongoCrudService<Question, String>
 {

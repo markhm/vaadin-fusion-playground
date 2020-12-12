@@ -4,6 +4,8 @@
 .project
 .classpath
 
+/docs/
+
 *.iml
 .DS_Store
 

@@ -12,9 +12,9 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(fluent=true)
 @ToString
-public class AnsweredQuestion extends AbstractEntity
+public class QuestionResponse extends AbstractEntity
 {
     int questionNumber;
     String questionText;
-    String answerText;
+    String responseText;
 }

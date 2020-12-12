@@ -57,10 +57,18 @@ const routes: Route[] = [
 				action: async() => { await import ('./views/introduction/introduction-view')}
 			},
 			{
+				path: 'surveys',
+				component: 'surveys-view',
+				action: async (context: Context, commands: Commands) => {
+					const authRedirect = await authGuard(context, commands);
+					if (authRedirect) return authRedirect;
+					await import('./views/survey/surveys-view');
+					return undefined;
+				},
+			},
+			{
 				path: 'questions',
 				component: 'questions-view',
-				// action: async () => { await import ('./views/question/questions-view')}
-				// action: authAndImport('./views/question/questions-view')
 				action: async (context: Context, commands: Commands) => {
 					const authRedirect = await authGuard(context, commands);
 					if (authRedirect) return authRedirect;
@@ -69,21 +77,18 @@ const routes: Route[] = [
 				},
 			},
 			{
-				path: 'answers',
-				component: 'answers-view',
+				path: 'responses',
+				component: 'responses-view',
 				action: async (context: Context, commands: Commands) => {
 					const authRedirect = await authGuard(context, commands);
 					if (authRedirect) return authRedirect;
-					await import('./views/answers/answers-view');
+					await import('./views/responses/responses-view');
 					return undefined;
 				},
 			},
 			{
 				path: 'add-achievement',
 				component: 'add-achievement-view',
-				// action: async () => { await import ('./views/question/questions-view')}
-				// action: async () => { await import ('./views/achievement/add-achievement-view'); }
-				// action: authAndImport('./views/achievement/add-achievement-view')
 				action: async (context: Context, commands: Commands) => {
 					const authRedirect = await authGuard(context, commands);
 					if (authRedirect) return authRedirect;
@@ -94,8 +99,6 @@ const routes: Route[] = [
 			{
 				path: 'achievements',
 				component: 'achievements-view',
-				// action: async () => { await import ('./views/achievement/achievements-view'); }
-				// action: authAndImport('./views/achievement/achievements-view')
 				action: async (context: Context, commands: Commands) => {
 					const authRedirect = await authGuard(context, commands);
 					if (authRedirect) return authRedirect;

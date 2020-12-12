@@ -1,13 +1,12 @@
 package fusion.playground.data.generator;
 
-import fusion.playground.data.service.AnswerRepository;
+import fusion.playground.data.service.ResponseRepository;
 import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
 import fusion.playground.data.service.UserRepository;
 import fusion.playground.data.entity.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bson.Document;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,14 +24,14 @@ public class DatabaseInitializer
     public InitializingBean initializeDatabase(@Autowired UserRepository userRepository,
                                                @Autowired QuestionRepository questionRepository,
                                                @Autowired PossibleAnswerRepository possibleAnswerRepository,
-                                               @Autowired AnswerRepository answerRepository)
+                                               @Autowired ResponseRepository responseRepository)
     {
         log.info("Initializing database");
 
         return () -> {
 
             // Start with a clean database;
-            dropAllCollections(questionRepository, possibleAnswerRepository, userRepository, answerRepository);
+            dropAllCollections(questionRepository, possibleAnswerRepository, userRepository, responseRepository);
 
             loadUsers(userRepository);
 
@@ -57,7 +56,7 @@ public class DatabaseInitializer
     private void dropAllCollections(QuestionRepository questionRepository,
                                     PossibleAnswerRepository possibleAnswerRepository,
                                     UserRepository userRepository,
-                                    AnswerRepository answerRepository)
+                                    ResponseRepository responseRepository)
     {
         questionRepository.deleteAll();
 
@@ -65,7 +64,7 @@ public class DatabaseInitializer
 
         userRepository.deleteAll();
 
-        answerRepository.deleteAll();
+        responseRepository.deleteAll();
     }
 
 

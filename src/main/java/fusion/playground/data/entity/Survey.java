@@ -1,21 +1,18 @@
 package fusion.playground.data.entity;
 
 import fusion.playground.data.AbstractEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent=true)
 @ToString
-public class Answer extends AbstractEntity
+public class Survey extends AbstractEntity
 {
-    private User user;
-
-    private Question question;
-    private String category;
-
-    private String answer;
+    String type;
 }

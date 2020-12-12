@@ -3,7 +3,7 @@ package fusion.playground.data.endpoint;
 import com.vaadin.flow.server.connect.Endpoint;
 import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import fusion.playground.data.CrudEndpoint;
-import fusion.playground.data.service.AnswerService;
+import fusion.playground.data.service.ResponseService;
 import fusion.playground.data.service.QuestionService;
 import fusion.playground.data.service.UserService;
 import fusion.playground.data.entity.Question;
@@ -20,17 +20,17 @@ public class QuestionEndpoint extends CrudEndpoint<Question, String>
     private static Log log = LogFactory.getLog(QuestionEndpoint.class);
 
     private QuestionService questionService;
-    private AnswerService answerService;
+    private ResponseService responseService;
     private UserService userService;
 
     private int questionPointer = 1;
 
     public QuestionEndpoint(@Autowired QuestionService questionService,
-                            AnswerService answerService,
+                            ResponseService responseService,
                             UserService userService)
     {
         this.questionService = questionService;
-        this.answerService = answerService;
+        this.responseService = responseService;
         this.userService = userService;
     }
 

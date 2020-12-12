@@ -183,8 +183,9 @@ export class MainView extends LitElement {
     if (this.isAuthenticated || this.debug) {
       this.menuTabs = [
         {route: '', name: 'Introduction'},
+        {route: 'surveys', name: 'Surveys'},
         {route: 'questions', name: 'Questions'},
-        {route: 'answers', name: 'Answers'},
+        {route: 'responses', name: 'Responses'},
         {route: 'add-achievement', name: 'Add Achievement'},
         {route: 'achievements', name: 'Achievements'},
       ];
