@@ -15,7 +15,7 @@ public class Response extends AbstractEntity
     private User user;
 
     private Question question;
-    private String category;
+    private String surveyName;
 
     private String response;
 }

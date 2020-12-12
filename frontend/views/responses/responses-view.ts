@@ -30,7 +30,7 @@ export class ResponsesView extends LitElement {
   }
 
   async loadAnswers() {
-    this.questionResponses = await ResponseEndpoint.getCategoryAnswers('1', 'example');
+    this.questionResponses = await ResponseEndpoint.getSurveyAnswers('1', 'example');
 
     await this.requestUpdate();
   }

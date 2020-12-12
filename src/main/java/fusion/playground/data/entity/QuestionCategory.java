@@ -5,7 +5,8 @@ public enum QuestionCategory
     example,
     daily,
     weekly,
-    monthly
+    monthly,
+    lucky
 
 //    public static String[] names()
 //    {

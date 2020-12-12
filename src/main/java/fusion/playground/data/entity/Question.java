@@ -18,7 +18,7 @@ public class Question extends AbstractEntity
 {
     private static final long serialVersionUID = 1L;
 
-    private String category;
+    private String surveyName;
 
     private Integer orderNumber;
 

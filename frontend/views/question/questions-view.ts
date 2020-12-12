@@ -13,7 +13,7 @@ import '@vaadin/vaadin-radio-button/vaadin-radio-group';
 import '@vaadin/vaadin-radio-button';
 
 import { EndpointError } from '@vaadin/flow-frontend/Connect';
-import * as QuestionEndpoint from "../../generated/QuestionEndpoint";
+import * as SurveyEndpoint from "../../generated/SurveyEndpoint";
 import * as ResponseEndpoint from "../../generated/ResponseEndpoint";
 import Question from "../../generated/fusion/playground/data/entity/Question";
 
@@ -28,7 +28,7 @@ export class QuestionsView extends LitElement {
   question : Question = {
     id: "0",
     orderNumber: 0,
-    category: 'example',
+    surveyName: 'example',
     text: "Loading questions...",
     possibleAnswers: []
   };
@@ -112,14 +112,14 @@ export class QuestionsView extends LitElement {
     window.addEventListener("offline", () => (this.online = false));
 
     await this.loadQuestion();
-    this.totalNumberOfQuestions = await QuestionEndpoint.getTotalNumberOfQuestions('example');
+    this.totalNumberOfQuestions = await SurveyEndpoint.getTotalNumberOfQuestions('example');
   }
 
   // @ts-ignore
   private async submit() {
     try {
 
-      await ResponseEndpoint.addResponse(this.questionId, this.userId, this.answerId);
+      await ResponseEndpoint.saveResponse(this.questionId, this.userId, this.answerId);
 
       showNotification('Answer details stored.', { position: 'bottom-start' });
       await this.loadQuestion();
@@ -136,19 +136,16 @@ export class QuestionsView extends LitElement {
   private async submitAnswer(answerId: string) {
 
     // console.log('About to submit answer: ' + answerId + ' to question ' + this.questionId + ' for user '+this.userId + '.');
-    await ResponseEndpoint.addResponse(this.question.id, this.userId, answerId);
-
-    // console.log('@submitAnswer: Received new answer from server side: ' + JSON.stringify(answer));
+    await ResponseEndpoint.saveResponse(this.question.id, this.userId, answerId);
 
     // load next question from the server
     await this.loadQuestion();
     await this.requestUpdate();
-
   }
 
   private async loadQuestion()
   {
-    this.question = await QuestionEndpoint.getNextQuestion("1", 'example');
+    this.question = await SurveyEndpoint.getNextQuestion("1", 'example');
     // console.log('Question loaded is: ' + JSON.stringify(this.question));
   }
 

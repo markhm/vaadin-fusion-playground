@@ -1,9 +1,6 @@
 package fusion.playground.data.generator;
 
-import fusion.playground.data.service.ResponseRepository;
-import fusion.playground.data.service.PossibleAnswerRepository;
-import fusion.playground.data.service.QuestionRepository;
-import fusion.playground.data.service.UserRepository;
+import fusion.playground.data.service.*;
 import fusion.playground.data.entity.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,6 +19,7 @@ public class DatabaseInitializer
 
     @Bean
     public InitializingBean initializeDatabase(@Autowired UserRepository userRepository,
+                                               @Autowired SurveyRepository surveyRepository,
                                                @Autowired QuestionRepository questionRepository,
                                                @Autowired PossibleAnswerRepository possibleAnswerRepository,
                                                @Autowired ResponseRepository responseRepository)
@@ -35,7 +33,7 @@ public class DatabaseInitializer
 
             loadUsers(userRepository);
 
-            loadQuestions(questionRepository, possibleAnswerRepository);
+            loadQuestions(surveyRepository, questionRepository, possibleAnswerRepository);
 
             // fetch all users
             log.info("Users found with findAll():");
@@ -59,11 +57,8 @@ public class DatabaseInitializer
                                     ResponseRepository responseRepository)
     {
         questionRepository.deleteAll();
-
         possibleAnswerRepository.deleteAll();
-
         userRepository.deleteAll();
-
         responseRepository.deleteAll();
     }
 
@@ -86,10 +81,20 @@ public class DatabaseInitializer
         userRepository.saveAll(userList);
     }
 
-    private static void loadQuestions(QuestionRepository questionRepository, PossibleAnswerRepository possibleAnswerRepository)
+    private static void loadQuestions(SurveyRepository surveyRepository,
+                                      QuestionRepository questionRepository,
+                                      PossibleAnswerRepository possibleAnswerRepository)
     {
-        ExampleQuestionsInitializer exampleQuestions = new ExampleQuestionsInitializer(questionRepository, possibleAnswerRepository);
+        ExampleSurveyInitializer exampleQuestions = new ExampleSurveyInitializer(surveyRepository,
+                questionRepository, possibleAnswerRepository);
         exampleQuestions.loadQuestions();
+        exampleQuestions.saveSurvey();
+
+        WeatherSurveyInitializer weatherSurveyInitializer = new WeatherSurveyInitializer(surveyRepository,
+                questionRepository, possibleAnswerRepository);
+
+        weatherSurveyInitializer.loadQuestions();
+        weatherSurveyInitializer.saveSurvey();
     }
 
     private static void printLogStatement(String statement)

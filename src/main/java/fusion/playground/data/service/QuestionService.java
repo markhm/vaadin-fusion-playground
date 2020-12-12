@@ -1,6 +1,7 @@
 package fusion.playground.data.service;
 
 import fusion.playground.data.entity.Question;
+import fusion.playground.data.entity.Survey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,48 +16,32 @@ import java.util.Optional;
 public class QuestionService extends MongoCrudService<Question, String>
 {
     @Autowired
-    private final QuestionRepository repository;
+    private final QuestionRepository questionRepository;
+    // private SurveyService surveyService = null;
 
-    public QuestionService(QuestionRepository repository)
+    public QuestionService(QuestionRepository questionRepository)
     {
-        this.repository = repository;
+        this.questionRepository = questionRepository;
     }
 
     @Override
     protected QuestionRepository getRepository() {
-        return repository;
+        return questionRepository;
     }
 
-    @Cacheable("questions")
+    // @Cacheable("questions")
     public List<Question> findAll()
     {
-        return repository.findAll();
+        return questionRepository.findAll();
     }
 
-    @Cacheable("questions_by_category")
-    public List<Question> findAllByCategory(String category)
-    {
-        return repository.findAllByCategory(category);
-    }
-
-    @Cacheable("question")
-    public Optional<Question> getByCategoryAndOrderNumber(String category, Integer number)
-    {
-        return repository.getByCategoryAndOrderNumber(category, number);
-    }
-
-    public int countAllByCategory(String category)
-    {
-        return this.findAllByCategory(category).size();
-    }
-
-    @Caching(evict = {
-            @CacheEvict(value="question", allEntries=true),
-            @CacheEvict(value="questions", allEntries=true),
-            @CacheEvict(value="questions_by_category", allEntries=true)})
+//    @Caching(evict = {
+//            @CacheEvict(value="question", allEntries=true),
+//            @CacheEvict(value="questions", allEntries=true),
+//            @CacheEvict(value="questions_by_category", allEntries=true)})
     public Question save(Question question)
     {
-        return this.repository.save(question);
+        return this.questionRepository.save(question);
     }
 
 }

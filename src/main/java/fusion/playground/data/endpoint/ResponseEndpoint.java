@@ -33,12 +33,12 @@ public class ResponseEndpoint extends CrudEndpoint<Response, String>
         return responseService;
     }
 
-    public List<QuestionResponse> getCategoryAnswers(String userId, String category)
+    public List<QuestionResponse> getSurveyAnswers(String userId, String surveyName)
     {
-        return responseService.getAnswers(userId, category);
+        return responseService.getResponses(userId, surveyName);
     }
 
-    public Response addResponse(String questionId, String userId, String responseId)
+    public Response saveResponse(String questionId, String userId, String responseId)
     {
         Response response = new Response();
 
@@ -48,7 +48,7 @@ public class ResponseEndpoint extends CrudEndpoint<Response, String>
         response.user(user);
         response.question(question);
         response.response(responseId);
-        response.category(question.category());
+        response.surveyName(question.surveyName());
 
         Response savedResponse = responseService.save(response);
 

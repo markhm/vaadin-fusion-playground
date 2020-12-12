@@ -3,14 +3,19 @@ package fusion.playground.data.generator;
 import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
 import fusion.playground.data.entity.QuestionCategory;
+import fusion.playground.data.service.SurveyRepository;
 
-public class ExampleQuestionsInitializer extends AbstractQuestionsLoader
+public class ExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
 {
     private static QuestionCategory CATEGORY_EXAMPLE = QuestionCategory.example;
 
-    public ExampleQuestionsInitializer(QuestionRepository questionRepository, PossibleAnswerRepository possibleAnswerRepository)
+    public ExampleSurveyInitializer(SurveyRepository surveyRepository,
+                                    QuestionRepository questionRepository,
+                                    PossibleAnswerRepository possibleAnswerRepository)
     {
-        super(CATEGORY_EXAMPLE.name(), questionRepository, possibleAnswerRepository);
+        super(surveyRepository, questionRepository, possibleAnswerRepository);
+
+        createSurvey("example", CATEGORY_EXAMPLE.name());
     }
 
     public void loadQuestions()

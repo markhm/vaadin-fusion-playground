@@ -23,8 +23,6 @@ public class QuestionEndpoint extends CrudEndpoint<Question, String>
     private ResponseService responseService;
     private UserService userService;
 
-    private int questionPointer = 1;
-
     public QuestionEndpoint(@Autowired QuestionService questionService,
                             ResponseService responseService,
                             UserService userService)
@@ -36,39 +34,5 @@ public class QuestionEndpoint extends CrudEndpoint<Question, String>
 
     protected QuestionService getService() {
         return questionService;
-    }
-
-    public Question getNextQuestion(String userId, String category)
-    {
-        // check if questions have already been answered today
-
-        // boolean alreadyComplete = answerService.answersAlreadyCompleted(category, userId, LocalDate.now());
-
-        Question nextQuestion = null;
-        if (true)
-        {
-            int totalNumberOfQuestions = questionService.countAllByCategory(category);
-            if (questionPointer > totalNumberOfQuestions)
-            {
-                questionPointer = 1;
-            }
-
-            Optional<Question> optionalQuestion = questionService.getByCategoryAndOrderNumber(category, questionPointer);
-            questionPointer++;
-            nextQuestion = optionalQuestion.get();
-        }
-        else
-        {
-            nextQuestion = new Question();
-            // nextQuestion.id("-1");
-            nextQuestion.text("You already answered this category today");
-        }
-
-        return nextQuestion;
-    }
-
-    public int getTotalNumberOfQuestions(String category)
-    {
-        return questionService.countAllByCategory(category);
     }
 }

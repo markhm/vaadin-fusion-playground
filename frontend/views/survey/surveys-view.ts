@@ -5,12 +5,13 @@ import '@vaadin/vaadin-select'
 import '@vaadin/vaadin-date-picker';
 
 import { css, customElement, html, property, LitElement } from 'lit-element';
+import * as SurveyEndpoint from "../../generated/SurveyEndpoint";
 
 @customElement('surveys-view')
 export class SurveysView extends LitElement {
 
     @property ({type: Array})
-    availableSurveys: String[] = [ 'example', 'daily', 'weekly', 'monthly'];
+    availableSurveys: String[] = ['example', 'weather'];
 
     @property ({type: String})
     selectedSurvey: String = '';
@@ -27,11 +28,12 @@ export class SurveysView extends LitElement {
     render() {
 
         let data = this.availableSurveys;
+        // console.log('Now is the data: '+JSON.stringify(data));
 
         return html`
             <h3>Available surveys</h3>
             <div>Choose a survey from the following list.</div>
-            <vaadin-select id="select" label="Surveys" @value-changed="${this.surveySelected}" placeholder="none selected">
+            <vaadin-select id='select' label='Surveys' @value-changed='${this.surveySelected}' placeholder='none selected'>
                 <template>
                     <vaadin-list-box>
                         ${data.map(dataElement => html`
@@ -41,11 +43,18 @@ export class SurveysView extends LitElement {
                 </template>
             </vaadin-select>
             
-            ${this.selectedSurvey ? html`You selected survey '${this.selectedSurvey}'.` : html``}
+            ${this.selectedSurvey ? html`<br/><br/>You selected survey '${this.selectedSurvey}'.` : html``}
             
             <br/><br/>
-            <vaadin-button @click="${this.submit}">Start survey</vaadin-button>
+            <vaadin-button disabled @click="${this.submit}">Start survey</vaadin-button>
     `;
+    }
+
+    async connectedCallback() {
+        super.connectedCallback();
+
+        this.availableSurveys = await SurveyEndpoint.getAvailableSurveys();
+        console.log('received availableSurveys: '+JSON.stringify(this.availableSurveys));
     }
 
     surveySelected(e: CustomEvent) {

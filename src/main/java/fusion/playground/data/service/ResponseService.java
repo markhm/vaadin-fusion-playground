@@ -42,13 +42,13 @@ public class ResponseService extends MongoCrudService<Response, String>
         return getRepository().save(response);
     }
 
-    public List<QuestionResponse> getAnswers(String userId, String category)
+    public List<QuestionResponse> getResponses(String userId, String surveyName)
     {
         User user = userService.findByUsername("testuser").get();
 
         Response probe = new Response();
         probe.user(user);
-        probe.category(category);
+        probe.surveyName(surveyName);
 
         List<Response> responses = getRepository().findAll(Example.of(probe));
 

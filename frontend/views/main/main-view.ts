@@ -146,6 +146,7 @@ export class MainView extends LitElement {
 
             ${!this.isAuthenticated ? html`<vaadin-tab> <a href="login">Login</a> </vaadin-tab>` : html``}
             ${!this.isAuthenticated ? html`<vaadin-tab> <a href="create-account">Create account</a> </vaadin-tab>` : html``}
+            ${this.isAuthenticated ? html`<vaadin-tab> <a href="user">User profile</a> </vaadin-tab>` : html``}
             ${this.isAuthenticated ? html`<vaadin-tab> <a href="logout">Logout</a> </vaadin-tab>` : html``}
              
              <vaadin-tab>--------</vaadin-tab>

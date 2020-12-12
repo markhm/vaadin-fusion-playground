@@ -10,7 +10,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
-import org.vaadin.artur.helpers.LaunchUtil;
+import org.vaadin.artur.helpers.CustomLaunchUtil;
 
 /**
  * The entry point of the Spring Boot application.
@@ -28,7 +28,8 @@ import org.vaadin.artur.helpers.LaunchUtil;
 public class Application extends SpringBootServletInitializer implements AppShellConfigurator
 {
     public static void main(String[] args) {
-        LaunchUtil.launchBrowserInDevelopmentMode(SpringApplication.run(Application.class, args));
+        CustomLaunchUtil.launchBrowserInDevelopmentMode("https://vaadin-fusion-playground/",
+                SpringApplication.run(Application.class, args));
     }
 
 }
