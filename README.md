@@ -36,5 +36,17 @@ To get started:
 Developed on macOS (11.0.1)
 
 ---
+### Questions
+- The @value-changed event of a <vaadin-select> box does nót contain the new value that was selected. The event looks like this: valueChanged: CustomEvent {"isTrusted":false}. How can we access/use the new value...?
+- How to access and modify elements in the DOM...?
+- How to pass an object from one view to another...? / How to store one or more objects on the client side...?
+- How to create a new user in Okta...?
+- How to access the user Profile from Okta...?
+- How to enable a button after an event.
+
+### Known issues
+- Connection fails for VaadinDevmodeGizmo.js?10c7:944 WebSocket connection to 'wss://vaadin-fusion-playground:35729/' failed: Error in connection establishment: net::ERR_CONNECTION_CLOSED
+- Then surrounding the Avatar image in `main-view.ts` with a link, it is no longer outlined to the right. Why...?
+
 ### Things we learned
 - It seems methods in an Endpoint cannot be overloaded. Bug of Feature...?
