@@ -17,6 +17,6 @@ public interface QuestionRepository extends MongoRepository<Question, String>
 
     // public Optional<Question> getByCategoryAndOrderNumber(String category, Integer orderNumber);
 
-    // public Optional<Question> getBySurveyAndOrderNumber(Survey survey, Integer orderNumber);
+    // public Optional<Question> getBySurveyAndOrderNumber(Survey surveyName, Integer orderNumber);
 
 }

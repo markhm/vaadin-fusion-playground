@@ -30,11 +30,11 @@ public class ResponseServiceTest
     @TestConfiguration
     static class EmployeeServiceImplTestContextConfiguration {
 
-        @Bean
-        public ResponseService answerService() {
-
-            return new ResponseService(responseRepository, userService, questionService, possibleAnswerService);
-        }
+//        @Bean
+//        public ResponseService answerService() {
+//
+//            // return new ResponseService(responseRepository, userService, questionService, possibleAnswerService);
+//        }
     }
 
     @Before

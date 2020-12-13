@@ -28,4 +28,10 @@ public class Survey extends AbstractEntity
         questions.add(question);
     }
 
+    public Question getQuestion(int orderNumber)
+    {
+        return questions.get(orderNumber - 1);
+    }
+
+
 }

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +18,6 @@ public class Question extends AbstractEntity
     private static final long serialVersionUID = 1L;
 
     private String surveyName;
-
     private Integer orderNumber;
 
     private String text;

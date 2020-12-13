@@ -13,10 +13,10 @@ import org.springframework.context.annotation.Bean;
 import org.vaadin.artur.exampledata.DataType;
 import org.vaadin.artur.exampledata.ExampleDataGenerator;
 
-@SpringComponent
+// @SpringComponent
 public class DataGenerator {
 
-    @Bean
+    // @Bean
     public CommandLineRunner loadData(PersonRepository personRepository) {
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());

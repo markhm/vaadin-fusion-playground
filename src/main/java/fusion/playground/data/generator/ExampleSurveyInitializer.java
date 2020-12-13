@@ -20,8 +20,8 @@ public class ExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
 
     public void loadQuestions()
     {
-        addQuestion("Is it a sunny day today?",
-                "Yes", "No");
+        addQuestion("What kind of music do you like?",
+                "Pop", "Rock", "Dance");
 
         addQuestion("Are you a girl or a boy?",
                 "Girl", "Boy");

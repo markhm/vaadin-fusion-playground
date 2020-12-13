@@ -38,8 +38,7 @@ Developed on macOS (11.0.1)
 ---
 ### Questions 
 - How to access and modify elements in the DOM, e.g. a <vaadin-button>, to set it from disabled to enabled...?
-- How to pass an object from one view to another...? / How to store one or more objects on the client side...?
-- How to enable a button after an event.
+  How to store or retrieve an objects on the client side in the session or local storage...?
 - For Okta: How to create a new user in Okta...? / How to access the user Profile from Okta...?
 
 ### Known issues
@@ -48,4 +47,5 @@ Developed on macOS (11.0.1)
 
 ### What we learned / discovered
 - It seems methods in an Endpoint cannot be overloaded. Bug of Feature...?
+- Accessing an url parameter, see [here](https://www.sitepoint.com/get-url-parameters-with-javascript/).  
 - ~~The @value-changed event of a <vaadin-select> box does nót contain the new value that was selected. The event looks like this: valueChanged: CustomEvent {"isTrusted":false}. How can we access/use the new value...?~~ - It turns out the `event.detail.value` contains the value, even though the (grandparent) doesn't.

@@ -17,12 +17,18 @@ import * as SurveyEndpoint from "../../generated/SurveyEndpoint";
 import * as ResponseEndpoint from "../../generated/ResponseEndpoint";
 import Question from "../../generated/fusion/playground/data/entity/Question";
 
-
 @customElement('questions-view')
 export class QuestionsView extends LitElement {
 
-  @property({ type: Boolean })
-  online: boolean = true;
+  // Does the client application have a connection to the internet at the moment...?
+  @property({ type: Boolean }) online: boolean = true;
+
+  @property( {type: Boolean }) debug = false;
+
+  // Name of the current surveyName that is being taken
+  @property({ type: String }) surveyName: string = 'example';
+
+  @property({ type: String }) surveyResponseId: string = '0';
 
   @property({ type: Object })
   question : Question = {
@@ -42,13 +48,6 @@ export class QuestionsView extends LitElement {
 
   @property({ type: Number})
   totalNumberOfQuestions = 0;
-
-  @property({type: Array}) // local answers
-  answers = [
-    {id: '1', name: 'True'},
-    {id: '2', name: 'False'},
-    {id: '3', name: 'Maybe'}
-  ];
 
   static get styles() {
     return [
@@ -71,10 +70,10 @@ export class QuestionsView extends LitElement {
 
     let result;
     let responseBasis;
-    if (question.id === "-1")
+    if (question.orderNumber === -1)
     {
       alreadyAnswered = true;
-      responseBasis = 'You have already answered today\'s questions...';
+      responseBasis = 'You have completed this survey.';
     }
     else if (question.id === "0")
     {
@@ -94,32 +93,47 @@ export class QuestionsView extends LitElement {
     }
 
     return html`
-      <h3>Welcome to today's questions</h3>
+      <h3>Welcome to this survey</h3>
+      <div>The surveyResponseId is '${this.surveyResponseId}'.</div> <br/>
       <!-- Show questions when they are available, else show loading warning... -->
       ${result}
       ${possibleAnswers.map(possibleAnswer => html`
             <vaadin-button class="special" @click="${() => this.submitAnswer(possibleAnswer.id)}">${possibleAnswer.text}</vaadin-button> <br/>
             `)}
       <br/>
+      ${alreadyAnswered ? html`<br/>See your responses <a href="/responses?surveyResponseId=${this.surveyResponseId}">here</a>.` : html``}
     `;
   }
 
   async connectedCallback() {
     super.connectedCallback();
 
+    // get the url parameter 'surveyName' to load the proper surveyName
+
+    const queryString = window.location.search;
+    console.log('queryString: ' + queryString);
+    const urlParams = new URLSearchParams(queryString);
+    this.surveyName = urlParams.get('surveyName') || 'example';
+    console.log('surveyName selected: ' + this.surveyName);
+
     this.online = navigator.onLine;
     window.addEventListener("online", () => (this.online = true));
     window.addEventListener("offline", () => (this.online = false));
 
+    if (this.surveyResponseId == "0")
+    {
+      this.surveyResponseId = await ResponseEndpoint.beginSurvey(this.surveyName, this.userId);
+    }
+
     await this.loadQuestion();
-    this.totalNumberOfQuestions = await SurveyEndpoint.getTotalNumberOfQuestions('example');
+    this.totalNumberOfQuestions = await SurveyEndpoint.getTotalNumberOfQuestions(this.surveyName);
   }
 
   // @ts-ignore
   private async submit() {
     try {
 
-      await ResponseEndpoint.saveResponse(this.questionId, this.userId, this.answerId);
+      await ResponseEndpoint.saveResponse(this.surveyResponseId, this.questionId, this.userId, this.answerId);
 
       showNotification('Answer details stored.', { position: 'bottom-start' });
       await this.loadQuestion();
@@ -136,7 +150,7 @@ export class QuestionsView extends LitElement {
   private async submitAnswer(answerId: string) {
 
     // console.log('About to submit answer: ' + answerId + ' to question ' + this.questionId + ' for user '+this.userId + '.');
-    await ResponseEndpoint.saveResponse(this.question.id, this.userId, answerId);
+    await ResponseEndpoint.saveResponse(this.surveyResponseId, this.question.id, this.userId, answerId);
 
     // load next question from the server
     await this.loadQuestion();
@@ -145,7 +159,7 @@ export class QuestionsView extends LitElement {
 
   private async loadQuestion()
   {
-    this.question = await SurveyEndpoint.getNextQuestion("1", 'example');
+    this.question = await SurveyEndpoint.getNextQuestion(this.surveyResponseId);
     // console.log('Question loaded is: ' + JSON.stringify(this.question));
   }
 

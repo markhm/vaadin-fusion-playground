@@ -149,12 +149,13 @@ export class MainView extends LitElement {
             ${this.isAuthenticated ? html`<vaadin-tab> <a href="user">User profile</a> </vaadin-tab>` : html``}
             ${this.isAuthenticated ? html`<vaadin-tab> <a href="logout">Logout</a> </vaadin-tab>` : html``}
              
-             <vaadin-tab>--------</vaadin-tab>
-             <vaadin-tab> <a href="#" @click="${() => this.debugSomething()}">debugSomething()</a> </vaadin-tab>
              
-             ${!this.isAuthenticated && this.debug ? html`<vaadin-tab> <a href="#" @click="${() => this.simulateLogin}">simulateLogin()</a> </vaadin-tab>` : html``}
-             ${this.isAuthenticated && this.debug ? html`<vaadin-tab> <a href="#" @click="${() => this.simulateLogout}">simulateLogout()</a> </vaadin-tab>` : html``} 
 
+            ${this.debug ? html`
+              <vaadin-tab>--------</vaadin-tab>
+              <vaadin-tab> <a href="#" @click="${() => this.debugSomething()}">debugSomething()</a> </vaadin-tab>
+            ` : html``}
+            
           </vaadin-tabs>
         </div>
         <slot></slot>
@@ -184,10 +185,9 @@ export class MainView extends LitElement {
     if (this.isAuthenticated || this.debug) {
       this.menuTabs = [
         {route: '', name: 'Introduction'},
-        {route: 'surveys', name: 'Surveys'},
-        {route: 'questions', name: 'Questions'},
-        {route: 'responses', name: 'Responses'},
-        {route: 'add-achievement', name: 'Add Achievement'},
+        {route: 'surveys', name: 'Take survey'},
+        // {route: 'questions', name: 'Questions'},
+        {route: 'responses', name: 'Survey responses'},
         {route: 'achievements', name: 'Achievements'},
       ];
     }
@@ -232,20 +232,6 @@ export class MainView extends LitElement {
       tabName = 'Introduction';
     }
     return tabName;
-  }
-
-  // private login() {
-  //   // open Spring login form
-  //   window.location.replace('login');
-  // }
-
-
-  private simulateLogin() {
-
-  }
-
-  private simulateLogout() {
-
   }
 
   private debugSomething() {

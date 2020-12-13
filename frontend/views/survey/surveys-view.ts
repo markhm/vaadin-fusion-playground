@@ -1,4 +1,4 @@
-import { showNotification } from '@vaadin/flow-frontend/a-notification';
+import {Router} from "@vaadin/router";
 import '@vaadin/vaadin-button';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-select'
@@ -33,7 +33,7 @@ export class SurveysView extends LitElement {
         return html`
             <h3>Available surveys</h3>
             <div>Choose a survey from the following list.</div>
-            <vaadin-select id='select' label='Surveys' @value-changed='${this.surveySelected}' placeholder='none selected'>
+            <vaadin-select id='select' label='Surveys' @value-changed='${this.surveySelected}' laceholder='none selected'>
                 <template>
                     <vaadin-list-box>
                         ${data.map(dataElement => html`
@@ -46,7 +46,7 @@ export class SurveysView extends LitElement {
             ${this.selectedSurvey ? html`<br/><br/>You selected survey '${this.selectedSurvey}'.` : html``}
             
             <br/><br/>
-            <vaadin-button disabled @click="${this.submit}">Start survey</vaadin-button>
+            <vaadin-button @click="${this.submit}">Start survey</vaadin-button>
     `;
     }
 
@@ -58,13 +58,19 @@ export class SurveysView extends LitElement {
     }
 
     surveySelected(e: CustomEvent) {
-        console.log('valueChanged: CustomEvent: ' + JSON.stringify(e));
+        // It is absurd that the parent event does not show its available child elements.
+        // console.log('event: CustomEvent: ' + JSON.stringify(e));
+        // console.log('event.detail = ' + JSON.stringify(e.detail));
+        // console.log('event.detail.value = ' + e.detail.value);
+
+        this.selectedSurvey = e.detail.value;
     }
 
     submit() {
         console.log('departments:' + JSON.stringify(this.availableSurveys));
 
-        showNotification('Selected ' + this.selectedSurvey);
+        // showNotification('Selected ' + this.selectedSurvey);
+        Router.go('/questions?surveyName='+this.selectedSurvey);
     }
 }
 

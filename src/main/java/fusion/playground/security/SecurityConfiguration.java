@@ -4,6 +4,7 @@ import com.okta.spring.boot.oauth.Okta;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 
 @EnableWebSecurity
+@ConditionalOnWebApplication
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
     private static Log log = LogFactory.getLog(SecurityConfiguration.class);

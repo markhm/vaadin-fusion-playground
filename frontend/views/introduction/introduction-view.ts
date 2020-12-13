@@ -40,7 +40,7 @@ export class IntroductionView extends LitElement {
         ` : html``}
         
         ${this.isAuthenticated ? html`
-          <div>See <a href="questions">questions</a> to take the first survey.</div>
+          <div>See <a href="surveys">surveys</a> to select your first survey.</div>
         ` : html``}
         
         <br/>

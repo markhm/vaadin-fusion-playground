@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @Endpoint
 @AnonymousAllowed
+@Deprecated
 public class QuestionEndpoint extends CrudEndpoint<Question, String>
 {
     private static Log log = LogFactory.getLog(QuestionEndpoint.class);
