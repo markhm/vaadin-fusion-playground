@@ -18,8 +18,8 @@ To get started:
 
 #### Functional features
 - Multiple choice questions and giving answers
-    - Questions and possible answers are loaded from the server
-    - Results are saved to the server
+    - Select a survey and take it. Questions and possible answers are loaded from the server
+    - Response to every question is saved to the server.
 - Adding achievements (work in progress)
 
 ### Not yet implemented / Feature backlog
@@ -31,7 +31,7 @@ To get started:
 
 ### Technology stack
 - Vaadin 18 (latest) on OpenJDK 15 (latest)
-- MongoDB (embedded !) 
+- MongoDB (embedded) 
 
 Developed on macOS (11.0.1)
 
@@ -44,6 +44,7 @@ Developed on macOS (11.0.1)
 ### Known issues
 - Connection fails for VaadinDevmodeGizmo.js?10c7:944 WebSocket connection to 'wss://vaadin-fusion-playground:35729/' failed: Error in connection establishment: net::ERR_CONNECTION_CLOSED
 - Then surrounding the Avatar image in `main-view.ts` with a link, it is no longer outlined to the right. Why...?
+- On the surveys-view page, the list of available surveys is correctly retrieved from the endpoint, but not processed correctly. The client-side default ones had to be set. 
 
 ### What we learned / discovered
 - It seems methods in an Endpoint cannot be overloaded. Bug of Feature...?
