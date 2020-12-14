@@ -47,94 +47,34 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
         // @formatter:off
         // Vaadin handles CSRF for its endpoints
 
-        // All requests are required to be secure.
-
-        // also on Heroku, things need to be secure
         Boolean developmentMode = environment.getProperty("developmentMode", Boolean.class);
-        log.info("developmentMode: " + developmentMode);
 
-        if (!developmentMode)
+        if (developmentMode)
         {
+            // All requests are required to be secure.
+            http.
+                    requiresChannel().
+                    anyRequest().
+                    requiresSecure();
+        } else // -> (!developmentMode)
+        {
+            // // also on Heroku, things need to be secure
             http.
                     requiresChannel().
                     requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null).
                     requiresSecure();
         }
-// http.headers().httpStrictTransportSecurity().disable();
 
         http.csrf().ignoringAntMatchers("/connect/**")
                 .and()
                 .authorizeRequests()
+                .antMatchers("/create-account/**").permitAll()
                 // allow access to everything, Vaadin will handle security
                 .antMatchers("/**").permitAll()
                 .and()
                 .oauth2ResourceServer().jwt();
         // @formatter:on
 
-        if (developmentMode)
-        {
-            // Is there a problem here...?
-            http.
-                    requiresChannel().
-                    anyRequest().
-                    requiresSecure();
-        }
         Okta.configureResourceServer401ResponseBody(http);
     }
 }
-
-
-//
-// This is for when deployed to the cloud. See Matt Raible's presentation.
-//        http.requiresChannel()
-//                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-//                .requiresSecure();
-
-// Allow all flow internal requests.
-// http.requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll();
-
-
-//        String serverHttpPort = environment.getProperty("server.http.port");
-//        log.info("serverHttpPort: " + serverHttpPort);
-//
-//        String serverPort = environment.getProperty("server.port");
-//        log.info("serverPort: " + serverPort);
-
-
-//    /**
-//     * Allows access to static resources, bypassing Spring security.
-//     */
-//    @Override
-//    public void configure(WebSecurity web) // throws Exception
-//    {
-//        web.ignoring().antMatchers(
-////                // Vaadin Flow static resources
-////                "/VAADIN/**",
-//
-//                // the standard favicon URI
-//                "/favicon.ico",
-//                // the robots exclusion standard
-//                "/robots.txt",
-//                // web application manifest
-//                "/manifest.webmanifest",
-//                "/sw.js",
-//                "/offline-page.html",
-//                // icons and images
-//                "/icons/**",
-//                "/images/**",
-//                "/img/**",
-//                // (development mode) static resources
-//                "/frontend/**",
-//                // (development mode) webjars
-//                "/webjars/**",
-//                // (development mode) H2 debugging console
-//                "/h2-console/**",
-//                // (production mode) static resources
-//                "/frontend-es5/**", "/frontend-es6/**"
-//
-////                 ,"/**"
-////                   ,"/"
-//
-////                 ,"/"
-//        );  // to ensure people can read the introduction view without logging in
-//    }
