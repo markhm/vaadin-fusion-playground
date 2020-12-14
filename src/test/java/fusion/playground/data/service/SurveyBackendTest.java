@@ -123,7 +123,7 @@ public class SurveyBackendTest
         Question ninthQuestion = surveyService.getNextQuestion(surveyResponseId);
 
         List<QuestionResponse> responses = surveyResponseService.getSurveyResponses(user, surveyName);
-        responses.forEach(finalResponse -> log.info("finalResponse: " + finalResponse));
+        responses.forEach(finalResponse -> log.info("saved: " + finalResponse));
     }
 
     @Test
