@@ -36,16 +36,16 @@ To get started:
 Developed on macOS (11.0.1)
 
 ---
+### Known issues
+- **Blocking:** On the surveys-view page, the list of available surveys is correctly retrieved from the endpoint, but not processed correctly (Error. The client-side default ones had to be set.
+- **Blocking:** How should a server-side Flow view be marked, so it is allowed according to (clients-side) security...? Currently, we see a 403.
+- **Annoying:** Connection fails for VaadinDevmodeGizmo.js?10c7:944 WebSocket connection to 'wss://vaadin-fusion-playground:35729/' failed: Error in connection establishment: net::ERR_CONNECTION_CLOSED
+- **Minor:** When surrounding the Avatar image in `main-view.ts` with a link, it is no longer outlined to the right. Why...?
+
 ### Questions 
 - How to access and modify elements in the DOM, e.g. a <vaadin-button>, to set it from disabled to enabled...?
   How to store or retrieve an objects on the client side in the session or local storage...?
-- How should a server-side view be marked, so it is allowed according to (clients-side) security...? Currently, we see a 403.
-
-### Known issues
-- Connection fails for VaadinDevmodeGizmo.js?10c7:944 WebSocket connection to 'wss://vaadin-fusion-playground:35729/' failed: Error in connection establishment: net::ERR_CONNECTION_CLOSED
-- Then surrounding the Avatar image in `main-view.ts` with a link, it is no longer outlined to the right. Why...?
-- On the surveys-view page, the list of available surveys is correctly retrieved from the endpoint, but not processed correctly. The client-side default ones had to be set. 
-
+  
 ### What we learned / discovered
 - It seems methods in an Endpoint cannot be overloaded. Bug of Feature...?
 - Accessing an url parameter, see [here](https://www.sitepoint.com/get-url-parameters-with-javascript/).  
