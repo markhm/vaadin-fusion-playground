@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.vaadin.artur.exampledata.DataType;
 import org.vaadin.artur.exampledata.ExampleDataGenerator;
 
-@SpringComponent
-@ConditionalOnWebApplication
+// @SpringComponent
+// @ConditionalOnWebApplication
 public class DataGenerator {
 
     @Bean
