@@ -106,11 +106,11 @@ const routes: Route[] = [
 					return undefined;
 				},
 			},
-			{
-				path: 'create-account',
-				component: 'create-account-view',
-				action: async() => { await import ('./views/login/create-account-view')}
-			},
+			// {
+			// 	path: 'create-account',
+			// 	component: 'create-account-view',
+			// 	action: async() => { await import ('./views/login/create-account-view')}
+			// },
 			{ path: 'hello', component: 'hello-world-view' },
 			{
 				path: 'people',
