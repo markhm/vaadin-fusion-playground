@@ -23,7 +23,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <vaadin.version>18.0.2</vaadin.version>
-        <okta.version>1.5.1</okta.version>
+        <okta.spring.version>1.5.1</okta.spring.version>
 
         <lombok.version>1.18.16</lombok.version>
 
@@ -105,11 +105,20 @@
 <!--            <artifactId>spring-boot-starter-cache</artifactId>-->
 <!--        </dependency>-->
 
+<!-- Client-side and Spring authentication -->
         <!-- https://mvnrepository.com/artifact/com.okta.spring/okta-spring-boot-starter -->
         <dependency>
             <groupId>com.okta.spring</groupId>
             <artifactId>okta-spring-boot-starter</artifactId>
-            <version>${okta.version}</version>
+            <version>${okta.spring.version}</version>
+        </dependency>
+<!-- Server side API for calling Okta -->
+
+        <!-- https://mvnrepository.com/artifact/com.okta.spring/okta-spring-sdk -->
+        <dependency>
+            <groupId>com.okta.spring</groupId>
+            <artifactId>okta-spring-sdk</artifactId>
+            <version>${okta.spring.version}</version>
         </dependency>
 
         <dependency>
