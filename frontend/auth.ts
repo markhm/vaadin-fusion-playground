@@ -11,26 +11,17 @@ const authClient = new OktaAuth({
 });
 
 const isAuthenticated = async () => {
-    // Checks if there is a current accessToken in the TokenManger.
-    // console.log("authClient.tokenManager.get('accessToken'): "+JSON.stringify(authClient.tokenManager.get('accessToken')));
-
     return !!(await authClient.tokenManager.get('accessToken'));
 };
 
 const signIn = async (username: string, password: string) => {
 
-    // console.log('redirectUri: '+window.location.origin + '/callback');
-    // console.log('');
-    // console.log('About to sign in.');
-    // console.log('username ' + username);
+    // signing in and requesting access to openid (default), email and profile (the rest)
     const authResult = await authClient.signIn({
         username,
         password,
         scopes: ['openid', 'email', 'profile'],
     });
-
-    // console.log('');
-    // console.log('authResult: ' + JSON.stringify(authResult));
 
     if (authResult.status === 'SUCCESS') {
         authClient.token.getWithRedirect({
@@ -47,7 +38,6 @@ const signInWithFacebook = async () => {
 const signOut = () => authClient.signOut();
 
 const handleAuthentication = async () => {
-    // console.log("at handleAuthentication()");
 
     if (authClient.token.isLoginRedirect()) {
         try {
@@ -55,12 +45,9 @@ const handleAuthentication = async () => {
             const {accessToken, idToken} = tokenResponse.tokens;
             if (!accessToken || !idToken) return false;
 
-            // console.log("adding accessToken to tokenManager()");
-
             authClient.tokenManager.add('accessToken', accessToken);
             authClient.tokenManager.add('idToken', idToken);
 
-            // console.log('accessToken set correctly...!');
             return true;
         } catch (err) {
             console.warn(`authClient.token.parseFromUrl() errored: ${err}`);
