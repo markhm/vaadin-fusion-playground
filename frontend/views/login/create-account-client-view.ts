@@ -22,9 +22,9 @@ import UserModel from '../../generated/fusion/playground/data/entity/UserModel';
 import { Binder, field } from '@vaadin/form';
 
 import { CSSModule } from '@vaadin/flow-frontend/css-utils';
-import styles from './create-account-view.css';
+import styles from './create-account-client-view.css';
 
-@customElement('create-account-view')
+@customElement('create-account-client-view')
 export class CreateAccountViewView extends LitElement {
 
   @query('#countryCode')
