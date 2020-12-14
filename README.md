@@ -39,7 +39,7 @@ Developed on macOS (11.0.1)
 ### Questions 
 - How to access and modify elements in the DOM, e.g. a <vaadin-button>, to set it from disabled to enabled...?
   How to store or retrieve an objects on the client side in the session or local storage...?
-- For Okta: How to create a new user in Okta...? / How to access the user Profile from Okta...?
+- How should a server-side view be marked, so it is allowed according to (clients-side) security...? Currently, we see a 403.
 
 ### Known issues
 - Connection fails for VaadinDevmodeGizmo.js?10c7:944 WebSocket connection to 'wss://vaadin-fusion-playground:35729/' failed: Error in connection establishment: net::ERR_CONNECTION_CLOSED
@@ -50,3 +50,4 @@ Developed on macOS (11.0.1)
 - It seems methods in an Endpoint cannot be overloaded. Bug of Feature...?
 - Accessing an url parameter, see [here](https://www.sitepoint.com/get-url-parameters-with-javascript/).  
 - ~~The @value-changed event of a <vaadin-select> box does nót contain the new value that was selected. The event looks like this: valueChanged: CustomEvent {"isTrusted":false}. How can we access/use the new value...?~~ - It turns out the `event.detail.value` contains the value, even though the (grandparent) doesn't.
+- There is no client-side API to create a user in Okta. A new user should be created with the server-side API.
