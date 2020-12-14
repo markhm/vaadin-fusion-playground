@@ -37,8 +37,8 @@ Developed on macOS (11.0.1)
 
 ---
 ### Known issues
-- **Blocking:** On the surveys-view page, the list of available surveys is correctly retrieved from the endpoint, but not processed correctly (Error. The client-side default ones had to be set.
 - **Blocking:** How should a server-side Flow view be marked, so it is allowed according to (clients-side) security...? Currently, we see a 403.
+- **Blocking:** On the surveys-view page, the list of available surveys is correctly retrieved from the endpoint, but not processed correctly (Error. The client-side default ones had to be set.
 - **Inconvenient:** Connection fails for VaadinDevmodeGizmo.js?10c7:944 WebSocket connection to 'wss://vaadin-fusion-playground:35729/' failed: Error in connection establishment: net::ERR_CONNECTION_CLOSED
 - **Minor:** When surrounding the Avatar image in `main-view.ts` with a link, it is no longer outlined to the right. Why...?
 
