@@ -12,13 +12,12 @@ import lombok.experimental.Accessors;
 @ToString
 public class User extends AbstractEntity
 {
-    private @NonNull String firstName;
-    private @NonNull String lastName;
+    /* Unique property that defines a user in Okta */
+    private String sub;
+
+    private String firstName;
+    private String lastName;
 
     private @NonNull String username;
     private @NonNull String emailAddress;
-
-    private @NonNull String passwordHash;
-    private @NonNull Integer questionPointer;
-
 }

@@ -70,9 +70,9 @@ public class DatabaseInitializer
     private static void loadUsers(UserRepository userRepository)
     {
         User regularUser = new User("John", "Doe", "testuser",
-                "testuser@test.dk", "something",1);
+                "testuser@test.dk", "something");
         User adminUser = new User("Admin", "Istrator", "admin",
-                "admin@test.dk", "somethingElse", 1);
+                "admin@test.dk", "somethingElse");
 
         List<User> userList = new ArrayList();
         userList.add(regularUser);
