@@ -17,7 +17,8 @@ export class AddSurveyView extends LitElement {
         id: '-1',
         category: 'test',
         name: 'unset',
-        questions: []
+        questions: [],
+        gradable: false
     };
 
     @internalProperty() private questions: Question[] = this.survey.questions;
@@ -61,7 +62,8 @@ export class AddSurveyView extends LitElement {
                 id: '-1',
                 category: 'test',
                 name: 'unset',
-                questions: []
+                questions: [],
+                gradable: false
             };
 
             this.survey = await SurveyEndpoint.get(this.survey.id) || emptySurvey;

@@ -54,18 +54,26 @@ public class SurveyResultService extends MongoCrudService<SurveyResult, String>
         return savedSurveyResult.id();
     }
 
-    public void approveResponses(String surveyResultId)
+    public SurveyResult confirmResponses(String surveyResultId)
     {
         SurveyResult surveyResult = get(surveyResultId).get();
-        surveyResult.registerUserApproval();
+        surveyResult.registerUserConfirmation();
+        if (surveyResult.survey().gradable())
+        {
+            surveyResult = gradeSurveyResult(surveyResult);
+        }
         surveyResultRepository.save(surveyResult);
+
+        return surveyResult;
     }
 
-    public void rejectResponses(String surveyResultId)
+    public SurveyResult rejectResponses(String surveyResultId)
     {
         SurveyResult surveyResult = get(surveyResultId).get();
         surveyResult.registerUserRejection();
         surveyResultRepository.save(surveyResult);
+
+        return surveyResult;
     }
 
     public List<QuestionResponse> getSurveyResponses(String surveyResultId)
@@ -80,6 +88,7 @@ public class SurveyResultService extends MongoCrudService<SurveyResult, String>
             QuestionResponse questionResponse = new QuestionResponse();
             questionResponse.questionText(response.question().text());
             questionResponse.questionNumber(response.question().orderNumber());
+            questionResponse.correct(response.correct());
 
             PossibleAnswer possibleAnswer = possibleAnswerService.get(response.response()).get();
             questionResponse.responseText(possibleAnswer.text());
@@ -113,11 +122,33 @@ public class SurveyResultService extends MongoCrudService<SurveyResult, String>
         response.user(surveyResult.user());
         response.question(question);
         response.response(responseId);
-        // response.surveyName(question.surveyName());
-
         Response savedResponse = save(surveyResult, response);
 
         return savedResponse;
+    }
+
+    public SurveyResult gradeSurveyResult(SurveyResult surveyResult)
+    {
+        if (!surveyResult.survey().gradable())
+        {
+            log.warn("Survey '"+ surveyResult.survey().name() + "' is not gradable. Returning ungraded result.");
+            return null;
+        }
+
+        // evaluate every individual answer, store the results.
+        surveyResult.responses().forEach(response ->
+        {
+            response.evaluateResponse();
+            responseService.update(response);
+        });
+
+        int surveyScore = surveyResult.responses().stream().mapToInt(Response::gradeResponse).sum();
+
+        // save the score and the result
+        surveyResult.score(surveyScore);
+        surveyResultRepository.save(surveyResult);
+
+        return surveyResult;
     }
 
     public List<SurveyResult> getCompletedSurveys(User user)

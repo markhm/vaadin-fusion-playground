@@ -63,6 +63,8 @@ public abstract class AbstractSurveyQuestionsLoader
 
     protected void addFactualQuestion(String questionText, int correctAnswer, String... possibleAnswerTexts)
     {
+        this.survey.gradable(true);
+
         FactualQuestion question = new FactualQuestion();
         question.text(questionText);
         // question.surveyName(survey.name());

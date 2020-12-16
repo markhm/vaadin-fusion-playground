@@ -17,4 +17,5 @@ public class QuestionResponse extends AbstractEntity
     int questionNumber;
     String questionText;
     String responseText;
+    boolean correct;
 }

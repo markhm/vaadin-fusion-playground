@@ -67,19 +67,21 @@ public class TakeSurveyBackendTest
         PossibleAnswer firstAnswer = firstQuestion.possibleAnswers().get(0);
 
         // saving the response
-        Response response = surveyResultService.saveResponse(surveyResult.id(), firstQuestion.id(), firstAnswer.id());
+        Response firstResponse = surveyResultService.saveResponse(surveyResult.id(), firstQuestion.id(), firstAnswer.id());
 
         // verifying the response is correctly saved
         SurveyResult reloadedResponse = surveyResultService.get(surveyResultId).get();
         assertEquals(1, reloadedResponse.lastCompletedQuestion());
-        Response retrievedResponse = responseService.get(response.id()).get();
-        assertEquals(response, retrievedResponse);
+        Response retrievedResponse = responseService.get(firstResponse.id()).get();
+        assertEquals(firstResponse, retrievedResponse);
 
         // retrieving the second question
         Question secondQuestion = surveyService.getNextQuestion(surveyResultId);
         // log.info("Second question: " + secondQuestion.text());
         assertEquals(2, secondQuestion.orderNumber());
         PossibleAnswer secondAnswer = secondQuestion.possibleAnswers().get(1);
+
+        // retrieving the second question again, since we did not submit our answer yet
         Question secondQuestionAgain = surveyService.getNextQuestion(surveyResultId);
         assertEquals(2, secondQuestionAgain.orderNumber());
         surveyResultService.saveResponse(surveyResult.id(), secondQuestion.id(), secondAnswer.id());
@@ -90,6 +92,7 @@ public class TakeSurveyBackendTest
         Question fourthQuestion = surveyService.getNextQuestion(surveyResultId);
         surveyResultService.saveResponse(surveyResult.id(), fourthQuestion.id(), fourthQuestion.possibleAnswers().get(1).id());
 
+        // confirming that the survey is not yet complete
         surveyResult = surveyResultService.get(surveyResultId).get();
         assertEquals(false, surveyResult.isComplete());
 
@@ -109,18 +112,21 @@ public class TakeSurveyBackendTest
 
         log.info("surveyResult: "+surveyResult);
 
+        // confirming that the survey is complete now
         assertEquals(true, surveyResult.isComplete());
 
-        // the ninth question does not exist, so a question with orderNumber -1 is returned
+        // the ninth question does not exist, so a dummy question with orderNumber -1 is returned
         Question ninthQuestion = surveyService.getNextQuestion(surveyResultId);
         assertEquals(-1, ninthQuestion.orderNumber());
 
+        // the responses are available now the survey has been completed
         List<QuestionResponse> responses = surveyResultService.getSurveyResponses(surveyResultId);
         responses.forEach(finalResponse -> log.info("saved: " + finalResponse));
 
-        surveyResultService.approveResponses(surveyResultId);
+        // we confirm the responses are correct
+        surveyResultService.confirmResponses(surveyResultId);
 
         surveyResult = surveyResultService.get(surveyResultId).get();
-        assertEquals(SurveyResult.SurveyResultStatus.approved, surveyResult.status());
+        assertEquals(SurveyResult.SurveyResultStatus.confirmed, surveyResult.status());
     }
 }

@@ -14,7 +14,7 @@ import '@vaadin/vaadin-radio-button';
 
 import { EndpointError } from '@vaadin/flow-frontend/Connect';
 import * as SurveyEndpoint from "../../generated/SurveyEndpoint";
-import * as ResponseEndpoint from "../../generated/ResponseEndpoint";
+import * as SurveyResultEndpoint from "../../generated/SurveyResultEndpoint";
 import Question from "../../generated/fusion/playground/data/entity/Question";
 import {Router} from "@vaadin/router";
 
@@ -129,7 +129,7 @@ export class QuestionView extends LitElement {
   private async submit() {
     try {
 
-      await ResponseEndpoint.saveResponse(this.surveyResultId, this.questionId, this.responseId);
+      await SurveyResultEndpoint.saveResponse(this.surveyResultId, this.questionId, this.responseId);
 
       showNotification('Response stored.', { position: 'bottom-start' });
       await this.loadQuestion();
@@ -146,7 +146,7 @@ export class QuestionView extends LitElement {
   private async submitAnswer(responseId: string) {
 
     // console.log('About to submit answer: ' + answerId + ' to question ' + this.questionId + ' for user '+this.userId + '.');
-    await ResponseEndpoint.saveResponse(this.surveyResultId, this.question.id, responseId);
+    await SurveyResultEndpoint.saveResponse(this.surveyResultId, this.question.id, responseId);
 
     // load next question from the server
     await this.loadQuestion();

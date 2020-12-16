@@ -42,16 +42,16 @@ export class CreateAccountView extends LitElement {
 
   render() {
     return html`        
-      <div>Welcome to Survey world...!</div></br>
+      <div>Welcome to the Fusion Playground Survey world...!</div></br>
       <div>This is where you complete surveys and get recognition for it. </div><br/>
-      <div>Fill in this form to request an account. </div>
+      <div>Fill in the form to request an account.</div>
       
       <vaadin-form-layout style="width: 100%;">
-        <vaadin-text-field label="Username" ...="${field(this.binder.model.username)}"></vaadin-text-field>
-        <vaadin-date-picker label="Date of birth" ...="${field(this.binder.model.dateOfBirth)}"></vaadin-date-picker>
+        <vaadin-text-field label="Username (nice and anonymous 😊) " ...="${field(this.binder.model.username)}"></vaadin-text-field>
+        <vaadin-date-picker label="Date of birth (you should be over 13 to join)" ...="${field(this.binder.model.dateOfBirth)}"></vaadin-date-picker>
         <vaadin-email-field label="Email" ...="${field(this.binder.model.emailAddress)}"></vaadin-email-field>
-        <div>You will be able to set a password when you confirm you email address.</div>
       </vaadin-form-layout>
+      <div>You will receive an email where you are able to set your password.</div>
       </br>
       
       <vaadin-horizontal-layout class="button-layout" theme="spacing">

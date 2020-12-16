@@ -20,6 +20,8 @@ public class Survey extends AbstractEntity
 
     private  List<Question> questions;
 
+    private boolean gradable = false;
+
     public void addQuestion(Question question)
     {
         if (questions == null) {

@@ -1,9 +1,10 @@
 import '@vaadin/vaadin-button';
 import '@vaadin/vaadin-text-field';
 import {css, customElement, html, LitElement, property} from 'lit-element';
-import * as ResponseEndpoint from "../../generated/ResponseEndpoint";
+import * as SurveyResultEndpoint from "../../generated/SurveyResultEndpoint";
 import QuestionResponse from "../../generated/fusion/playground/data/entity/QuestionResponse";
 import {Router} from "@vaadin/router";
+import SurveyResult from "../../generated/fusion/playground/data/entity/SurveyResult";
 
 @customElement('confirm-responses-view')
 export class ConfirmResponsesView extends LitElement {
@@ -13,8 +14,8 @@ export class ConfirmResponsesView extends LitElement {
   @property({type: String})
   surveyResultId : string = 'unavailable';
 
-  // @property({type: Object})
-  // surveyResult : SurveyResult;
+  @property({type: Object})
+  surveyResult : SurveyResult | undefined;
 
   @property({ type: Array })
   questionResponses : QuestionResponse[] = [];
@@ -31,7 +32,7 @@ export class ConfirmResponsesView extends LitElement {
   render() {
     return html`       
       <h3>Survey responses</h3>
-      <div>You took survey: ${this.surveyResultId}</div><br/>
+      <div>Your results are logged under: ${this.surveyResultId}</div><br/>
       
       ${this.questionResponses ? this.questionResponses.map(questionResponse => html`
             ${questionResponse.questionNumber}: ${questionResponse.questionText} <b>${questionResponse.responseText}</b> </br>
@@ -39,7 +40,7 @@ export class ConfirmResponsesView extends LitElement {
       
       ${this.questionResponses ? html`
         <br/>  
-        <div>Do you wish to submit these answers...?</div>
+        <div>Do you wish to confirm these answers...? <br/>(If you made a mistake, choose 'Reject' and retake the survey.)</div>
         <br/>
         <vaadin-horizontal-layout class="button-layout" theme="spacing">
           <vaadin-button theme="primary" @click="${this.approve}">Approve</vaadin-button>
@@ -54,19 +55,26 @@ export class ConfirmResponsesView extends LitElement {
     super.connectedCallback();
 
     this.surveyResultId = localStorage.getItem('surveyResultId') || 'unavailable';
-
-    this.questionResponses = await ResponseEndpoint.getSurveyResponses(this.surveyResultId);
+    this.questionResponses = await SurveyResultEndpoint.getSurveyResponses(this.surveyResultId);
   }
 
   async approve() {
 
-    await ResponseEndpoint.approveResponses(this.surveyResultId);
+    await SurveyResultEndpoint.confirmResponses(this.surveyResultId);
 
-    Router.go('/completed-surveys');
+    this.surveyResult = await SurveyResultEndpoint.confirmResponses(this.surveyResultId);
+
+    if (this.surveyResult.survey.gradable) {
+      Router.go('/survey-results');
+    }
+    else {
+      Router.go('/completed-surveys');
+    }
   }
 
   async  reject() {
-    await ResponseEndpoint.rejectResponses(this.surveyResultId);
+    this.surveyResult = await SurveyResultEndpoint.rejectResponses(this.surveyResultId);
+    console.log('surveyResult: '+this.surveyResult);
 
     Router.go('/completed-surveys');
   }

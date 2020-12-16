@@ -96,7 +96,8 @@ public class SurveyService extends MongoCrudService<Survey, String>
 //    public Question getNextQuestion(String userId, String surveyName)
 //    {
 //        // check if questions have already been answered today
-//        // boolean alreadyComplete = answerService.answersAlreadyCompleted(category, userId, LocalDate.now());
+//        // boolean alreadyComplete = answerService.answersAlreadyCompleted(ca
+//        tegory, userId, LocalDate.now());
 //
 //        Question nextQuestion = null;
 //        if (true)

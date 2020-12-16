@@ -6,7 +6,7 @@ import '@vaadin/vaadin-date-picker';
 
 import { css, customElement, html, property, LitElement } from 'lit-element';
 import * as SurveyEndpoint from "../../generated/SurveyEndpoint";
-import * as ResponseEndpoint from "../../generated/ResponseEndpoint";
+import * as SurveyResultEndpoint from "../../generated/SurveyResultEndpoint";
 
 @customElement('select-survey-view')
 export class SelectSurveyView extends LitElement {
@@ -73,7 +73,7 @@ export class SelectSurveyView extends LitElement {
         let oktaUserId = JSON.parse(oktaTokenStorage).accessToken.claims.uid;
         console.log('User is indentified as: '+oktaUserId);
 
-        let surveyResultId = await ResponseEndpoint.beginSurvey(this.selectedSurvey, oktaUserId);
+        let surveyResultId = await SurveyResultEndpoint.beginSurvey(this.selectedSurvey, oktaUserId);
 
         // https://medium.com/@nixonaugustine5/localstorage-and-sessionstorage-in-angular-app-65cda19283a0
         localStorage.setItem('surveyResultId', surveyResultId);

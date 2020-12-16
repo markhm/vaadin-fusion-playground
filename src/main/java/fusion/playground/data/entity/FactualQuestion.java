@@ -13,5 +13,5 @@ import lombok.experimental.Accessors;
 @ToString(callSuper = true)
 public class FactualQuestion extends Question
 {
-    PossibleAnswer correctAnswer;
+    private PossibleAnswer correctAnswer;
 }

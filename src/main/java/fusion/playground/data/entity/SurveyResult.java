@@ -33,6 +33,8 @@ public class SurveyResult extends AbstractEntity
 
     private SurveyResultStatus status;
 
+    int score;
+
     public SurveyResult()
     {
         status = SurveyResultStatus.created;
@@ -62,6 +64,7 @@ public class SurveyResult extends AbstractEntity
         responses.add(response);
         lastCompletedQuestion++;
 
+        log.info("lastCompleted question: " + lastCompletedQuestion);
         if (lastCompletedQuestion == survey.questions().size())
         {
             registerCompletion();
@@ -76,6 +79,10 @@ public class SurveyResult extends AbstractEntity
 
     public void registerCompletion()
     {
+//        log.info("status: " + status);
+//        log.info("survey.questions().size(): " + survey.questions().size());
+//        log.info("responses().size(): " + responses().size());
+
         if (status == SurveyResultStatus.in_progress && responses().size() == survey.questions().size())
         {
             this.endTime = LocalDateTime.now();
@@ -83,19 +90,19 @@ public class SurveyResult extends AbstractEntity
         }
         else
         {
-            log.error("Cannot register completion.");
+             log.error("Cannot register completion, please investigate.");
         }
     }
 
-    public void registerUserApproval()
+    public void registerUserConfirmation()
     {
         if (status == SurveyResultStatus.complete)
         {
-            status = SurveyResultStatus.approved;
+            status = SurveyResultStatus.confirmed;
         }
         else
         {
-            log.error("Cannot register completion");
+            log.error("Cannot register confirmation, please investigate.");
         }
     }
 
@@ -107,7 +114,7 @@ public class SurveyResult extends AbstractEntity
         }
         else
         {
-            log.error("Cannot register rejection");
+            log.error("Cannot register rejection, please investigate.");
         }
     }
 
@@ -115,14 +122,14 @@ public class SurveyResult extends AbstractEntity
      * created - newly created
      * in_process - user is answering questions
      * complete - user has answered all questions
-     * approved - user has approved responses and result is ready for evaluation
-     * evaluateds
+     * confirmed - user has confirmed responses and result is ready for evaluation
+     * evaluated - the surveyResult has been checked and the score is available
      */
     public enum SurveyResultStatus {
         created,
         in_progress,
         complete,
-        approved,
+        confirmed,
         rejected,
         evaluated
     }

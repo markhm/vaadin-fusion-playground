@@ -19,4 +19,26 @@ public class Response extends AbstractEntity
     private String response;
 
     private boolean correct;
+
+    public void evaluateResponse()
+    {
+        PossibleAnswer correctAnswer = ((FactualQuestion) question).correctAnswer();
+
+        if (response().equals(correctAnswer.id()))
+        {
+            correct(true);
+        }
+    }
+
+    public int gradeResponse()
+    {
+        if (correct())
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
 }

@@ -112,6 +112,16 @@ const routes: Route[] = [
 				},
 			},
 			{
+				path: 'survey-results',
+				component: 'survey-results-view',
+				action: async (context: Context, commands: Commands) => {
+					const authRedirect = await authGuard(context, commands);
+					if (authRedirect) return authRedirect;
+					await import('./views/responses/survey-results-view');
+					return undefined;
+				},
+			},
+			{
 				path: 'completed-surveys',
 				component: 'completed-surveys-view',
 				action: async (context: Context, commands: Commands) => {

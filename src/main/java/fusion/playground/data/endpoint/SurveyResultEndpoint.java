@@ -13,17 +13,17 @@ import java.util.List;
 
 @Endpoint
 @AnonymousAllowed
-public class ResponseEndpoint extends CrudEndpoint<SurveyResult, String>
+public class SurveyResultEndpoint extends CrudEndpoint<SurveyResult, String>
 {
-    private static Log log = LogFactory.getLog(ResponseEndpoint.class);
+    private static Log log = LogFactory.getLog(SurveyResultEndpoint.class);
 
     private SurveyService surveyService;
     private SurveyResultService surveyResultService;
     private UserService userService;
     private QuestionService questionService;
 
-    public ResponseEndpoint(@Autowired SurveyService surveyService, SurveyResultService surveyResultService,
-                            UserService userService, QuestionService questionService) {
+    public SurveyResultEndpoint(@Autowired SurveyService surveyService, SurveyResultService surveyResultService,
+                                UserService userService, QuestionService questionService) {
         this.surveyService = surveyService;
         this.surveyResultService = surveyResultService;
         this.userService = userService;
@@ -48,14 +48,14 @@ public class ResponseEndpoint extends CrudEndpoint<SurveyResult, String>
         surveyResultService.saveResponse(surveyResponseId, questionId, responseId);
     }
 
-    public void approveResponses(String surveyResultId)
+    public SurveyResult confirmResponses(String surveyResultId)
     {
-        surveyResultService.approveResponses(surveyResultId);
+        return surveyResultService.confirmResponses(surveyResultId);
     }
 
-    public void rejectResponses(String surveyResultId)
+    public SurveyResult rejectResponses(String surveyResultId)
     {
-        surveyResultService.rejectResponses(surveyResultId);
+        return surveyResultService.rejectResponses(surveyResultId);
     }
 
     public List<SurveyResult> getCompletedSurveys(String oktaUserId)
@@ -68,28 +68,5 @@ public class ResponseEndpoint extends CrudEndpoint<SurveyResult, String>
     {
         return surveyResultService.getSurveyResponses(surveyResultId);
     }
-
-//    public void saveResponse(String surveyResultId, String questionId, String userId, String responseId)
-//    {
-//        log.info("Trying to saveResponse(...) with:");
-//        log.info("surveyResultId: " + surveyResultId);
-//        log.info("questionId: " + questionId);
-//        log.info("userId: " + userId);
-//        log.info("responseId: " + responseId);
-//
-//        SurveyResponse surveyResponse = surveyResponseService.get(surveyResultId).get();
-//        int lastCompletedQuestion = surveyResponse.lastCompletedQuestion();
-//
-//        Response response = new Response();
-//        User user = userService.findByUsername("testuser").get();
-//        Question question = questionService.get(questionId).get();
-//
-//        response.user(user);
-//        response.question(question);
-//        response.response(responseId);
-//        response.surveyName(question.surveyName());
-//
-//        surveyResponseService.save(surveyResponse, response);
-//    }
 
 }
