@@ -1,11 +1,9 @@
 package fusion.playground.data.service;
 
-import fusion.playground.data.endpoint.QuestionEndpoint;
 import fusion.playground.data.entity.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.MongoCrudService;
 
@@ -16,69 +14,64 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class SurveyResponseService extends MongoCrudService<SurveyResponse, String>
+public class SurveyResultService extends MongoCrudService<SurveyResult, String>
 {
-    private static Log log = LogFactory.getLog(SurveyResponseService.class);
+    private static Log log = LogFactory.getLog(SurveyResultService.class);
 
     private UserService userService;
     private QuestionService questionService;
-    private SurveyResponseRepository surveyResponseRepository;
+    private SurveyResultRepository surveyResultRepository;
     private PossibleAnswerService possibleAnswerService;
     private ResponseService responseService;
 
     @Override
-    protected SurveyResponseRepository getRepository()
+    protected SurveyResultRepository getRepository()
     {
-        return this.surveyResponseRepository;
+        return this.surveyResultRepository;
     }
 
-    public SurveyResponseService(@Autowired UserService userService,
-                                 @Autowired QuestionService questionService,
-                                 @Autowired SurveyResponseRepository surveyResponseRepository,
-                                 @Autowired PossibleAnswerService possibleAnswerService,
-                                 @Autowired ResponseService responseService)
+    @Autowired
+    public SurveyResultService(UserService userService, QuestionService questionService,
+                               SurveyResultRepository surveyResultRepository,
+                               PossibleAnswerService possibleAnswerService, ResponseService responseService)
     {
         this.userService = userService;
         this.questionService = questionService;
-        this.surveyResponseRepository = surveyResponseRepository;
+        this.surveyResultRepository = surveyResultRepository;
         this.possibleAnswerService = possibleAnswerService;
         this.responseService = responseService;
     }
 
     public String beginSurvey(User user, Survey survey)
     {
-        SurveyResponse surveyResponse = new SurveyResponse();
-        surveyResponse.user(user);
-        surveyResponse.survey(survey);
-        surveyResponse.startTime(LocalDateTime.now());
+        SurveyResult surveyResult = new SurveyResult();
+        surveyResult.user(user);
+        surveyResult.survey(survey);
+        surveyResult.startTime(LocalDateTime.now());
 
-        SurveyResponse savedSurveyResponse = surveyResponseRepository.save(surveyResponse);
+        SurveyResult savedSurveyResult = surveyResultRepository.save(surveyResult);
 
-        return savedSurveyResponse.id();
+        return savedSurveyResult.id();
     }
 
-    public void endSurvey(SurveyResponse surveyResponse)
+    public void approveResponses(String surveyResultId)
     {
-        surveyResponse.endTime(LocalDateTime.now());
-
-        surveyResponseRepository.save(surveyResponse);
+        SurveyResult surveyResult = get(surveyResultId).get();
+        surveyResult.registerUserApproval();
+        surveyResultRepository.save(surveyResult);
     }
 
-    public List<QuestionResponse> getSurveyResponses(User user, String surveyName)
+    public void rejectResponses(String surveyResultId)
     {
-//        Response probe = new Response();
-//        probe.user(user);
-//        probe.surveyName(surveyName);
+        SurveyResult surveyResult = get(surveyResultId).get();
+        surveyResult.registerUserRejection();
+        surveyResultRepository.save(surveyResult);
+    }
 
-        //  = getRepository().findAll(Example.of(probe));
-
-        List<SurveyResponse> surveyResponses = getRepository().findAll();
-
-        List<SurveyResponse> completedResponses = surveyResponses.stream().filter(response -> response.isComplete()).collect(Collectors.toList());
-
-        // taking the latest for now
-        SurveyResponse latestSurveyResponse = completedResponses.get(completedResponses.size() - 1);
-        List<Response> responses = latestSurveyResponse.responses();
+    public List<QuestionResponse> getSurveyResponses(String surveyResultId)
+    {
+        SurveyResult surveyResult = get(surveyResultId).get();
+        List<Response> responses = surveyResult.responses();
 
         List<QuestionResponse> questionResponses = new ArrayList<>();
 
@@ -99,8 +92,8 @@ public class SurveyResponseService extends MongoCrudService<SurveyResponse, Stri
 
     public Response saveResponse(String surveyResponseId, String questionId, String responseId)
     {
-        SurveyResponse surveyResponse = get(surveyResponseId).get();
-        if (surveyResponse.isComplete())
+        SurveyResult surveyResult = get(surveyResponseId).get();
+        if (surveyResult.isComplete())
         {
             Response dummyResponse = new Response();
             dummyResponse.response("Survey already complete.");
@@ -117,25 +110,27 @@ public class SurveyResponseService extends MongoCrudService<SurveyResponse, Stri
             return null;
         }
 
-        response.user(surveyResponse.user());
+        response.user(surveyResult.user());
         response.question(question);
         response.response(responseId);
-        response.surveyName(question.surveyName());
+        // response.surveyName(question.surveyName());
 
-        Response savedResponse = save(surveyResponse, response);
+        Response savedResponse = save(surveyResult, response);
 
         return savedResponse;
     }
 
-    private Response save(SurveyResponse surveyResponse, Response response)
+    public List<SurveyResult> getCompletedSurveys(User user)
+    {
+        return surveyResultRepository.findAllByUser(user);
+    }
+
+    private Response save(SurveyResult surveyResult, Response response)
     {
         Response savedResponse = responseService.update(response);
-        surveyResponse.addResponse(savedResponse);
-        surveyResponseRepository.save(surveyResponse);
+        surveyResult.addResponse(savedResponse);
+        surveyResultRepository.save(surveyResult);
 
         return savedResponse;
     }
-
-
-
 }

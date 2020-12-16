@@ -1,19 +1,15 @@
 package fusion.playground.data.service;
 
-import fusion.playground.data.endpoint.SurveyEndpoint;
 import fusion.playground.data.entity.Question;
 import fusion.playground.data.entity.Survey;
-import fusion.playground.data.entity.SurveyResponse;
-import fusion.playground.data.entity.User;
+import fusion.playground.data.entity.SurveyResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.MongoCrudService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,15 +18,15 @@ public class SurveyService extends MongoCrudService<Survey, String>
     private static Log log = LogFactory.getLog(SurveyService.class);
 
     private SurveyRepository surveyRepository;
-    private SurveyResponseService surveyResponseService;
+    private SurveyResultService surveyResultService;
 
     private int questionPointer = 1;
 
     public SurveyService(@Autowired SurveyRepository surveyRepository,
-                         @Autowired SurveyResponseService surveyResponseService)
+                         @Autowired SurveyResultService surveyResultService)
     {
         this.surveyRepository = surveyRepository;
-        this.surveyResponseService = surveyResponseService;
+        this.surveyResultService = surveyResultService;
     }
 
     @Override
@@ -72,8 +68,8 @@ public class SurveyService extends MongoCrudService<Survey, String>
     {
         Question result = null;
 
-        SurveyResponse surveyResponse = surveyResponseService.get(surveyResponseId).get();
-        if (surveyResponse.isComplete())
+        SurveyResult surveyResult = surveyResultService.get(surveyResponseId).get();
+        if (surveyResult.isComplete())
         {
             result = new Question();
             result.orderNumber(-1);
@@ -81,9 +77,9 @@ public class SurveyService extends MongoCrudService<Survey, String>
         }
         else
         {
-            int lastCompletedQuestion = surveyResponse.lastCompletedQuestion();
+            int lastCompletedQuestion = surveyResult.lastCompletedQuestion();
 
-            Survey survey = surveyResponse.survey();
+            Survey survey = surveyResult.survey();
             result = getQuestionFromSurvey(survey, lastCompletedQuestion + 1);
         }
         return result;

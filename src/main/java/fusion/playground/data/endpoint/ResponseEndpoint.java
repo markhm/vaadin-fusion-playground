@@ -13,56 +13,71 @@ import java.util.List;
 
 @Endpoint
 @AnonymousAllowed
-public class ResponseEndpoint extends CrudEndpoint<SurveyResponse, String>
+public class ResponseEndpoint extends CrudEndpoint<SurveyResult, String>
 {
     private static Log log = LogFactory.getLog(ResponseEndpoint.class);
 
     private SurveyService surveyService;
-    private SurveyResponseService surveyResponseService;
+    private SurveyResultService surveyResultService;
     private UserService userService;
     private QuestionService questionService;
 
-    public ResponseEndpoint(@Autowired SurveyService surveyService, SurveyResponseService surveyResponseService,
+    public ResponseEndpoint(@Autowired SurveyService surveyService, SurveyResultService surveyResultService,
                             UserService userService, QuestionService questionService) {
         this.surveyService = surveyService;
-        this.surveyResponseService = surveyResponseService;
+        this.surveyResultService = surveyResultService;
         this.userService = userService;
         this.questionService = questionService;
     }
 
     @Override
-    protected SurveyResponseService getService() {
-        return surveyResponseService;
+    protected SurveyResultService getService() {
+        return surveyResultService;
     }
 
-    public String beginSurvey(String surveyName, String userId)
+    public String beginSurvey(String surveyName, String oktaUserId)
     {
-        User user = userService.findByUsername("testuser").get();
-
+        log.info("Trying to begin survey for user with oktaUserId: "+oktaUserId);
+        User user = userService.findByOktaUserId(oktaUserId).get();
         Survey survey = surveyService.findSurveyByName(surveyName);
-        return surveyResponseService.beginSurvey(user, survey);
+        return surveyResultService.beginSurvey(user, survey);
     }
 
-    public void saveResponse(String surveyResponseId, String questionId, String userId, String responseId)
+    public void saveResponse(String surveyResponseId, String questionId, String responseId)
     {
-        surveyResponseService.saveResponse(surveyResponseId, questionId, responseId);
+        surveyResultService.saveResponse(surveyResponseId, questionId, responseId);
     }
 
-    public List<QuestionResponse> getSurveyAnswers(String userId, String surveyName)
+    public void approveResponses(String surveyResultId)
     {
-        User user = null;
-        return surveyResponseService.getSurveyResponses(user, surveyName);
+        surveyResultService.approveResponses(surveyResultId);
     }
 
-//    public void saveResponse(String surveyResponseId, String questionId, String userId, String responseId)
+    public void rejectResponses(String surveyResultId)
+    {
+        surveyResultService.rejectResponses(surveyResultId);
+    }
+
+    public List<SurveyResult> getCompletedSurveys(String oktaUserId)
+    {
+        User user = userService.findByOktaUserId(oktaUserId).get();
+        return surveyResultService.getCompletedSurveys(user);
+    }
+
+    public List<QuestionResponse> getSurveyResponses(String surveyResultId)
+    {
+        return surveyResultService.getSurveyResponses(surveyResultId);
+    }
+
+//    public void saveResponse(String surveyResultId, String questionId, String userId, String responseId)
 //    {
 //        log.info("Trying to saveResponse(...) with:");
-//        log.info("surveyResponseId: " + surveyResponseId);
+//        log.info("surveyResultId: " + surveyResultId);
 //        log.info("questionId: " + questionId);
 //        log.info("userId: " + userId);
 //        log.info("responseId: " + responseId);
 //
-//        SurveyResponse surveyResponse = surveyResponseService.get(surveyResponseId).get();
+//        SurveyResponse surveyResponse = surveyResponseService.get(surveyResultId).get();
 //        int lastCompletedQuestion = surveyResponse.lastCompletedQuestion();
 //
 //        Response response = new Response();

@@ -1,6 +1,7 @@
-package fusion.playground.data.service;
+package fusion.playground.test;
 
 
+import fusion.playground.data.service.*;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,6 +3,7 @@ package fusion.playground.data.entity;
 import fusion.playground.data.AbstractEntity;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Accessors(fluent=true)
-@ToString
+@ToString(callSuper = true)
 public class Survey extends AbstractEntity
 {
     private @NonNull String name;

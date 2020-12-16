@@ -144,10 +144,10 @@ export class MainView extends LitElement {
     )}
             <vaadin-tab>...</vaadin-tab>
 
-            ${!this.isAuthenticated ? html`<vaadin-tab> <a href="login">Login</a> </vaadin-tab>` : html``}
-            ${!this.isAuthenticated ? html`<vaadin-tab> <a href="create-account">Create account</a> </vaadin-tab>` : html``}
-            ${this.isAuthenticated ? html`<vaadin-tab> <a href="user">User profile</a> </vaadin-tab>` : html``}
-            ${this.isAuthenticated ? html`<vaadin-tab> <a href="logout">Logout</a> </vaadin-tab>` : html``}
+            ${!this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('login')}">Login</a> </vaadin-tab>` : html``}
+            ${!this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('create-account')}">Create account</a> </vaadin-tab>` : html``}
+            ${this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('user')}">User profile</a> </vaadin-tab>` : html``}
+            ${this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('logout')}">Logout</a> </vaadin-tab>` : html``}
             
 
             ${this.debug ? html`
@@ -184,17 +184,16 @@ export class MainView extends LitElement {
     if (this.isAuthenticated || this.debug) {
       this.menuTabs = [
         {route: '', name: 'Introduction'},
-        {route: 'surveys', name: 'Take survey'},
-        // {route: 'questions', name: 'Questions'},
-        {route: 'responses', name: 'Survey responses'},
+        {route: 'select-survey', name: 'Select survey'},
+        {route: 'completed-surveys', name: 'Completed surveys'},
         {route: 'achievements', name: 'Achievements'},
+        // {route: 'add-survey', name: 'Add survey'},
       ];
     }
     else {
       this.menuTabs = [
         {route: '', name: 'Introduction'},
         // {route: 'login', name: 'Login'},
-        // {route: 'create-account', name: 'Create account'},
         {route: 'events', name: 'Events'},
         {route: 'people', name: 'People view'},
         {route: 'test/hello-world', name: 'Hello World'},

@@ -6,15 +6,16 @@ import '@vaadin/vaadin-date-picker';
 
 import { css, customElement, html, property, LitElement } from 'lit-element';
 import * as SurveyEndpoint from "../../generated/SurveyEndpoint";
+import * as ResponseEndpoint from "../../generated/ResponseEndpoint";
 
-@customElement('surveys-view')
-export class SurveysView extends LitElement {
+@customElement('select-survey-view')
+export class SelectSurveyView extends LitElement {
 
     @property ({type: Array})
-    availableSurveys: String[] = ['example', 'weather'];
+    availableSurveys: String[] = ['example', 'weather', 'maths_1'];
 
     @property ({type: String})
-    selectedSurvey: String = '';
+    selectedSurvey: string = '';
 
     static get styles() {
         return css`
@@ -53,24 +54,33 @@ export class SurveysView extends LitElement {
     async connectedCallback() {
         super.connectedCallback();
 
-        this.availableSurveys = await SurveyEndpoint.getAvailableSurveys();
+        this.availableSurveys = await SurveyEndpoint.getSurveyNames();
         console.log('received availableSurveys: '+JSON.stringify(this.availableSurveys));
     }
 
     surveySelected(e: CustomEvent) {
-        // It is absurd that the parent event does not show its available child elements.
-        // console.log('event: CustomEvent: ' + JSON.stringify(e));
-        // console.log('event.detail = ' + JSON.stringify(e.detail));
-        // console.log('event.detail.value = ' + e.detail.value);
-
+        // NB: It is absurd that the parent event does not show its available child elements.
         this.selectedSurvey = e.detail.value;
     }
 
-    submit() {
+    async submit() {
         console.log('departments:' + JSON.stringify(this.availableSurveys));
 
         // showNotification('Selected ' + this.selectedSurvey);
-        Router.go('/questions?surveyName='+this.selectedSurvey);
+        // localStorage.setItem('requestedSurvey', this.selectedSurvey);
+
+        let oktaTokenStorage = localStorage.getItem('okta-token-storage') || 'invalid';
+        let oktaUserId = JSON.parse(oktaTokenStorage).accessToken.claims.uid;
+        console.log('User is indentified as: '+oktaUserId);
+
+        let surveyResultId = await ResponseEndpoint.beginSurvey(this.selectedSurvey, oktaUserId);
+
+        // https://medium.com/@nixonaugustine5/localstorage-and-sessionstorage-in-angular-app-65cda19283a0
+        localStorage.setItem('surveyResultId', surveyResultId);
+        localStorage.setItem('surveyStatus', 'new');
+        console.log('wrote '+surveyResultId+' to localStorage.surveyResultId: ' + surveyResultId);
+
+        Router.go('/question');
     }
 }
 

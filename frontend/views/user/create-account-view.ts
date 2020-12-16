@@ -1,4 +1,4 @@
-import { unsafeCSS, customElement, html, LitElement, PropertyValues, query } from 'lit-element';
+import {customElement, html, LitElement, PropertyValues, css} from 'lit-element';
 
 import '@vaadin/vaadin-button/vaadin-button';
 import '@vaadin/vaadin-custom-field/vaadin-custom-field';
@@ -21,17 +21,16 @@ import * as UserEndpoint from '../../generated/UserEndpoint';
 import UserModel from '../../generated/fusion/playground/data/entity/UserModel';
 import { Binder, field } from '@vaadin/form';
 
-import { CSSModule } from '@vaadin/flow-frontend/css-utils';
-import styles from './create-account-client-view.css';
-
-@customElement('create-account-client-view')
-export class CreateAccountViewView extends LitElement {
-
-  @query('#countryCode')
-  private countryCode: any;
+@customElement('create-account-view')
+export class CreateAccountView extends LitElement {
 
   static get styles() {
-    return [CSSModule('lumo-typography'), unsafeCSS(styles)];
+    return css`
+      :host {
+        display: block;
+        padding: 1em;
+      }
+    `;
   }
 
   private binder = new Binder(this, UserModel);
@@ -39,36 +38,34 @@ export class CreateAccountViewView extends LitElement {
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
 
-    this.countryCode.items = ['+354', '+91', '+62', '+98', '+964', '+353', '+44', '+972', '+39', '+225'];
   }
 
   render() {
-    return html`
-      <h3>Create account (not implemented yet)</h3>
+    return html`        
+      <div>Welcome to Survey world...!</div></br>
+      <div>This is where you complete surveys and get recognition for it. </div><br/>
+      <div>Fill in this form to request an account. </div>
+      
       <vaadin-form-layout style="width: 100%;">
-        <vaadin-text-field label="First name" ...="${field(this.binder.model.firstName)}"></vaadin-text-field>
-        <vaadin-text-field label="Last name" ...="${field(this.binder.model.lastName)}"></vaadin-text-field>
         <vaadin-text-field label="Username" ...="${field(this.binder.model.username)}"></vaadin-text-field>
-        <vaadin-email-field label="Email address" ...="${field(this.binder.model.emailAddress)}"></vaadin-email-field>
-        <vaadin-password-field label="Password" ...="${field(this.binder.model.passwordHash)}"></vaadin-password-field>
-        <vaadin-text-field label="Question pointer" ...="${field(this.binder.model.questionPointer)}"></vaadin-text-field>
+        <vaadin-date-picker label="Date of birth" ...="${field(this.binder.model.dateOfBirth)}"></vaadin-date-picker>
+        <vaadin-email-field label="Email" ...="${field(this.binder.model.emailAddress)}"></vaadin-email-field>
+        <div>You will be able to set a password when you confirm you email address.</div>
       </vaadin-form-layout>
+      </br>
+      
       <vaadin-horizontal-layout class="button-layout" theme="spacing">
-        <vaadin-button theme="primary" @click="${this.save}">
-          Save
-        </vaadin-button>
-        <vaadin-button @click="${this.clearForm}">
-          Cancel
-        </vaadin-button>
+        <vaadin-button theme="primary" @click="${this.save}">Submit</vaadin-button>
+        <vaadin-button @click="${this.clearForm}">Clear</vaadin-button>
       </vaadin-horizontal-layout>
     `;
   }
 
   private async save() {
     try {
-      await this.binder.submitTo(UserEndpoint.update);
+      await this.binder.submitTo(UserEndpoint.createUser);
       this.clearForm();
-      showNotification('Person details stored.', { position: 'bottom-start' });
+        showNotification('Check your mail to confirm your account.', { position: 'bottom-start' });
     } catch (error) {
       if (error instanceof EndpointError) {
         showNotification('Server error. ' + error.message, { position: 'bottom-start' });

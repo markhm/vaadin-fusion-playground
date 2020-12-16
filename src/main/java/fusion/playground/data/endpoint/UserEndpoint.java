@@ -22,4 +22,13 @@ public class UserEndpoint extends CrudEndpoint<User, String>
         return service;
     }
 
+    public User update(User user) {
+
+        return getService().update(user);
+    }
+
+    public User createUser(User requestedUser)
+    {
+        return getService().createUser(requestedUser);
+    }
 }

@@ -1,4 +1,4 @@
-package fusion.playground.data.service;
+package fusion.playground.test;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;

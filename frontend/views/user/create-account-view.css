@@ -1,0 +1,10 @@
+create-account-view,
+#create-account-view {
+    display: block;
+    padding: 1em;
+}
+
+/*.button-layout {*/
+/*    margin-bottom: var(--lumo-space-l);*/
+/*    margin-top: var(--lumo-space-m);*/
+/*}*/

@@ -1,5 +1,6 @@
 package fusion.playground.data.generator;
 
+import fusion.playground.data.entity.FactualQuestion;
 import fusion.playground.data.entity.Survey;
 import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
@@ -45,23 +46,43 @@ public abstract class AbstractSurveyQuestionsLoader
     {
         Question question = new Question();
         question.text(questionText);
-        question.surveyName(survey.name());
+        // question.surveyName(survey.name());
         question.orderNumber(orderCounter);
 
         for (String possibleAnswerText: possibleAnswerTexts)
         {
             PossibleAnswer possibleAnswer = new PossibleAnswer(possibleAnswerText);
-            possibleAnswerRepository.save(possibleAnswer);
-//            log.info("PossibleAnswer added: "+ possibleAnswer.toString());
-//            log.info("with .id(): "+ possibleAnswer.id());
-            question.addPossibleAnswer(possibleAnswer);
+            question.addPossibleAnswer(possibleAnswerRepository.save(possibleAnswer));
         }
 
         questionRepository.save(question);
         survey.addQuestion(question);
 
-//        log.info("Question added: "+ question.toString());
-//        log.info("");
+        orderCounter++;
+    }
+
+    protected void addFactualQuestion(String questionText, int correctAnswer, String... possibleAnswerTexts)
+    {
+        FactualQuestion question = new FactualQuestion();
+        question.text(questionText);
+        // question.surveyName(survey.name());
+        question.orderNumber(orderCounter);
+
+        int counter = 1;
+        for (String possibleAnswerText: possibleAnswerTexts)
+        {
+            PossibleAnswer possibleAnswer = new PossibleAnswer(possibleAnswerText);
+            question.addPossibleAnswer(possibleAnswerRepository.save(possibleAnswer));
+
+            if (counter == correctAnswer)
+            {
+                question.correctAnswer(possibleAnswer);
+            }
+            counter++;
+        }
+
+        questionRepository.save(question);
+        survey.addQuestion(question);
 
         orderCounter++;
     }

@@ -67,32 +67,57 @@ const routes: Route[] = [
 				},
 			},
 			{
-				path: 'surveys',
-				component: 'surveys-view',
+				path: 'create-account',
+				component: 'create-account-view',
+				action: async() => { await import ('./views/user/create-account-view')}
+			},
+			{
+				path: 'select-survey',
+				component: 'select-survey-view',
 				action: async (context: Context, commands: Commands) => {
 					const authRedirect = await authGuard(context, commands);
 					if (authRedirect) return authRedirect;
-					await import('./views/survey/surveys-view');
+					await import('./views/survey/select-survey-view');
 					return undefined;
 				},
 			},
 			{
-				path: 'questions',
-				component: 'questions-view',
+				path: 'add-survey',
+				component: 'add-survey-view',
 				action: async (context: Context, commands: Commands) => {
 					const authRedirect = await authGuard(context, commands);
 					if (authRedirect) return authRedirect;
-					await import('./views/question/questions-view');
+					await import('./views/survey/add-survey-view');
 					return undefined;
 				},
 			},
 			{
-				path: 'responses',
-				component: 'responses-view',
+				path: 'question',
+				component: 'question-view',
 				action: async (context: Context, commands: Commands) => {
 					const authRedirect = await authGuard(context, commands);
 					if (authRedirect) return authRedirect;
-					await import('./views/responses/responses-view');
+					await import('./views/question/question-view');
+					return undefined;
+				},
+			},
+			{
+				path: 'confirm-responses',
+				component: 'confirm-responses-view',
+				action: async (context: Context, commands: Commands) => {
+					const authRedirect = await authGuard(context, commands);
+					if (authRedirect) return authRedirect;
+					await import('./views/responses/confirm-responses-view');
+					return undefined;
+				},
+			},
+			{
+				path: 'completed-surveys',
+				component: 'completed-surveys-view',
+				action: async (context: Context, commands: Commands) => {
+					const authRedirect = await authGuard(context, commands);
+					if (authRedirect) return authRedirect;
+					await import('./views/survey/completed-surveys-view');
 					return undefined;
 				},
 			},

@@ -12,18 +12,23 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent=true)
-@ToString
+@ToString(callSuper = true)
 public class Question extends AbstractEntity
 {
     private static final long serialVersionUID = 1L;
 
-    private String surveyName;
     private Integer orderNumber;
 
-    private String text;
+    /* Description of the question */
+    protected String text;
 
-    private List<PossibleAnswer> possibleAnswers = new ArrayList<>();
+    /* Possible answers to the question */
+    protected List<PossibleAnswer> possibleAnswers = new ArrayList<>();
 
+    /**
+     * Add a possible answer to the question.
+    * @param possibleAnswer one of the possible multiple-choice answers
+    * */
     public void addPossibleAnswer(PossibleAnswer possibleAnswer)
     {
         if (!possibleAnswers.contains(possibleAnswer))

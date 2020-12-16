@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,10 +70,18 @@ public class DatabaseInitializer
      */
     private static void loadUsers(UserRepository userRepository)
     {
-        User regularUser = new User("John", "Doe", "testuser",
-                "testuser@test.dk", "something");
-        User adminUser = new User("Admin", "Istrator", "admin",
-                "admin@test.dk", "somethingElse");
+        User regularUser = new User();
+        regularUser.username("testuser");
+        regularUser.emailAddress("testuser@test.com");
+        regularUser.emailConfirmed(true);
+        regularUser.dateOfBirth(LocalDate.now().minusYears(20));
+        regularUser.oktaUserId("00u28osriV7V5f7pM5d6");
+
+        User adminUser = new User();
+        adminUser.username("admin");
+        adminUser.emailAddress("admin@test.com");
+        adminUser.emailConfirmed(true);
+        adminUser.dateOfBirth(LocalDate.now().minusYears(40));
 
         List<User> userList = new ArrayList();
         userList.add(regularUser);
@@ -95,6 +104,11 @@ public class DatabaseInitializer
 
         weatherSurveyInitializer.loadQuestions();
         weatherSurveyInitializer.saveSurvey();
+
+        Maths_1_SurveyInitializer maths_1_surveyInitializer = new Maths_1_SurveyInitializer(surveyRepository,
+                questionRepository, possibleAnswerRepository);
+        maths_1_surveyInitializer.loadQuestions();
+        maths_1_surveyInitializer.saveSurvey();
     }
 
     private static void printLogStatement(String statement)

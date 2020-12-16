@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent=true)
-@ToString
+@ToString(callSuper = true)
 public class Person extends AbstractEntity
 {
   private String firstName;

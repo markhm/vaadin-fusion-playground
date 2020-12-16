@@ -29,7 +29,7 @@ public class WeatherSurveyInitializer extends AbstractSurveyQuestionsLoader
         addQuestion("Is it a freezing today?",
                 "Yes", "No");
 
-        addQuestion("Are there any clouds??",
+        addQuestion("Are there any clouds?",
                 "Yes", "No");
 
     }

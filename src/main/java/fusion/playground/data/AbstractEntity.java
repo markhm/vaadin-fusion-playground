@@ -1,9 +1,6 @@
 package fusion.playground.data;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 
@@ -11,6 +8,7 @@ import org.springframework.data.annotation.Id;
 @RequiredArgsConstructor
 @Accessors(fluent=true)
 @EqualsAndHashCode
+@ToString
 public class AbstractEntity
 {
     @Id

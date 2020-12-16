@@ -9,13 +9,14 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent=true)
-@ToString
+@ToString(callSuper = true)
 public class Response extends AbstractEntity
 {
     private User user;
-
     private Question question;
-    private String surveyName;
 
+    /** This should probably be the id of the possibleAnswer */
     private String response;
+
+    private boolean correct;
 }

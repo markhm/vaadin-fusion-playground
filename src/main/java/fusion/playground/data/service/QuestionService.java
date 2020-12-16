@@ -15,13 +15,14 @@ import java.util.Optional;
 @Service
 public class QuestionService extends MongoCrudService<Question, String>
 {
-    @Autowired
-    private final QuestionRepository questionRepository;
+    private QuestionRepository questionRepository;
     // private SurveyService surveyService = null;
 
+    @Autowired
     public QuestionService(QuestionRepository questionRepository)
     {
         this.questionRepository = questionRepository;
+        // this.surveyService = surveyService;
     }
 
     @Override
@@ -39,9 +40,9 @@ public class QuestionService extends MongoCrudService<Question, String>
 //            @CacheEvict(value="question", allEntries=true),
 //            @CacheEvict(value="questions", allEntries=true),
 //            @CacheEvict(value="questions_by_category", allEntries=true)})
-    public Question save(Question question)
-    {
-        return this.questionRepository.save(question);
-    }
+//    public Question save(Question question)
+//    {
+//        return this.questionRepository.save(question);
+//    }
 
 }

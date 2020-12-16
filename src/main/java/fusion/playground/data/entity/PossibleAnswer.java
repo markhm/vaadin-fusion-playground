@@ -9,8 +9,13 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent=true)
-@ToString
+@ToString(callSuper = true)
 public class PossibleAnswer extends AbstractEntity
 {
+    // Not sure how much this still adds.
+    public static final PossibleAnswer YES = new PossibleAnswer("Yes");
+    public static final PossibleAnswer NO = new PossibleAnswer("No");
+    public static final PossibleAnswer MAYBE = new PossibleAnswer("Maybe");
+
     private @NonNull String text;
 }
