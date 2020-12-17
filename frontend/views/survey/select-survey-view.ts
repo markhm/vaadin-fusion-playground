@@ -5,6 +5,9 @@ import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-select'
 import '@vaadin/vaadin-date-picker';
 
+import '../../demos/combo-box-renderer-demo';
+import '../../components/select-survey-combo-box';
+
 import * as SurveyEndpoint from "../../generated/SurveyEndpoint";
 import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
 import {EndpointError} from '@vaadin/flow-frontend/Connect';
@@ -14,8 +17,8 @@ import {Router} from "@vaadin/router";
 @customElement('select-survey-view')
 export class SelectSurveyView extends LitElement {
 
-    @internalProperty ()
-    private categories: string[] = ['example'];
+    // @internalProperty ()
+    // private categories: string[] = ['example'];
 
     @internalProperty ()
     private names: string[] = ['weather', 'maths', 'example'];
@@ -39,10 +42,18 @@ export class SelectSurveyView extends LitElement {
     }
 
     render() {
-        let categoriesItems = this.categories.map(item => html`<vaadin-item>${item}</vaadin-item>`);
-        let namesItems = this.names.map(item => html`<vaadin-item>${item}</vaadin-item>`);
+        // let categoriesItems = this.categories.map(item => html`<vaadin-item>${item}</vaadin-item>`);
+        // let namesItems = this.names.map(item => html`<vaadin-item>${item}</vaadin-item>`);
 
-        console.log('namesItems: '+ JSON.stringify(namesItems));
+        type Survey = { category: string; name: string };
+        let sampleSurveys : Survey[] = [
+            { category: 'example', name: 'aap' },
+            { category: 'example', name: 'noot' },
+            { category: 'example', name: 'mies' }
+        ];
+        // console.log('samplesSurveys: '+sampleSurveys);
+
+        // console.log('namesItems: '+ JSON.stringify(namesItems));
 
         return html`                
             <h3>Available surveys</h3>
@@ -50,23 +61,10 @@ export class SelectSurveyView extends LitElement {
 
             <div class="form">
                 <vaadin-horizontal-layout>
-                    <vaadin-select ?disabled=${categoriesItems.length <= 1} label='Category' 
-                                   @value-changed='() => ${this.categorySelected}' 
-                                   placeholder='none selected' value='example'>
-                        <template>
-                            <vaadin-list-box>
-                               ${categoriesItems}
-                            </vaadin-list-box>
-                        </template>
-                    </vaadin-select>
                     
-                    <vaadin-select label='Survey name' @value-changed='() => ${this.nameSelected}' placeholder='none selected'>
-                        <template>
-                            <vaadin-list-box>
-                                ${namesItems}
-                            </vaadin-list-box>
-                        </template>
-                    </vaadin-select>
+                    <select-survey-combo-box label="Survey name" value="noot"
+                            .surveys="${sampleSurveys}" @value-changed="${this.nameSelected}"/>
+
                 </vaadin-horizontal-layout>
                 
                 ${this.selectedCategory ? html`<br/><br/>You selected category '${this.selectedCategory}'.` : html``}
@@ -78,7 +76,24 @@ export class SelectSurveyView extends LitElement {
     `;
     }
 
-    async connectedCallback() {
+// <select-category-combo-box label="Category" value="example"
+//         .surveys="${sampleSurveys}" @value-changed="${this.categorySelected}"/>
+
+        // <vaadin-select ?disabled=${categoriesItems.length <= 1} label='Category'
+// @value-changed='${this.categorySelected}'
+//     placeholder='none selected' value='example'>
+//         <template>
+//             <vaadin-list-box>
+//         ${categoriesItems}
+//         </vaadin-list-box>
+//         </template>
+//         </vaadin-select>
+
+// <vaadin-select label='Survey name' .items=${this.names}
+//         @value-changed='${this.nameSelected}' placeholder='none selected'>
+
+
+        async connectedCallback() {
         super.connectedCallback();
 
         // moved initialization to firstUpdated();
@@ -151,6 +166,5 @@ export class SelectSurveyView extends LitElement {
             }
         }
     }
-
 }
 
