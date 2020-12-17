@@ -17,7 +17,8 @@ export class SelectSurveyView extends LitElement {
     @internalProperty ()
     private categories: string[] = ['example'];
 
-    @internalProperty () private names: string[] = ['weather', 'maths', 'example'];
+    @internalProperty ()
+    private names: string[] = ['weather', 'maths', 'example'];
 
     @internalProperty ()
     selectedCategory: string = 'example';
