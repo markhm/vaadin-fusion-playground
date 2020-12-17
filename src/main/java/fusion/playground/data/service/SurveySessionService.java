@@ -14,9 +14,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class SurveyResultService extends MongoCrudService<SurveyResult, String>
+public class SurveySessionService extends MongoCrudService<SurveyResult, String>
 {
-    private static Log log = LogFactory.getLog(SurveyResultService.class);
+    private static Log log = LogFactory.getLog(SurveySessionService.class);
 
     private UserService userService;
     private QuestionService questionService;
@@ -31,9 +31,9 @@ public class SurveyResultService extends MongoCrudService<SurveyResult, String>
     }
 
     @Autowired
-    public SurveyResultService(UserService userService, QuestionService questionService,
-                               SurveyResultRepository surveyResultRepository,
-                               PossibleAnswerService possibleAnswerService, ResponseService responseService)
+    public SurveySessionService(UserService userService, QuestionService questionService,
+                                SurveyResultRepository surveyResultRepository,
+                                PossibleAnswerService possibleAnswerService, ResponseService responseService)
     {
         this.userService = userService;
         this.questionService = questionService;

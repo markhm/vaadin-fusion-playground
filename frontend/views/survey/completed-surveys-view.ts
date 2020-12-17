@@ -6,7 +6,8 @@ import '@vaadin/vaadin-grid';
 
 import { css, customElement, html, property, LitElement } from 'lit-element';
 import SurveyResult from "../../generated/fusion/playground/data/entity/SurveyResult";
-import * as SurveyResultEndpoint from "../../generated/SurveyResultEndpoint";
+import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
+import {Router} from "@vaadin/router";
 
 @customElement('completed-surveys-view')
 export class CompletedSurveysView extends LitElement {
@@ -60,10 +61,12 @@ export class CompletedSurveysView extends LitElement {
         super.connectedCallback();
 
         let oktaTokenStorage = localStorage.getItem('okta-token-storage') || 'invalid';
+        if (oktaTokenStorage === 'invalid') Router.go('/logout');
+
         let oktaUserId = JSON.parse(oktaTokenStorage).accessToken.claims.uid;
 
-        this.completedSurveys = await SurveyResultEndpoint.getCompletedSurveys(oktaUserId);
-        // console.log('received availableSurveys: '+JSON.stringify(this.availableSurveys));
+        this.completedSurveys = await SurveySessionEndpoint.getCompletedSurveys(oktaUserId);
+        // console.log('received categories: '+JSON.stringify(this.categories));
     }
 }
 

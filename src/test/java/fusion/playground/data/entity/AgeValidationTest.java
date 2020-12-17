@@ -14,10 +14,11 @@ import java.time.LocalDate;
 import java.util.Set;
 
 // https://farenda.com/java/bean-validation-unit-testing/
+// https://dzone.com/articles/create-your-own-constraint-with-bean-validation-20
 
-public class UserTest
+public class AgeValidationTest
 {
-    private static Log log = LogFactory.getLog(UserTest.class);
+    private static Log log = LogFactory.getLog(AgeValidationTest.class);
 
     private static ValidatorFactory validatorFactory;
     private static Validator validator;

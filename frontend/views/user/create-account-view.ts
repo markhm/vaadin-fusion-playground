@@ -55,7 +55,7 @@ export class CreateAccountView extends LitElement {
       </br>
       
       <vaadin-horizontal-layout class="button-layout" theme="spacing">
-        <vaadin-button theme="primary" @click="${this.save}">Submit</vaadin-button>
+        <vaadin-button theme="primary" ?disabled=${this.binder.invalid || this.binder.submitting} @click="${this.save}">Submit</vaadin-button>
         <vaadin-button @click="${this.clearForm}">Clear</vaadin-button>
       </vaadin-horizontal-layout>
     `;

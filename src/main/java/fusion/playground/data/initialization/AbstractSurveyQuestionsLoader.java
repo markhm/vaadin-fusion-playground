@@ -1,11 +1,8 @@
-package fusion.playground.data.generator;
+package fusion.playground.data.initialization;
 
-import fusion.playground.data.entity.FactualQuestion;
-import fusion.playground.data.entity.Survey;
+import fusion.playground.data.entity.*;
 import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
-import fusion.playground.data.entity.PossibleAnswer;
-import fusion.playground.data.entity.Question;
 import fusion.playground.data.service.SurveyRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,7 +11,6 @@ public abstract class AbstractSurveyQuestionsLoader
 {
     private static Log log = LogFactory.getLog(AbstractSurveyQuestionsLoader.class);
 
-    protected String category;
     private int orderCounter = 1;
 
     protected SurveyRepository surveyRepository;
@@ -32,9 +28,17 @@ public abstract class AbstractSurveyQuestionsLoader
         this.possibleAnswerRepository = possibleAnswerRepository;
     }
 
-    public void createSurvey(String name, String category)
+    public abstract void loadQuestions();
+
+    public void createSurvey(SurveyCategory category, String name)
     {
-        survey = new Survey(name, category);
+        survey = new Survey(category, name);
+    }
+
+    public void createSurvey(SurveyCategory category, String name, String title)
+    {
+        survey = new Survey(category, name);
+        survey.title(title);
     }
 
     public void saveSurvey()
@@ -46,7 +50,6 @@ public abstract class AbstractSurveyQuestionsLoader
     {
         Question question = new Question();
         question.text(questionText);
-        // question.surveyName(survey.name());
         question.orderNumber(orderCounter);
 
         for (String possibleAnswerText: possibleAnswerTexts)
@@ -67,7 +70,6 @@ public abstract class AbstractSurveyQuestionsLoader
 
         FactualQuestion question = new FactualQuestion();
         question.text(questionText);
-        // question.surveyName(survey.name());
         question.orderNumber(orderCounter);
 
         int counter = 1;
@@ -88,6 +90,4 @@ public abstract class AbstractSurveyQuestionsLoader
 
         orderCounter++;
     }
-
-    public abstract void loadQuestions();
 }

@@ -1,7 +1,7 @@
 import '@vaadin/vaadin-button';
 import '@vaadin/vaadin-text-field';
 import {css, customElement, html, LitElement, property} from 'lit-element';
-import * as SurveyResultEndpoint from "../../generated/SurveyResultEndpoint";
+import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
 import QuestionResponse from "../../generated/fusion/playground/data/entity/QuestionResponse";
 import SurveyResult from "../../generated/fusion/playground/data/entity/SurveyResult";
 
@@ -34,7 +34,7 @@ export class ConfirmResponsesView extends LitElement {
 
     return html`       
       <h3>Survey score</h3>
-      <div>Your results were stored under: ${this.surveyResultId}</div><br/>
+      <div>Your results were stored under: ${this.surveyResultId}</div>.<br/>
       
       ${this.questionResponses ? this.questionResponses.map(questionResponse =>
           html`
@@ -59,8 +59,8 @@ export class ConfirmResponsesView extends LitElement {
     super.connectedCallback();
 
     this.surveyResultId = localStorage.getItem('surveyResultId') || 'unavailable';
-    this.surveyResult = await SurveyResultEndpoint.get(this.surveyResultId);
-    this.questionResponses = await SurveyResultEndpoint.getSurveyResponses(this.surveyResultId);
+    this.surveyResult = await SurveySessionEndpoint.get(this.surveyResultId);
+    this.questionResponses = await SurveySessionEndpoint.getSurveyResponses(this.surveyResultId);
   }
 
 }

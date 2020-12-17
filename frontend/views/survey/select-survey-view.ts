@@ -1,21 +1,32 @@
-import {Router} from "@vaadin/router";
+import {css, customElement, html, internalProperty, LitElement} from 'lit-element';
+
 import '@vaadin/vaadin-button';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-select'
 import '@vaadin/vaadin-date-picker';
 
-import { css, customElement, html, property, LitElement } from 'lit-element';
 import * as SurveyEndpoint from "../../generated/SurveyEndpoint";
-import * as SurveyResultEndpoint from "../../generated/SurveyResultEndpoint";
+import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
+import {EndpointError} from '@vaadin/flow-frontend/Connect';
+import {showNotification} from '@vaadin/flow-frontend/a-notification';
+import {Router} from "@vaadin/router";
 
 @customElement('select-survey-view')
 export class SelectSurveyView extends LitElement {
 
-    @property ({type: Array})
-    availableSurveys: String[] = ['example', 'weather', 'maths_1'];
+    @internalProperty ()
+    private categories: string[] = ['example'];
 
-    @property ({type: String})
-    selectedSurvey: string = '';
+    @internalProperty () private names: string[] = ['weather', 'maths', 'example'];
+
+    @internalProperty ()
+    selectedCategory: string = 'example';
+
+    @internalProperty ()
+    private selectedName: string = '';
+
+    @internalProperty ()
+    private surveyResultId: string = '';
 
     static get styles() {
         return css`
@@ -28,59 +39,130 @@ export class SelectSurveyView extends LitElement {
 
     render() {
 
-        let data = this.availableSurveys;
-        // console.log('Now is the data: '+JSON.stringify(data));
+        let categoriesItems = this.categories.map(item => html`<vaadin-item>${item}</vaadin-item>`);
+        let namesItems = this.names.map(item => html`<vaadin-item>${item}</vaadin-item>`);
 
-        return html`
+        console.log('namesItems: '+ JSON.stringify(namesItems));
+
+        return html`                
             <h3>Available surveys</h3>
-            <div>Choose a survey from the following list.</div>
-            <vaadin-select id='select' label='Surveys' @value-changed='${this.surveySelected}' laceholder='none selected'>
-                <template>
-                    <vaadin-list-box>
-                        ${data.map(dataElement => html`
-                            <vaadin-item>${dataElement}</vaadin-item>
-                        `)}
-                    </vaadin-list-box>
-                </template>
-            </vaadin-select>
-            
-            ${this.selectedSurvey ? html`<br/><br/>You selected survey '${this.selectedSurvey}'.` : html``}
-            
-            <br/><br/>
-            <vaadin-button @click="${this.submit}">Start survey</vaadin-button>
+            <div>Choose a survey.</div>
+
+            <div class="form">
+                <vaadin-horizontal-layout>
+                    <vaadin-select label='Category' 
+                                   @value-changed='() => ${this.categorySelected}' 
+                                   placeholder='none selected' value='example'>
+                        <template>
+                            <vaadin-list-box>
+                               ${categoriesItems}
+                            </vaadin-list-box>
+                        </template>
+                    </vaadin-select>
+                    
+                    <vaadin-select label='Survey name' @value-changed='() => ${this.nameSelected}' placeholder='none selected'>
+                        <template>
+                            <vaadin-list-box>
+                                ${namesItems}
+                            </vaadin-list-box>
+                        </template>
+                    </vaadin-select>
+                </vaadin-horizontal-layout>
+                
+                ${this.selectedCategory ? html`<br/><br/>You selected category '${this.selectedCategory}'.` : html``}
+                ${this.selectedName ? html`<br/>You selected survey '${this.selectedName}'.` : html``}
+                
+                <br/><br/>
+                <vaadin-button ?disabled=${this.selectedName === ''} @click='() => ${this.startSelectedSurvey}'>Start survey</vaadin-button>
+            </div>
     `;
     }
+
+    // ?disabled=${categoriesItems.length <= 1}
+    // ?disabled=${this.names.length === 0}
+// <template>
+// <vaadin-list-box>
+//     ${namesItems}
+// </vaadin-list-box>
+// </template>
 
     async connectedCallback() {
         super.connectedCallback();
 
-        this.availableSurveys = await SurveyEndpoint.getSurveyNames();
-        console.log('received availableSurveys: '+JSON.stringify(this.availableSurveys));
+        // await this.getAvailableSurveys();
+        // console.log('received names: '+JSON.stringify(this.names));
+        this.requestUpdate();
     }
 
-    surveySelected(e: CustomEvent) {
-        // NB: It is absurd that the parent event does not show its available child elements.
-        this.selectedSurvey = e.detail.value;
+    async firstUpdated() {
+
+        console.log('firstUpdated() called');
+        this.names = await this.getAvailableSurveys() || ['one', 'two', 'and another one'];
+
+        console.log('received names: ' + this.names);
+
+        this.requestUpdate();
     }
 
-    async submit() {
-        console.log('departments:' + JSON.stringify(this.availableSurveys));
 
-        // showNotification('Selected ' + this.selectedSurvey);
-        // localStorage.setItem('requestedSurvey', this.selectedSurvey);
+    categorySelected(e: CustomEvent) {
+        this.selectedCategory = e.detail.value;
+        console.log('selected category: '+this.selectedCategory);
+        this.requestUpdate();
+    }
 
-        let oktaTokenStorage = localStorage.getItem('okta-token-storage') || 'invalid';
-        let oktaUserId = JSON.parse(oktaTokenStorage).accessToken.claims.uid;
-        console.log('User is indentified as: '+oktaUserId);
+    nameSelected(e: CustomEvent) {
+        this.selectedName = e.detail.value;
+        console.log('selected name: '+this.selectedName);
+        this.requestUpdate();
+    }
 
-        let surveyResultId = await SurveyResultEndpoint.beginSurvey(this.selectedSurvey, oktaUserId);
+    async startSelectedSurvey() {
 
-        // https://medium.com/@nixonaugustine5/localstorage-and-sessionstorage-in-angular-app-65cda19283a0
-        localStorage.setItem('surveyResultId', surveyResultId);
-        localStorage.setItem('surveyStatus', 'new');
-        console.log('wrote '+surveyResultId+' to localStorage.surveyResultId: ' + surveyResultId);
+        await this.initializeSurvey();
 
         Router.go('/question');
     }
+
+    async initializeSurvey() {
+
+        try {
+            // retrieve the oktaUserId to initialize survey for this user
+            let oktaTokenStorage = localStorage.getItem('okta-token-storage') || 'invalid';
+            let oktaUserId = JSON.parse(oktaTokenStorage).accessToken.claims.uid;
+
+            console.log('Initializing survey ' + this.selectedName + ' for user with oktaUserId: '+oktaUserId);
+            this.surveyResultId = await SurveySessionEndpoint.beginSurvey(this.selectedName, oktaUserId);
+
+            // https://medium.com/@nixonaugustine5/localstorage-and-sessionstorage-in-angular-app-65cda19283a0
+            localStorage.setItem('surveyResultId', this.surveyResultId);
+            console.log('wrote ' + this.surveyResultId + ' to localStorage.surveyResultId: ' + this.surveyResultId);
+
+        } catch (error) {
+            if (error instanceof EndpointError) {
+                showNotification('Server error. ' + error.message, { position: 'bottom-start' });
+            } else {
+                throw error;
+            }
+        }
+    }
+
+    async getAvailableSurveys() {
+        try {
+            let result = await SurveyEndpoint.getAvailableSurveys();
+            return result;
+
+        } catch (error) {
+            showNotification('Some error happened. ' + error.message, { position: 'bottom-start' });
+
+            if (error instanceof EndpointError) {
+                showNotification('Server error. ' + error.message, { position: 'bottom-start' });
+            } else {
+                throw error;
+            }
+        }
+        return ['one', 'two', 'and another one'];
+    }
+
 }
 

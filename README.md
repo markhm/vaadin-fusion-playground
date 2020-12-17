@@ -38,16 +38,22 @@ Developed on macOS (11.0.1)
 ---
 ### Known issues
 - **Blocking:** How should a server-side Flow view be marked, so it is allowed according to (clients-side) security...? Currently, we see a 403.
-- **Blocking:** On the surveys-view page, the list of available surveys is correctly retrieved from the endpoint, but not processed correctly (Error. The client-side default ones had to be set.
+- **Blocking:** On the surveys-view page, the list of available surveys is correctly retrieved from the endpoint, but not processed correctly (Error. The client-side default ones had to be set.)
 - **Inconvenient:** Connection fails for VaadinDevmodeGizmo.js?10c7:944 WebSocket connection to 'wss://vaadin-fusion-playground:35729/' failed: Error in connection establishment: net::ERR_CONNECTION_CLOSED
 - **Minor:** When surrounding the Avatar image in `main-view.ts` with a link, it is no longer outlined to the right. Why...?
 
 ### Questions 
-- How to access and modify elements in the DOM, e.g. a <vaadin-button>, to set it from disabled to enabled...?
-  How to store or retrieve an objects on the client side in the session or local storage...?
-  
+- How to access and modify elements in the DOM, e.g. a <vaadin-button>, to set it from disabled to enabled...? See [here](https://medium.com/@nixonaugustine5/localstorage-and-sessionstorage-in-angular-app-65cda19283a0).
+
+
+### Answers
+- How to store or retrieve an objects on the client side in the session or local storage...?
+
 ### What we learned / discovered
 - It seems methods in an Endpoint cannot be overloaded. Bug of Feature...?
-- Accessing an url parameter, see [here](https://www.sitepoint.com/get-url-parameters-with-javascript/).  
-- ~~The @value-changed event of a <vaadin-select> box does nót contain the new value that was selected. The event looks like this: valueChanged: CustomEvent {"isTrusted":false}. How can we access/use the new value...?~~ - It turns out the `event.detail.value` contains the value, even though the (grandparent) doesn't.
+- The @value-changed event of a <vaadin-select> box does not seem contain the new value that was selected. It can be retrieved from `event.detail.value`. NB: the (grandparent) doesn't show it is available.  
+- Accessing an url parameter is explained [here](https://www.sitepoint.com/get-url-parameters-with-javascript/).  
 - There is no client-side API to create a user in Okta. A new user should be created with the server-side API.
+
+### Useful resources
+- [Creating clients-side forms - Binder tutorial](https://vaadin.com/docs-beta/latest/fusion/forms/tutorial-binder/)

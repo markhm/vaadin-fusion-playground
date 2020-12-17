@@ -1,13 +1,13 @@
-package fusion.playground.data.generator;
+package fusion.playground.data.initialization;
 
-import fusion.playground.data.entity.QuestionCategory;
+import fusion.playground.data.entity.SurveyCategory;
 import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
 import fusion.playground.data.service.SurveyRepository;
 
 public class Maths_1_SurveyInitializer extends AbstractSurveyQuestionsLoader
 {
-    private static QuestionCategory CATEGORY_EXAMPLE = QuestionCategory.example;
+    private static SurveyCategory CATEGORY_EXAMPLE = SurveyCategory.example;
 
     public Maths_1_SurveyInitializer(SurveyRepository surveyRepository,
                                      QuestionRepository questionRepository,
@@ -15,7 +15,7 @@ public class Maths_1_SurveyInitializer extends AbstractSurveyQuestionsLoader
     {
         super(surveyRepository, questionRepository, possibleAnswerRepository);
 
-        createSurvey("maths_1", CATEGORY_EXAMPLE.name());
+        createSurvey(SurveyCategory.example, "maths");
     }
 
     public void loadQuestions()

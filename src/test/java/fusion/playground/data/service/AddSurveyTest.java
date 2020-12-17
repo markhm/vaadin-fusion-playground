@@ -1,9 +1,6 @@
 package fusion.playground.data.service;
 
-import fusion.playground.data.entity.PossibleAnswer;
-import fusion.playground.data.entity.Question;
-import fusion.playground.data.entity.Survey;
-import fusion.playground.data.entity.User;
+import fusion.playground.data.entity.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
@@ -23,7 +20,7 @@ public class AddSurveyTest
     private SurveyService surveyService;
 
     @Autowired
-    private SurveyResultService surveyResultService;
+    private SurveySessionService surveySessionService;
 
     @Autowired
     private ResponseService responseService;
@@ -48,15 +45,14 @@ public class AddSurveyTest
     @Test
     public void addSurvey()
     {
-        Survey survey = surveyService.update(new Survey("test", "test_category"));
+        Survey newSurvey = surveyService.update(new Survey(SurveyCategory.example, "test"));
 
-        addQuestion(survey, "This is the first question. What is your answer...?", "Yes", "No");
+        addQuestion(newSurvey, "This is the first question. What is your answer...?", "Yes", "No");
+        addQuestion(newSurvey, "This is the second question. Are you happy...?", "Yes", "No");
+        addQuestion(newSurvey, "Are you a desert person or a soup person...?", "Soup", "Desert");
 
-        addQuestion(survey, "This is the second question. Are you happy...?", "Yes", "No");
-
-        addQuestion(survey, "Are you a desert person or a soup person...?", "Soup", "Desert");
-
-        log.info("Survey: " + survey);
+        Survey survey = surveyService.findSurveyByName("test");
+        log.info("Found survey: "+survey);
     }
 
     private void addQuestion(Survey survey, String questionText, String... possibleAnswerTexts)

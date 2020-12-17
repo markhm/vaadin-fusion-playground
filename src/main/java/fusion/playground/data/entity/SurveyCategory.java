@@ -1,6 +1,6 @@
 package fusion.playground.data.entity;
 
-public enum QuestionCategory
+public enum SurveyCategory
 {
     example,
     daily,

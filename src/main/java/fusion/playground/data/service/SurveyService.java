@@ -12,21 +12,24 @@ import org.vaadin.artur.helpers.MongoCrudService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * SurveyService contains the stateless services, independent of a user session.
+ */
 @Service
 public class SurveyService extends MongoCrudService<Survey, String>
 {
     private static Log log = LogFactory.getLog(SurveyService.class);
 
     private SurveyRepository surveyRepository;
-    private SurveyResultService surveyResultService;
+    private SurveySessionService surveySessionService;
 
     private int questionPointer = 1;
 
     public SurveyService(@Autowired SurveyRepository surveyRepository,
-                         @Autowired SurveyResultService surveyResultService)
+                         @Autowired SurveySessionService surveySessionService)
     {
         this.surveyRepository = surveyRepository;
-        this.surveyResultService = surveyResultService;
+        this.surveySessionService = surveySessionService;
     }
 
     @Override
@@ -64,11 +67,11 @@ public class SurveyService extends MongoCrudService<Survey, String>
         return this.findAllBySurveyName(surveyName).size();
     }
 
-    public Question getNextQuestion(String surveyResponseId)
+    public Question getNextQuestion(String surveyResultId)
     {
         Question result = null;
 
-        SurveyResult surveyResult = surveyResultService.get(surveyResponseId).get();
+        SurveyResult surveyResult = surveySessionService.get(surveyResultId).get();
         if (surveyResult.isComplete())
         {
             result = new Question();
@@ -124,6 +127,7 @@ public class SurveyService extends MongoCrudService<Survey, String>
 
     private Question getQuestionFromSurvey(Survey survey, int orderNumber)
     {
+        log.info("Retrieving question #" + orderNumber + "from survey "+survey.toString());
         return survey.questions().get(orderNumber - 1);
     }
 

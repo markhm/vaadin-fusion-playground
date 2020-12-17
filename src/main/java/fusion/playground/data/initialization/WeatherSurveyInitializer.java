@@ -1,13 +1,13 @@
-package fusion.playground.data.generator;
+package fusion.playground.data.initialization;
 
-import fusion.playground.data.entity.QuestionCategory;
+import fusion.playground.data.entity.SurveyCategory;
 import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
 import fusion.playground.data.service.SurveyRepository;
 
 public class WeatherSurveyInitializer extends AbstractSurveyQuestionsLoader
 {
-    private static QuestionCategory CATEGORY_EXAMPLE = QuestionCategory.example;
+    private static SurveyCategory CATEGORY_EXAMPLE = SurveyCategory.example;
 
     public WeatherSurveyInitializer(SurveyRepository surveyRepository,
                                     QuestionRepository questionRepository,
@@ -15,7 +15,7 @@ public class WeatherSurveyInitializer extends AbstractSurveyQuestionsLoader
     {
         super(surveyRepository, questionRepository, possibleAnswerRepository);
 
-        createSurvey("weather", CATEGORY_EXAMPLE.name());
+        createSurvey(SurveyCategory.example, "weather");
     }
 
     public void loadQuestions()

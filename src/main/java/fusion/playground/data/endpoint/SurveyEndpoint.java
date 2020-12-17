@@ -3,10 +3,9 @@ package fusion.playground.data.endpoint;
 import com.vaadin.flow.server.connect.Endpoint;
 import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import fusion.playground.data.CrudEndpoint;
-import fusion.playground.data.entity.Question;
 import fusion.playground.data.entity.Survey;
 import fusion.playground.data.entity.SurveyResult;
-import fusion.playground.data.service.SurveyResultService;
+import fusion.playground.data.service.SurveySessionService;
 import fusion.playground.data.service.SurveyService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,13 +20,13 @@ public class SurveyEndpoint extends CrudEndpoint<Survey, String>
     private static Log log = LogFactory.getLog(SurveyEndpoint.class);
 
     private SurveyService surveyService;
-    private SurveyResultService surveyResultService;
+    private SurveySessionService surveySessionService;
 
     @Autowired
-    public SurveyEndpoint(SurveyService surveyService, SurveyResultService surveyResultService)
+    public SurveyEndpoint(SurveyService surveyService, SurveySessionService surveySessionService)
     {
         this.surveyService = surveyService;
-        this.surveyResultService = surveyResultService;
+        this.surveySessionService = surveySessionService;
     }
 
     public SurveyService getService()
@@ -35,32 +34,21 @@ public class SurveyEndpoint extends CrudEndpoint<Survey, String>
         return surveyService;
     }
 
-    public List<String> getSurveyNames()
+    public String[] getAvailableSurveys()
     {
-        log.info("getSurveyNames() was called");
+        // EndpointUtil.logPrincipal("getSurveyNames()");
+
         List<String> availableSurveys = surveyService.getAvailableSurveys();
-
         availableSurveys.forEach(survey -> log.info("found surveyName: "+survey));
-        return availableSurveys;
+
+        return availableSurveys.stream().toArray(String[]::new);
     }
 
-//    public Question getNextQuestion(String userId, String surveyName)
-//    {
-//        return surveyService.getNextQuestion(userId, surveyName);
-//    }
-
-    public Question getNextQuestion(String surveyResponseId)
+    public int getTotalNumberOfQuestions(String surveyResultId)
     {
-        return surveyService.getNextQuestion(surveyResponseId);
-//        SurveyResponse surveyResponse = surveyResponseService.get(surveyResultId).get();
-//        int lastCompletedQuestion = surveyResponse.lastCompletedQuestion();
-//        Survey survey = surveyResponse.survey();
-//        return survey.getQuestion(lastCompletedQuestion);
-    }
+        // EndpointUtil.logPrincipal("getTotalNumberOfQuestions(..)");
 
-    public int getTotalNumberOfQuestions(String surveyReponseId)
-    {
-        SurveyResult surveyResponse = surveyResultService.get(surveyReponseId).get();
+        SurveyResult surveyResponse = surveySessionService.get(surveyResultId).get();
         Survey survey = surveyResponse.survey();
         return survey.questions().size();
         // return surveyService.countAllBySurveyName(survey);

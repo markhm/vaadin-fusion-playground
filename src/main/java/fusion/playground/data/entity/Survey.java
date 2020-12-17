@@ -10,17 +10,24 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Accessors(fluent=true)
 @ToString(callSuper = true)
 public class Survey extends AbstractEntity
 {
-    private @NonNull String name;
     private @NonNull String category;
+    private @NonNull String name;
 
-    private  List<Question> questions;
+    private String title;
+
+    private List<Question> questions;
 
     private boolean gradable = false;
+
+    public Survey(SurveyCategory category, String name)
+    {
+        this.category = category.toString();
+        this.name = name;
+    }
 
     public void addQuestion(Question question)
     {
@@ -35,6 +42,4 @@ public class Survey extends AbstractEntity
     {
         return questions.get(orderNumber - 1);
     }
-
-
 }

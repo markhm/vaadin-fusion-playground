@@ -1,10 +1,10 @@
-import { LitElement, html, css, customElement, internalProperty, } from 'lit-element';
+import {css, customElement, html, internalProperty, LitElement,} from 'lit-element';
 import Survey from '../../generated/fusion/playground/data/entity/Survey';
 import Question from '../../generated/fusion/playground/data/entity/Question';
 
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-button';
-import { Binder, field } from '@vaadin/form';
+import {Binder, field} from '@vaadin/form';
 // import { addQuestion, getSurvey } from '../../generated/SurveyEndpoint';
 import * as SurveyEndpoint from '../../generated/SurveyEndpoint';
 import SurveyModel from "../../generated/fusion/playground/data/entity/SurveyModel";
@@ -15,8 +15,9 @@ export class AddSurveyView extends LitElement {
 
     @internalProperty() private survey: Survey = {
         id: '-1',
-        category: 'test',
+        category: 'example',
         name: 'unset',
+        title: 'unavailable',
         questions: [],
         gradable: false
     };
@@ -60,8 +61,9 @@ export class AddSurveyView extends LitElement {
         try {
             const emptySurvey = {
                 id: '-1',
-                category: 'test',
+                category: 'example',
                 name: 'unset',
+                title: 'unavailable',
                 questions: [],
                 gradable: false
             };

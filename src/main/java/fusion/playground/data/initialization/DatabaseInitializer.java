@@ -1,4 +1,4 @@
-package fusion.playground.data.generator;
+package fusion.playground.data.initialization;
 
 import fusion.playground.data.service.*;
 import fusion.playground.data.entity.User;
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,11 +20,12 @@ public class DatabaseInitializer
     private static Log log = LogFactory.getLog(DatabaseInitializer.class);
 
     @Bean
-    public InitializingBean initializeDatabase(@Autowired UserRepository userRepository,
-                                               @Autowired SurveyRepository surveyRepository,
-                                               @Autowired QuestionRepository questionRepository,
-                                               @Autowired PossibleAnswerRepository possibleAnswerRepository,
-                                               @Autowired ResponseRepository responseRepository)
+    @Autowired
+    public InitializingBean initializeDatabase(UserRepository userRepository,
+                                               SurveyRepository surveyRepository,
+                                               QuestionRepository questionRepository,
+                                               PossibleAnswerRepository possibleAnswerRepository,
+                                               ResponseRepository responseRepository)
     {
         log.info("Initializing database");
 
@@ -52,17 +54,13 @@ public class DatabaseInitializer
         };
     }
 
-    private void dropAllCollections(QuestionRepository questionRepository,
-                                    PossibleAnswerRepository possibleAnswerRepository,
-                                    UserRepository userRepository,
-                                    ResponseRepository responseRepository)
+    private void dropAllCollections(MongoRepository... mongoRepositories)
     {
-        questionRepository.deleteAll();
-        possibleAnswerRepository.deleteAll();
-        userRepository.deleteAll();
-        responseRepository.deleteAll();
+        for (MongoRepository mongoRepository : mongoRepositories)
+        {
+            mongoRepository.deleteAll();
+        }
     }
-
 
     /** Users are loaded from Okta
      *
