@@ -51,7 +51,7 @@ export class SelectSurveyView extends LitElement {
 
             <div class="form">
                 <vaadin-horizontal-layout>
-                    <vaadin-select label='Category' 
+                    <vaadin-select ?disabled=${categoriesItems.length <= 1} label='Category' 
                                    @value-changed='() => ${this.categorySelected}' 
                                    placeholder='none selected' value='example'>
                         <template>
@@ -79,14 +79,6 @@ export class SelectSurveyView extends LitElement {
     `;
     }
 
-    // ?disabled=${categoriesItems.length <= 1}
-    // ?disabled=${this.names.length === 0}
-// <template>
-// <vaadin-list-box>
-//     ${namesItems}
-// </vaadin-list-box>
-// </template>
-
     async connectedCallback() {
         super.connectedCallback();
 
@@ -98,7 +90,7 @@ export class SelectSurveyView extends LitElement {
     async firstUpdated() {
 
         console.log('firstUpdated() called');
-        this.names = await this.getAvailableSurveys() || ['one', 'two', 'and another one'];
+        this.names = await this.getAvailableSurveys() || ['could', 'not', 'reach', 'server'];
 
         console.log('received names: ' + this.names);
 
@@ -162,7 +154,7 @@ export class SelectSurveyView extends LitElement {
                 throw error;
             }
         }
-        return ['one', 'two', 'and another one'];
+        return ['could', 'not', 'reach', 'server 2'];
     }
 
 }
