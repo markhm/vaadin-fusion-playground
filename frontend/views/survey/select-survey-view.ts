@@ -39,7 +39,6 @@ export class SelectSurveyView extends LitElement {
     }
 
     render() {
-
         let categoriesItems = this.categories.map(item => html`<vaadin-item>${item}</vaadin-item>`);
         let namesItems = this.names.map(item => html`<vaadin-item>${item}</vaadin-item>`);
 
@@ -82,15 +81,13 @@ export class SelectSurveyView extends LitElement {
     async connectedCallback() {
         super.connectedCallback();
 
-        // await this.getAvailableSurveys();
-        // console.log('received names: '+JSON.stringify(this.names));
-        this.requestUpdate();
+        // moved initialization to firstUpdated();
     }
 
     async firstUpdated() {
 
-        console.log('firstUpdated() called');
-        this.names = await this.getAvailableSurveys() || ['could', 'not', 'reach', 'server'];
+        // get the list of available surveys from the endpoint
+        await this.getAvailableSurveys();
 
         console.log('received names: ' + this.names);
 
@@ -142,19 +139,17 @@ export class SelectSurveyView extends LitElement {
 
     async getAvailableSurveys() {
         try {
-            let result = await SurveyEndpoint.getAvailableSurveys();
-            return result;
+            this.names = await SurveyEndpoint.getAvailableSurveys();
 
         } catch (error) {
-            showNotification('Some error happened. ' + error.message, { position: 'bottom-start' });
+            showNotification('Some error happened. ' + error.message, {position: 'bottom-start'});
 
             if (error instanceof EndpointError) {
-                showNotification('Server error. ' + error.message, { position: 'bottom-start' });
+                showNotification('Server error. ' + error.message, {position: 'bottom-start'});
             } else {
                 throw error;
             }
         }
-        return ['could', 'not', 'reach', 'server 2'];
     }
 
 }
