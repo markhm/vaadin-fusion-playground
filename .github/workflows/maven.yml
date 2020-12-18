@@ -27,5 +27,5 @@ jobs:
       if: always()
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        files: test-results/**/*.xml
+        files: target/surefire-reports/**/*.xml
 
