@@ -16,26 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 // @SpringJUnitConfig
 // @DataMongoTest
 @SpringBootTest
-public class TakeSurveyBackendTest
+public class TakeSurveyBackendTest extends AbstractServiceLayerTest
 {
     private static Log log = LogFactory.getLog(TakeSurveyBackendTest.class);
 
-    @Autowired private UserService userService;
-    @Autowired private SurveyService surveyService;
-    @Autowired private SurveySessionService surveySessionService;
-    @Autowired private ResponseService responseService;
-    @Autowired private QuestionService questionService;
-
-    private User user = null;
-
     public TakeSurveyBackendTest()
     {}
-
-    @Before
-    public void before()
-    {
-        user = userService.findByUsername("testuser").get();
-    }
 
     @Test
     public void surveyLoading()
@@ -46,7 +32,6 @@ public class TakeSurveyBackendTest
 
         Survey weatherSurvey = surveyService.findSurveyByName("weather");
         assertEquals(weatherSurvey.questions().size(), 4);
-
     }
 
     @Test
@@ -62,7 +47,7 @@ public class TakeSurveyBackendTest
         // log.info("Started survey with surveyResultId: " + surveyResultId);
 
         // retrieving the first question
-        Question firstQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question firstQuestion = surveySessionService.getNextQuestion(surveyResultId);
         assertEquals(1, firstQuestion.orderNumber());
         PossibleAnswer firstAnswer = firstQuestion.possibleAnswers().get(0);
 
@@ -76,36 +61,36 @@ public class TakeSurveyBackendTest
         assertEquals(firstResponse, retrievedResponse);
 
         // retrieving the second question
-        Question secondQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question secondQuestion = surveySessionService.getNextQuestion(surveyResultId);
         // log.info("Second question: " + secondQuestion.text());
         assertEquals(2, secondQuestion.orderNumber());
         PossibleAnswer secondAnswer = secondQuestion.possibleAnswers().get(1);
 
         // retrieving the second question again, since we did not submit our answer yet
-        Question secondQuestionAgain = surveyService.getNextQuestion(surveyResultId);
+        Question secondQuestionAgain = surveySessionService.getNextQuestion(surveyResultId);
         assertEquals(2, secondQuestionAgain.orderNumber());
         surveySessionService.saveResponse(surveyResult.id(), secondQuestion.id(), secondAnswer.id());
 
-        Question thirdQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question thirdQuestion = surveySessionService.getNextQuestion(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), thirdQuestion.id(), thirdQuestion.possibleAnswers().get(1).id());
 
-        Question fourthQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question fourthQuestion = surveySessionService.getNextQuestion(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), fourthQuestion.id(), fourthQuestion.possibleAnswers().get(1).id());
 
         // confirming that the survey is not yet complete
         surveyResult = surveySessionService.get(surveyResultId).get();
         assertEquals(false, surveyResult.isComplete());
 
-        Question fifthQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question fifthQuestion = surveySessionService.getNextQuestion(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), fifthQuestion.id(), fifthQuestion.possibleAnswers().get(0).id());
 
-        Question sixthQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question sixthQuestion = surveySessionService.getNextQuestion(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), sixthQuestion.id(), sixthQuestion.possibleAnswers().get(0).id());
 
-        Question seventhQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question seventhQuestion = surveySessionService.getNextQuestion(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), seventhQuestion.id(), seventhQuestion.possibleAnswers().get(0).id());
 
-        Question eighthQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question eighthQuestion = surveySessionService.getNextQuestion(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), eighthQuestion.id(), eighthQuestion.possibleAnswers().get(0).id());
 
         surveyResult = surveySessionService.get(surveyResultId).get();
@@ -116,7 +101,7 @@ public class TakeSurveyBackendTest
         assertEquals(true, surveyResult.isComplete());
 
         // the ninth question does not exist, so a dummy question with orderNumber -1 is returned
-        Question ninthQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question ninthQuestion = surveySessionService.getNextQuestion(surveyResultId);
         assertEquals(-1, ninthQuestion.orderNumber());
 
         // the responses are available now the survey has been completed

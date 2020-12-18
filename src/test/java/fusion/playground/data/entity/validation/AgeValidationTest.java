@@ -1,6 +1,7 @@
-package fusion.playground.data.entity;
+package fusion.playground.data.entity.validation;
 
 
+import fusion.playground.data.entity.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.BeforeAll;

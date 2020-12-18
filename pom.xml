@@ -18,16 +18,21 @@
     <name>Vaadin Fusion Playground</name>
 
     <properties>
+        <!-- technical foundation -->
         <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <vaadin.version>18.0.2</vaadin.version>
-        <okta.spring.version>1.5.1</okta.spring.version>
-
+        <!-- frameworks and components -->
         <lombok.version>1.18.16</lombok.version>
+        <okta.spring.version>1.5.1</okta.spring.version>
+        <vaadin.version>18.0.2</vaadin.version>
 
+        <!-- testing and documentation generation -->
         <junit.jupiter.version>5.7.0</junit.jupiter.version>
+        <jacoco.version>0.8.6</jacoco.version>
+        <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
+        <maven-project-info-reports-plugin.version>3.1.1</maven-project-info-reports-plugin.version>
     </properties>
 
     <repositories>
@@ -253,6 +258,38 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <!--                Java 14 support pending https://www.jacoco.org/jacoco/trunk/doc/changes.html-->
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${maven-site-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven-project-info-reports-plugin.version}</version>
             </plugin>
 
             <plugin>

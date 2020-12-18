@@ -2,21 +2,22 @@ package fusion.playground.data.entity;
 
 import fusion.playground.data.AbstractEntity;
 import fusion.playground.data.service.SurveyService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Document
 @AllArgsConstructor
 @Accessors(fluent=true)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class SurveyResult extends AbstractEntity
 {
     private static Log log = LogFactory.getLog(SurveyService.class);

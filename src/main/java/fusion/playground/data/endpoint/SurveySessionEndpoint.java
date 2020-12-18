@@ -52,7 +52,7 @@ public class SurveySessionEndpoint extends CrudEndpoint<SurveyResult, String>
         // EndpointUtil.logPrincipal("getNextQuestion(..)");
         log.info("at SurveyEndpoint.getNextQuestion(" + surveyResultId + ")...");
 
-        return surveyService.getNextQuestion(surveyResultId);
+        return surveySessionService.getNextQuestion(surveyResultId);
 //        SurveyResponse surveyResponse = surveyResponseService.get(surveyResultId).get();
 //        int lastCompletedQuestion = surveyResponse.lastCompletedQuestion();
 //        Survey survey = surveyResponse.survey();

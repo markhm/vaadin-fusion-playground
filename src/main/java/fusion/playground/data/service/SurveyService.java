@@ -22,15 +22,14 @@ public class SurveyService extends MongoCrudService<Survey, String>
     private static Log log = LogFactory.getLog(SurveyService.class);
 
     private SurveyRepository surveyRepository;
-    private SurveySessionService surveySessionService;
+    // private SurveySessionService surveySessionService;
 
     private int questionPointer = 1;
 
-    public SurveyService(@Autowired SurveyRepository surveyRepository,
-                         @Autowired SurveySessionService surveySessionService)
+    @Autowired
+    public SurveyService(SurveyRepository surveyRepository)
     {
         this.surveyRepository = surveyRepository;
-        this.surveySessionService = surveySessionService;
     }
 
     @Override
@@ -76,27 +75,6 @@ public class SurveyService extends MongoCrudService<Survey, String>
         return this.findAllBySurveyName(surveyName).size();
     }
 
-    @Deprecated
-    public Question getNextQuestion(String surveyResultId)
-    {
-        Question result = null;
-
-        SurveyResult surveyResult = surveySessionService.get(surveyResultId).get();
-        if (surveyResult.isComplete())
-        {
-            result = new Question();
-            result.orderNumber(-1);
-            result.text("Survey already completed");
-        }
-        else
-        {
-            int lastCompletedQuestion = surveyResult.lastCompletedQuestion();
-
-            Survey survey = surveyResult.survey();
-            result = getQuestionFromSurvey(survey, lastCompletedQuestion + 1);
-        }
-        return result;
-    }
 
 //    public Question getNextQuestion(SurveyResponse surveyResponse)
 //    {
@@ -135,7 +113,7 @@ public class SurveyService extends MongoCrudService<Survey, String>
 //        return nextQuestion;
 //    }
 
-    private Question getQuestionFromSurvey(Survey survey, int orderNumber)
+    public Question getQuestionFromSurvey(Survey survey, int orderNumber)
     {
         log.info("Retrieving question #" + orderNumber + "from survey "+survey.toString());
         return survey.questions().get(orderNumber - 1);

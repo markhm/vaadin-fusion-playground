@@ -1,17 +1,18 @@
 package fusion.playground.data.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import fusion.playground.data.AbstractEntity;
+import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@Document
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent=true)
 @ToString(callSuper = true)
-public class Achievement
+@EqualsAndHashCode(callSuper = true)
+public class Achievement extends AbstractEntity
 {
     private User user;
     private AchievementType type;

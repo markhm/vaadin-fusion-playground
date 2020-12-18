@@ -11,26 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class EvaluateFactualSurveyTest
+public class EvaluateFactualSurveyTest extends AbstractServiceLayerTest
 {
     private static Log log = LogFactory.getLog(EvaluateFactualSurveyTest.class);
 
-    @Autowired private UserService userService;
-    @Autowired private SurveyService surveyService;
-    @Autowired private SurveySessionService surveySessionService;
-    @Autowired private ResponseService responseService;
-    @Autowired private QuestionService questionService;
-
-    private User user = null;
-
     public EvaluateFactualSurveyTest()
     {}
-
-    @Before
-    public void before()
-    {
-        user = userService.findByUsername("testuser").get();
-    }
 
     @Test
     public void testFactualTest()
@@ -43,16 +29,16 @@ public class EvaluateFactualSurveyTest
         SurveyResult surveyResult = surveySessionService.get(surveyResultId).get();
 
         // retrieving the first question
-        Question firstQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question firstQuestion = surveySessionService.getNextQuestion(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), firstQuestion.id(), firstQuestion.possibleAnswers().get(0).id());
 
-        Question secondQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question secondQuestion = surveySessionService.getNextQuestion(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), secondQuestion.id(), secondQuestion.possibleAnswers().get(1).id());
 
-        Question thirdQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question thirdQuestion = surveySessionService.getNextQuestion(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), thirdQuestion.id(), thirdQuestion.possibleAnswers().get(1).id());
 
-        Question fourthQuestion = surveyService.getNextQuestion(surveyResultId);
+        Question fourthQuestion = surveySessionService.getNextQuestion(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), fourthQuestion.id(), fourthQuestion.possibleAnswers().get(1).id());
 
         // grade the FactualQuestions

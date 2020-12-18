@@ -3,26 +3,30 @@ package fusion.playground.data.entity;
 import fusion.playground.data.AbstractEntity;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Data
+@Document
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent=true)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class Question extends AbstractEntity
 {
     private static final long serialVersionUID = 1L;
 
-    private Integer orderNumber;
+    protected Integer orderNumber;
 
     /* Description of the question */
     protected String text;
 
     /* Possible answers to the question */
+    @EqualsAndHashCode.Exclude
     protected List<PossibleAnswer> possibleAnswers = new ArrayList<>();
 
     /**

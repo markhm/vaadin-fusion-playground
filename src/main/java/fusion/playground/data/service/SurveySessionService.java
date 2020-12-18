@@ -20,6 +20,7 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
 
     private UserService userService;
     private QuestionService questionService;
+    private SurveyService surveyService;
     private SurveyResultRepository surveyResultRepository;
     private PossibleAnswerService possibleAnswerService;
     private ResponseService responseService;
@@ -32,11 +33,12 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
 
     @Autowired
     public SurveySessionService(UserService userService, QuestionService questionService,
-                                SurveyResultRepository surveyResultRepository,
-                                PossibleAnswerService possibleAnswerService, ResponseService responseService)
+                                SurveyService surveyService, PossibleAnswerService possibleAnswerService,
+                                ResponseService responseService, SurveyResultRepository surveyResultRepository)
     {
         this.userService = userService;
         this.questionService = questionService;
+        this.surveyService = surveyService;
         this.surveyResultRepository = surveyResultRepository;
         this.possibleAnswerService = possibleAnswerService;
         this.responseService = responseService;
@@ -54,49 +56,26 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
         return savedSurveyResult.id();
     }
 
-    public SurveyResult confirmResponses(String surveyResultId)
+    @Deprecated
+    public Question getNextQuestion(String surveyResultId)
     {
+        Question result = null;
+
         SurveyResult surveyResult = get(surveyResultId).get();
-        surveyResult.registerUserConfirmation();
-        if (surveyResult.survey().gradable())
+        if (surveyResult.isComplete())
         {
-            surveyResult = gradeSurveyResult(surveyResult);
+            result = new Question();
+            result.orderNumber(-1);
+            result.text("Survey already completed.");
         }
-        surveyResultRepository.save(surveyResult);
+        else
+        {
+            int lastCompletedQuestion = surveyResult.lastCompletedQuestion();
 
-        return surveyResult;
-    }
-
-    public SurveyResult rejectResponses(String surveyResultId)
-    {
-        SurveyResult surveyResult = get(surveyResultId).get();
-        surveyResult.registerUserRejection();
-        surveyResultRepository.save(surveyResult);
-
-        return surveyResult;
-    }
-
-    public List<QuestionResponse> getSurveyResponses(String surveyResultId)
-    {
-        SurveyResult surveyResult = get(surveyResultId).get();
-        List<Response> responses = surveyResult.responses();
-
-        List<QuestionResponse> questionResponses = new ArrayList<>();
-
-        responses.forEach(response -> {
-
-            QuestionResponse questionResponse = new QuestionResponse();
-            questionResponse.questionText(response.question().text());
-            questionResponse.questionNumber(response.question().orderNumber());
-            questionResponse.correct(response.correct());
-
-            PossibleAnswer possibleAnswer = possibleAnswerService.get(response.response()).get();
-            questionResponse.responseText(possibleAnswer.text());
-
-            questionResponses.add(questionResponse);
-        });
-
-        return questionResponses;
+            Survey survey = surveyResult.survey();
+            result = surveyService.getQuestionFromSurvey(survey, lastCompletedQuestion + 1);
+        }
+        return result;
     }
 
     public Response saveResponse(String surveyResponseId, String questionId, String responseId)
@@ -125,6 +104,51 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
         Response savedResponse = save(surveyResult, response);
 
         return savedResponse;
+    }
+
+    public List<QuestionResponse> getSurveyResponses(String surveyResultId)
+    {
+        SurveyResult surveyResult = get(surveyResultId).get();
+        List<Response> responses = surveyResult.responses();
+
+        List<QuestionResponse> questionResponses = new ArrayList<>();
+
+        responses.forEach(response -> {
+
+            QuestionResponse questionResponse = new QuestionResponse();
+            questionResponse.questionText(response.question().text());
+            questionResponse.questionNumber(response.question().orderNumber());
+            questionResponse.correct(response.correct());
+
+            PossibleAnswer possibleAnswer = possibleAnswerService.get(response.response()).get();
+            questionResponse.responseText(possibleAnswer.text());
+
+            questionResponses.add(questionResponse);
+        });
+
+        return questionResponses;
+    }
+
+    public SurveyResult confirmResponses(String surveyResultId)
+    {
+        SurveyResult surveyResult = get(surveyResultId).get();
+        surveyResult.registerUserConfirmation();
+        if (surveyResult.survey().gradable())
+        {
+            surveyResult = gradeSurveyResult(surveyResult);
+        }
+        surveyResultRepository.save(surveyResult);
+
+        return surveyResult;
+    }
+
+    public SurveyResult rejectResponses(String surveyResultId)
+    {
+        SurveyResult surveyResult = get(surveyResultId).get();
+        surveyResult.registerUserRejection();
+        surveyResultRepository.save(surveyResult);
+
+        return surveyResult;
     }
 
     public SurveyResult gradeSurveyResult(SurveyResult surveyResult)
@@ -159,6 +183,7 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
     private Response save(SurveyResult surveyResult, Response response)
     {
         Response savedResponse = responseService.update(response);
+
         surveyResult.addResponse(savedResponse);
         surveyResultRepository.save(surveyResult);
 

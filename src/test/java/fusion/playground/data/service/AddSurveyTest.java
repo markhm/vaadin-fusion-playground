@@ -9,38 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class AddSurveyTest
+public class AddSurveyTest extends AbstractServiceLayerTest
 {
     private static Log log = LogFactory.getLog(AddSurveyTest.class);
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private SurveyService surveyService;
-
-    @Autowired
-    private SurveySessionService surveySessionService;
-
-    @Autowired
-    private ResponseService responseService;
-
-    @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private PossibleAnswerService possibleAnswerService;
-
-    private User user = null;
-
-    public AddSurveyTest()
-    {}
-
-    @Before
-    public void before()
-    {
-        user = userService.findByUsername("testuser").get();
-    }
 
     @Test
     public void addSurvey()

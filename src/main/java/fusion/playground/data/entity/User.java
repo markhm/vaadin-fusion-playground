@@ -7,14 +7,18 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.Email;
 import fusion.playground.data.entity.validation.AgeValidator;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDate;
 
 
 @Data
+@Document
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent=true)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class User extends AbstractEntity
 {
     /* Unique property that defines a user in Okta (sub or accessToken.claims.uid) */

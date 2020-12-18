@@ -3,14 +3,17 @@ package fusion.playground.data;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@RequiredArgsConstructor
+@Data
+@Document
+@NoArgsConstructor
+@AllArgsConstructor
 @Accessors(fluent=true)
-@EqualsAndHashCode
-@ToString
+@ToString(callSuper = true)
 public class AbstractEntity
 {
     @Id
-    private String id;
+    @EqualsAndHashCode.Include
+    protected String id;
 }

@@ -1,17 +1,17 @@
 package fusion.playground.data.entity;
 
 import fusion.playground.data.AbstractEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@Document
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent=true)
-@ToString
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class QuestionResponse extends AbstractEntity
 {
     int questionNumber;
