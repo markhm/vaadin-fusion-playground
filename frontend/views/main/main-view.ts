@@ -56,11 +56,11 @@ export class MainView extends LitElement {
           font-size: var(--lumo-font-size-l);
           margin: 0;
         }
-        
+
         header .logout {
           margin-right: 12px;
         }
-        
+
         header img {
           border-radius: 50%;
           height: var(--lumo-size-s);
@@ -146,15 +146,15 @@ export class MainView extends LitElement {
 
             ${!this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('login')}">Login</a> </vaadin-tab>` : html``}
             ${!this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('create-account')}">Create account</a> </vaadin-tab>` : html``}
-            ${this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('user')}">User profile</a> </vaadin-tab>` : html``}
+            ${this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('user-details')}">User details</a> </vaadin-tab>` : html``}
             ${this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('logout')}">Logout</a> </vaadin-tab>` : html``}
-            
+
 
             ${this.debug ? html`
               <vaadin-tab>--------</vaadin-tab>
               <vaadin-tab> <a href="#" @click="${() => this.debugSomething()}">debugSomething()</a> </vaadin-tab>
             ` : html``}
-            
+
           </vaadin-tabs>
         </div>
         <slot></slot>

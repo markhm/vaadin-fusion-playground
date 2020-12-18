@@ -44,6 +44,11 @@ public class SurveyEndpoint extends CrudEndpoint<Survey, String>
         return availableSurveys.stream().toArray(String[]::new);
     }
 
+    public String getSurveyDescription(String category, String name)
+    {
+        return surveyService.getSurveyDescription(category, name);
+    }
+
     public int getTotalNumberOfQuestions(String surveyResultId)
     {
         // EndpointUtil.logPrincipal("getTotalNumberOfQuestions(..)");

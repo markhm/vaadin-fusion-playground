@@ -32,7 +32,7 @@ export class ConfirmResponsesView extends LitElement {
   render() {
     return html`       
       <h3>Survey responses</h3>
-      <div>Your results are logged under: ${this.surveyResultId}</div>.<br/>
+      <div>Your results are logged under: ${this.surveyResultId}.</div><br/>
       
       ${this.questionResponses ? this.questionResponses.map(questionResponse => html`
             ${questionResponse.questionNumber}: ${questionResponse.questionText} <b>${questionResponse.responseText}</b> </br>

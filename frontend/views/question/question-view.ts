@@ -1,4 +1,4 @@
-import { css, customElement, html, LitElement, property} from 'lit-element';
+import { css, customElement, html, LitElement, property, internalProperty} from 'lit-element';
 
 import '@polymer/iron-icon/iron-icon.js';
 import '@vaadin/vaadin-grid/all-imports.js';
@@ -24,9 +24,10 @@ export class QuestionView extends LitElement {
   @property({ type: Boolean }) online: boolean = true;
   @property( {type: Boolean }) debug = false;
 
-  @property({ type: String }) surveyResultId: string = '0';
+  @internalProperty()
+  surveyResultId: string = '0';
 
-  @property({ type: Object })
+  @internalProperty()
   question : Question = {
     id: "0",
     orderNumber: 0,
@@ -34,8 +35,11 @@ export class QuestionView extends LitElement {
     possibleAnswers: []
   };
 
-  @property({ type: String}) questionId : string = "3";
-  @property({ type: Number}) totalNumberOfQuestions = 0;
+  @internalProperty()
+  questionId : string = "3";
+
+  @internalProperty()
+  totalNumberOfQuestions = 0;
 
   static get styles() {
     return [
@@ -87,7 +91,8 @@ export class QuestionView extends LitElement {
             <vaadin-button class="special" @click="${() => this.submitAnswer(possibleAnswer.id)}">${possibleAnswer.text}</vaadin-button> <br/>
             `)}
       <br/>
-      ${alreadyAnswered ? html`<br/>Please confirm your responses <a href='/confirm-responses'>here</a>.` : html``}
+      
+      ${alreadyAnswered ? html`<br/><div>Please confirm your responses <a href='/confirm-responses'>here</a>.</div><br/>` : html``}
 
       <div>The surveyResponseId is '${this.surveyResultId}'.</div> <br/>
     `;
@@ -99,7 +104,7 @@ export class QuestionView extends LitElement {
     // retrieve the survey session from the session and redirect if not found
     this.surveyResultId = localStorage.getItem('surveyResultId') || 'unavailable';
 
-    console.log('surveyResultId found: '+this.surveyResultId);
+    // console.log('surveyResultId found: '+this.surveyResultId);
 
     if (this.surveyResultId === 'unavailable') {
       Router.go('/select-survey');
@@ -116,13 +121,12 @@ export class QuestionView extends LitElement {
 
   private async submitAnswer(responseId: string) {
     try {
-      // console.log('About to submit answer: ' + answerId + ' to question ' + this.questionId + ' for user '+this.userId + '.');
+      // console.log('About to submit answer: ' + answerId + ' to question ' + this.questionId + ' for userClaims '+this.userId + '.');
       await SurveySessionEndpoint.saveResponse(this.surveyResultId, this.question.id, responseId);
 
       showNotification('Response stored.', { position: 'bottom-start' });
 
       await this.loadQuestion();
-
       await this.requestUpdate();
 
     } catch (error) {

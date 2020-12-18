@@ -5,17 +5,20 @@ import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
 import fusion.playground.data.service.SurveyRepository;
 
-public class Maths_1_SurveyInitializer extends AbstractSurveyQuestionsLoader
+public class MathsExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
 {
     private static SurveyCategory CATEGORY_EXAMPLE = SurveyCategory.example;
 
-    public Maths_1_SurveyInitializer(SurveyRepository surveyRepository,
-                                     QuestionRepository questionRepository,
-                                     PossibleAnswerRepository possibleAnswerRepository)
+    public MathsExampleSurveyInitializer(SurveyRepository surveyRepository,
+                                         QuestionRepository questionRepository,
+                                         PossibleAnswerRepository possibleAnswerRepository)
     {
         super(surveyRepository, questionRepository, possibleAnswerRepository);
 
         createSurvey(SurveyCategory.example, "maths");
+
+        survey.title("Math example survey");
+        survey.description("This is an example survey where questions have a correct answer.");
     }
 
     public void loadQuestions()

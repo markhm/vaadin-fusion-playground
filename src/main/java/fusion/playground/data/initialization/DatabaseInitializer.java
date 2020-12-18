@@ -92,21 +92,21 @@ public class DatabaseInitializer
                                       QuestionRepository questionRepository,
                                       PossibleAnswerRepository possibleAnswerRepository)
     {
-        ExampleSurveyInitializer exampleQuestions = new ExampleSurveyInitializer(surveyRepository,
+        FirstExampleSurveyInitializer exampleQuestions = new FirstExampleSurveyInitializer(surveyRepository,
                 questionRepository, possibleAnswerRepository);
         exampleQuestions.loadQuestions();
         exampleQuestions.saveSurvey();
 
-        WeatherSurveyInitializer weatherSurveyInitializer = new WeatherSurveyInitializer(surveyRepository,
+        WeatherExampleSurveyInitializer weatherExampleSurveyInitializer = new WeatherExampleSurveyInitializer(surveyRepository,
                 questionRepository, possibleAnswerRepository);
 
-        weatherSurveyInitializer.loadQuestions();
-        weatherSurveyInitializer.saveSurvey();
+        weatherExampleSurveyInitializer.loadQuestions();
+        weatherExampleSurveyInitializer.saveSurvey();
 
-        Maths_1_SurveyInitializer maths_1_surveyInitializer = new Maths_1_SurveyInitializer(surveyRepository,
+        MathsExampleSurveyInitializer mathsExampleSurveyInitializer = new MathsExampleSurveyInitializer(surveyRepository,
                 questionRepository, possibleAnswerRepository);
-        maths_1_surveyInitializer.loadQuestions();
-        maths_1_surveyInitializer.saveSurvey();
+        mathsExampleSurveyInitializer.loadQuestions();
+        mathsExampleSurveyInitializer.saveSurvey();
     }
 
     private static void printLogStatement(String statement)

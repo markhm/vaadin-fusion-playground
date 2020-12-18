@@ -47,9 +47,12 @@ export class CreateAccountView extends LitElement {
       <div>Fill in the form to request an account.</div>
       
       <vaadin-form-layout style="width: 100%;">
-        <vaadin-text-field label="Username (nice and anonymous 😊) " ...="${field(this.binder.model.username)}"></vaadin-text-field>
-        <vaadin-date-picker label="Date of birth (you should be over 13 to join)" ...="${field(this.binder.model.dateOfBirth)}"></vaadin-date-picker>
-        <vaadin-email-field label="Email" ...="${field(this.binder.model.emailAddress)}"></vaadin-email-field>
+        <vaadin-text-field label="Username (anonymous, but one your friends would recognise)"
+                           ...="${field(this.binder.model.username)}"></vaadin-text-field>
+        <vaadin-date-picker label="Date of birth (you should be over 13 to join)" 
+                            ...="${field(this.binder.model.dateOfBirth)}"></vaadin-date-picker>
+        <vaadin-email-field label="Email" 
+                            ...="${field(this.binder.model.emailAddress)}"></vaadin-email-field>
       </vaadin-form-layout>
       <div>You will receive an email where you are able to set your password.</div>
       </br>
@@ -57,6 +60,9 @@ export class CreateAccountView extends LitElement {
       <vaadin-horizontal-layout class="button-layout" theme="spacing">
         <vaadin-button theme="primary" ?disabled=${this.binder.invalid || this.binder.submitting} @click="${this.save}">Submit</vaadin-button>
         <vaadin-button @click="${this.clearForm}">Clear</vaadin-button>
+        ${this.binder.submitting ? html`
+            <span class="label">submitting</span>
+            <div class="spinner"></div>` : html``}
       </vaadin-horizontal-layout>
     `;
   }

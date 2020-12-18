@@ -5,8 +5,8 @@ import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-select'
 import '@vaadin/vaadin-date-picker';
 
-import '../../demos/combo-box-renderer-demo';
-import '../../components/select-survey-combo-box';
+import '../../components/string-array-combo-box';
+import './components/select-survey-combo-box';
 
 import * as SurveyEndpoint from "../../generated/SurveyEndpoint";
 import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
@@ -17,17 +17,20 @@ import {Router} from "@vaadin/router";
 @customElement('select-survey-view')
 export class SelectSurveyView extends LitElement {
 
-    // @internalProperty ()
-    // private categories: string[] = ['example'];
+    @internalProperty ()
+    private categories: string[] = ['example'];
+
+    @internalProperty ()
+    selectedCategory: string = this.categories[0];
 
     @internalProperty ()
     private names: string[] = ['weather', 'maths', 'example'];
 
     @internalProperty ()
-    selectedCategory: string = 'example';
+    private selectedName: string = '';
 
     @internalProperty ()
-    private selectedName: string = '';
+    private surveyDescription: string = '';
 
     @internalProperty ()
     private surveyResultId: string = '';
@@ -42,58 +45,32 @@ export class SelectSurveyView extends LitElement {
     }
 
     render() {
-        // let categoriesItems = this.categories.map(item => html`<vaadin-item>${item}</vaadin-item>`);
-        // let namesItems = this.names.map(item => html`<vaadin-item>${item}</vaadin-item>`);
-
-        type Survey = { category: string; name: string };
-        let sampleSurveys : Survey[] = [
-            { category: 'example', name: 'aap' },
-            { category: 'example', name: 'noot' },
-            { category: 'example', name: 'mies' }
-        ];
-        // console.log('samplesSurveys: '+sampleSurveys);
-
-        // console.log('namesItems: '+ JSON.stringify(namesItems));
-
         return html`                
             <h3>Available surveys</h3>
             <div>Choose a survey.</div>
 
             <div class="form">
                 <vaadin-horizontal-layout>
-                    
-                    <select-survey-combo-box label="Survey name" value="noot"
-                            .surveys="${sampleSurveys}" @value-changed="${this.nameSelected}"/>
 
+                    <string-array-combo-box label="Category" value="example" disabled
+                                               .items="${this.categories}" @value-changed="${this.categorySelected}">
+                    </string-array-combo-box>
+                    
+                    <select-survey-combo-box label="Survey name" value="example" 
+                              .items="${this.names}" @value-changed="${this.nameSelected}">
+                    </select-survey-combo-box>
+                    
                 </vaadin-horizontal-layout>
                 
-                ${this.selectedCategory ? html`<br/><br/>You selected category '${this.selectedCategory}'.` : html``}
-                ${this.selectedName ? html`<br/>You selected survey '${this.selectedName}'.` : html``}
+                ${this.selectedCategory && this.selectedName ? html`<br/><br/><div>${this.surveyDescription}</div>` : html``}
                 
-                <br/><br/>
+                <br/>
                 <vaadin-button ?disabled=${this.selectedName === ''} @click='() => ${this.startSelectedSurvey}'>Start survey</vaadin-button>
             </div>
     `;
     }
 
-// <select-category-combo-box label="Category" value="example"
-//         .surveys="${sampleSurveys}" @value-changed="${this.categorySelected}"/>
-
-        // <vaadin-select ?disabled=${categoriesItems.length <= 1} label='Category'
-// @value-changed='${this.categorySelected}'
-//     placeholder='none selected' value='example'>
-//         <template>
-//             <vaadin-list-box>
-//         ${categoriesItems}
-//         </vaadin-list-box>
-//         </template>
-//         </vaadin-select>
-
-// <vaadin-select label='Survey name' .items=${this.names}
-//         @value-changed='${this.nameSelected}' placeholder='none selected'>
-
-
-        async connectedCallback() {
+    async connectedCallback() {
         super.connectedCallback();
 
         // moved initialization to firstUpdated();
@@ -112,13 +89,15 @@ export class SelectSurveyView extends LitElement {
 
     categorySelected(e: CustomEvent) {
         this.selectedCategory = e.detail.value;
-        console.log('selected category: '+this.selectedCategory);
+        // console.log('selected category: '+this.selectedCategory);
         this.requestUpdate();
     }
 
-    nameSelected(e: CustomEvent) {
+    async nameSelected(e: CustomEvent) {
         this.selectedName = e.detail.value;
-        console.log('selected name: '+this.selectedName);
+        // console.log('selected name: '+this.selectedName);
+
+        await this.loadSurveyDescription();
         this.requestUpdate();
     }
 
@@ -132,11 +111,11 @@ export class SelectSurveyView extends LitElement {
     async initializeSurvey() {
 
         try {
-            // retrieve the oktaUserId to initialize survey for this user
+            // retrieve the oktaUserId to initialize survey for this userClaims
             let oktaTokenStorage = localStorage.getItem('okta-token-storage') || 'invalid';
             let oktaUserId = JSON.parse(oktaTokenStorage).accessToken.claims.uid;
 
-            console.log('Initializing survey ' + this.selectedName + ' for user with oktaUserId: '+oktaUserId);
+            console.log('Initializing survey ' + this.selectedName + ' for userClaims with oktaUserId: '+oktaUserId);
             this.surveyResultId = await SurveySessionEndpoint.beginSurvey(this.selectedName, oktaUserId);
 
             // https://medium.com/@nixonaugustine5/localstorage-and-sessionstorage-in-angular-app-65cda19283a0
@@ -155,6 +134,21 @@ export class SelectSurveyView extends LitElement {
     async getAvailableSurveys() {
         try {
             this.names = await SurveyEndpoint.getAvailableSurveys();
+
+        } catch (error) {
+            showNotification('Some error happened. ' + error.message, {position: 'bottom-start'});
+
+            if (error instanceof EndpointError) {
+                showNotification('Server error. ' + error.message, {position: 'bottom-start'});
+            } else {
+                throw error;
+            }
+        }
+    }
+
+    async loadSurveyDescription() {
+        try {
+            this.surveyDescription = await SurveyEndpoint.getSurveyDescription(this.selectedCategory, this.selectedName);
 
         } catch (error) {
             showNotification('Some error happened. ' + error.message, {position: 'bottom-start'});

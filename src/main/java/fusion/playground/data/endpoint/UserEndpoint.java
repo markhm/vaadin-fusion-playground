@@ -31,4 +31,10 @@ public class UserEndpoint extends CrudEndpoint<User, String>
     {
         return getService().createUser(requestedUser);
     }
+
+    public User getUserByOktaId(String oktaId)
+    {
+        return getService().findByOktaUserId(oktaId);
+    }
+
 }

@@ -8,5 +8,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SurveyRepository extends MongoRepository<Survey, String>
 {
+    @Deprecated
     Survey findByName(String name);
+
+    @Deprecated
+    Survey findByCategoryAndName(String category, String name);
 }

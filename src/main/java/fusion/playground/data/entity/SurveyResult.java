@@ -120,9 +120,9 @@ public class SurveyResult extends AbstractEntity
 
     /**
      * created - newly created
-     * in_process - user is answering questions
-     * complete - user has answered all questions
-     * confirmed - user has confirmed responses and result is ready for evaluation
+     * in_process - userClaims is answering questions
+     * complete - userClaims has answered all questions
+     * confirmed - userClaims has confirmed responses and result is ready for evaluation
      * evaluated - the surveyResult has been checked and the score is available
      */
     public enum SurveyResultStatus {

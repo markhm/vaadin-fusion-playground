@@ -18,6 +18,7 @@ export class AddSurveyView extends LitElement {
         category: 'example',
         name: 'unset',
         title: 'unavailable',
+        description: 'unavailable',
         questions: [],
         gradable: false
     };
@@ -64,6 +65,7 @@ export class AddSurveyView extends LitElement {
                 category: 'example',
                 name: 'unset',
                 title: 'unavailable',
+                description: 'unavailable',
                 questions: [],
                 gradable: false
             };

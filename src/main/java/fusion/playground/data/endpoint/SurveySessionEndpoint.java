@@ -41,8 +41,8 @@ public class SurveySessionEndpoint extends CrudEndpoint<SurveyResult, String>
     {
         // EndpointUtil.logPrincipal("SurveyResultEndpoint.beginSurvey(..)");
 
-        log.info("Beginning begin survey " + surveyName + " for user with oktaUserId: "+oktaUserId);
-        User user = userService.findByOktaUserId(oktaUserId).get();
+        log.info("Beginning begin survey " + surveyName + " for userClaims with oktaUserId: "+oktaUserId);
+        User user = userService.findByOktaUserId(oktaUserId);
         Survey survey = surveyService.findSurveyByName(surveyName);
         return surveySessionService.beginSurvey(user, survey);
     }
@@ -76,7 +76,7 @@ public class SurveySessionEndpoint extends CrudEndpoint<SurveyResult, String>
 
     public List<SurveyResult> getCompletedSurveys(String oktaUserId)
     {
-        User user = userService.findByOktaUserId(oktaUserId).get();
+        User user = userService.findByOktaUserId(oktaUserId);
         return surveySessionService.getCompletedSurveys(user);
     }
 

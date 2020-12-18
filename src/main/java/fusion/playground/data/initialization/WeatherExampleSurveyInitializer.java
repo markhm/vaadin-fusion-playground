@@ -5,17 +5,20 @@ import fusion.playground.data.service.PossibleAnswerRepository;
 import fusion.playground.data.service.QuestionRepository;
 import fusion.playground.data.service.SurveyRepository;
 
-public class WeatherSurveyInitializer extends AbstractSurveyQuestionsLoader
+public class WeatherExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
 {
     private static SurveyCategory CATEGORY_EXAMPLE = SurveyCategory.example;
 
-    public WeatherSurveyInitializer(SurveyRepository surveyRepository,
-                                    QuestionRepository questionRepository,
-                                    PossibleAnswerRepository possibleAnswerRepository)
+    public WeatherExampleSurveyInitializer(SurveyRepository surveyRepository,
+                                           QuestionRepository questionRepository,
+                                           PossibleAnswerRepository possibleAnswerRepository)
     {
         super(surveyRepository, questionRepository, possibleAnswerRepository);
 
         createSurvey(SurveyCategory.example, "weather");
+
+        survey.title("Weather example survey");
+        survey.description("This is a short survey with multiple-choice questions about the weather.");
     }
 
     public void loadQuestions()

@@ -8,6 +8,7 @@
 **/.idea/tasks.xml
 
 /docs/
+/docs_unshared/
 
 *.iml
 .DS_Store
@@ -28,6 +29,5 @@ webpack.config.js
 types.d.ts
 tsconfig.json
 /src/main/resources-filtered/env/application.heroku.properties
-docs/logo.pptx
 
 /src/main/java/fusion/playground/data/initialization/hidden/*.java

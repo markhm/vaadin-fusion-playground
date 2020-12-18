@@ -57,12 +57,12 @@ const routes: Route[] = [
 				action: async() => { await import ('./views/introduction/introduction-view')}
 			},
 			{
-				path: 'user',
-				component: 'user-view',
+				path: 'user-details',
+				component: 'user-details-view',
 				action: async (context: Context, commands: Commands) => {
 					const authRedirect = await authGuard(context, commands);
 					if (authRedirect) return authRedirect;
-					await import('./views/user/user-view');
+					await import('./views/user/user-details-view');
 					return undefined;
 				},
 			},

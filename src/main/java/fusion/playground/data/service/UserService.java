@@ -19,8 +19,8 @@ public class UserService extends MongoCrudService<User, String>
 
     private OktaService oktaService;
 
-    public UserService(@Autowired UserRepository userRepository,
-                       @Autowired OktaService oktaService)
+    @Autowired
+    public UserService( UserRepository userRepository, OktaService oktaService)
     {
         this.userRepository = userRepository;
         this.oktaService = oktaService;
@@ -32,14 +32,9 @@ public class UserService extends MongoCrudService<User, String>
         return this.userRepository;
     }
 
-    public Optional<User> findById(String id)
+    public User findByOktaUserId(String id)
     {
-        return getRepository().findById(id);
-    }
-
-    public Optional<User> findByOktaUserId(String id)
-    {
-        return getRepository().findByOktaUserId(id);
+        return getRepository().findByOktaUserId(id).get();
     }
 
     public Optional<User> findByUsername(String username)
@@ -58,7 +53,7 @@ public class UserService extends MongoCrudService<User, String>
 
         if (optionalUser.isPresent())
         {
-            log.warn("A user with username '"+user.username()+"' already exists. Ignoring.");
+            log.warn("A userClaims with username '"+user.username()+"' already exists. Ignoring.");
             return null;
         }
 
@@ -66,13 +61,13 @@ public class UserService extends MongoCrudService<User, String>
 
         if (optionalUser2.isPresent())
         {
-            log.warn("A user with emailAddress '"+user.emailAddress()+"' already exists. Ignoring.");
+            log.warn("A userClaims with emailAddress '"+user.emailAddress()+"' already exists. Ignoring.");
             return null;
         }
 
         com.okta.sdk.resource.user.User userInOkta = oktaService.createUserInOkta(user);
 
-        log.info("Created user in Okta: "+userInOkta);
+        log.info("Created userClaims in Okta: "+userInOkta);
 
         return null;
     }

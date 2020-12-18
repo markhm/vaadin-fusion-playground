@@ -6,6 +6,7 @@ import fusion.playground.data.entity.SurveyResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.MongoCrudService;
 
@@ -51,22 +52,31 @@ public class SurveyService extends MongoCrudService<Survey, String>
 //        return surveyResponseService.beginSurvey(user, survey);
 //    }
 
+    @Deprecated
     public Survey findSurveyByName(String name)
     {
         return surveyRepository.findByName(name);
     }
 
+    public String getSurveyDescription(String category, String name)
+    {
+        return surveyRepository.findByCategoryAndName(category, name).description();
+    }
+
     // @Cacheable("questions_by_survey")
+    @Deprecated
     public List<Question> findAllBySurveyName(String surveyName)
     {
         return surveyRepository.findByName(surveyName).questions();
     }
 
+    @Deprecated
     public int countAllBySurveyName(String surveyName)
     {
         return this.findAllBySurveyName(surveyName).size();
     }
 
+    @Deprecated
     public Question getNextQuestion(String surveyResultId)
     {
         Question result = null;
@@ -133,6 +143,7 @@ public class SurveyService extends MongoCrudService<Survey, String>
 
 
     // @Cacheable("question")
+    @Deprecated
     private Question getByNameAndOrderNumber(String name, int orderNumber)
     {
         Survey survey = findSurveyByName(name);

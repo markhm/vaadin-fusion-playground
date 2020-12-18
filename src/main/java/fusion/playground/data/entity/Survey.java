@@ -18,6 +18,7 @@ public class Survey extends AbstractEntity
     private @NonNull String name;
 
     private String title;
+    private String description = "There is no description available yet for this survey.";
 
     private List<Question> questions;
 
