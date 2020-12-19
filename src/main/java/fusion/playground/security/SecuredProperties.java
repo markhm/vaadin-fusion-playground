@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("classpath:secured_properties.properties")
+@PropertySource(value = "classpath:secured_properties.properties", ignoreResourceNotFound = true)
 @ConditionalOnProperty(name="developmentMode", havingValue="true")
 public class SecuredProperties
 {
