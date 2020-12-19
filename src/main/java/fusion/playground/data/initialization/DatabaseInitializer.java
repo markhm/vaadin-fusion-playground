@@ -21,7 +21,7 @@ public class DatabaseInitializer
 
     @Bean
     @Autowired
-    public InitializingBean initializeDatabase(UserRepository userRepository,
+    public InitializingBean initializeDatabase(UserService userService,
                                                SurveyRepository surveyRepository,
                                                QuestionRepository questionRepository,
                                                PossibleAnswerRepository possibleAnswerRepository,
@@ -32,25 +32,25 @@ public class DatabaseInitializer
         return () -> {
 
             // Start with a clean database;
-            dropAllCollections(questionRepository, possibleAnswerRepository, userRepository, responseRepository);
+            dropAllCollections(questionRepository, possibleAnswerRepository, responseRepository);
 
-            loadUsers(userRepository);
+            // loadUsers(userService);
 
-            loadQuestions(surveyRepository, questionRepository, possibleAnswerRepository);
+            loadQuestions(userService, surveyRepository, questionRepository, possibleAnswerRepository);
 
-            // fetch all users
-            log.info("Users found with findAll():");
-            log.info("-------------------------------");
-
-            List<User> users = userRepository.findAll();
-            if (users.size() == 0)
-            {
-                log.info("No users found in the database. Initialization failed?");
-            } else
-            {
-                users.forEach(user -> { log.info(user); } );
-            }
-            log.info("");
+//            // fetch all users
+//            log.info("Users found with findAll():");
+//            log.info("-------------------------------");
+//
+//            List<User> users = userService.findAll();
+//            if (users.size() == 0)
+//            {
+//                log.info("No users found in the database. Initialization failed?");
+//            } else
+//            {
+//                users.forEach(user -> { log.info(user); } );
+//            }
+//            log.info("");
         };
     }
 
@@ -62,49 +62,51 @@ public class DatabaseInitializer
         }
     }
 
-    /** Users are loaded from Okta
+    /** User authentication is done vs Okta
      *
-     * @param userRepository
+     * @param userService
      */
-    private static void loadUsers(UserRepository userRepository)
+    private static void loadUsers(UserService userService)
     {
         User regularUser = new User();
         regularUser.username("testuser");
-        regularUser.emailAddress("testuser@test.com");
-        regularUser.emailConfirmed(true);
-        regularUser.dateOfBirth(LocalDate.now().minusYears(20));
+//        regularUser.emailAddress("testuser@test.com");
+//        regularUser.emailConfirmed(true);
+        // regularUser.dateOfBirth(LocalDate.now().minusYears(20));
         regularUser.oktaUserId("00u28osriV7V5f7pM5d6");
 
         User adminUser = new User();
         adminUser.username("admin");
-        adminUser.emailAddress("admin@test.com");
-        adminUser.emailConfirmed(true);
-        adminUser.dateOfBirth(LocalDate.now().minusYears(40));
+//        adminUser.emailAddress("admin@test.com");
+//        adminUser.emailConfirmed(true);
+        // adminUser.dateOfBirth(LocalDate.now().minusYears(40));
+        regularUser.oktaUserId("00u1f8o0y26HLrrVp5d6");
 
         List<User> userList = new ArrayList();
         userList.add(regularUser);
         userList.add(adminUser);
 
-        userRepository.saveAll(userList);
+        // userRepository.saveAll(userList);
     }
 
-    private static void loadQuestions(SurveyRepository surveyRepository,
+    private static void loadQuestions(UserService userService,
+                                      SurveyRepository surveyRepository,
                                       QuestionRepository questionRepository,
                                       PossibleAnswerRepository possibleAnswerRepository)
     {
-        FirstExampleSurveyInitializer exampleQuestions = new FirstExampleSurveyInitializer(surveyRepository,
-                questionRepository, possibleAnswerRepository);
+        FirstExampleSurveyInitializer exampleQuestions =
+                new FirstExampleSurveyInitializer(userService, surveyRepository, questionRepository, possibleAnswerRepository);
         exampleQuestions.loadQuestions();
         exampleQuestions.saveSurvey();
 
-        WeatherExampleSurveyInitializer weatherExampleSurveyInitializer = new WeatherExampleSurveyInitializer(surveyRepository,
-                questionRepository, possibleAnswerRepository);
+        WeatherExampleSurveyInitializer weatherExampleSurveyInitializer =
+                new WeatherExampleSurveyInitializer(userService, surveyRepository, questionRepository, possibleAnswerRepository);
 
         weatherExampleSurveyInitializer.loadQuestions();
         weatherExampleSurveyInitializer.saveSurvey();
 
-        MathsExampleSurveyInitializer mathsExampleSurveyInitializer = new MathsExampleSurveyInitializer(surveyRepository,
-                questionRepository, possibleAnswerRepository);
+        MathsExampleSurveyInitializer mathsExampleSurveyInitializer =
+                new MathsExampleSurveyInitializer(userService, surveyRepository, questionRepository, possibleAnswerRepository);
         mathsExampleSurveyInitializer.loadQuestions();
         mathsExampleSurveyInitializer.saveSurvey();
     }

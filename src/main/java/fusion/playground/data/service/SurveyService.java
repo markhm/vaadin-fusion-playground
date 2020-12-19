@@ -1,8 +1,6 @@
 package fusion.playground.data.service;
 
-import fusion.playground.data.entity.Question;
-import fusion.playground.data.entity.Survey;
-import fusion.playground.data.entity.SurveyResult;
+import fusion.playground.data.entity.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +8,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.MongoCrudService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,14 +20,13 @@ public class SurveyService extends MongoCrudService<Survey, String>
 {
     private static Log log = LogFactory.getLog(SurveyService.class);
 
+    private UserService userService;
     private SurveyRepository surveyRepository;
-    // private SurveySessionService surveySessionService;
-
-    private int questionPointer = 1;
 
     @Autowired
-    public SurveyService(SurveyRepository surveyRepository)
+    public SurveyService(SurveyRepository surveyRepository, UserService userService)
     {
+        this.userService = userService;
         this.surveyRepository = surveyRepository;
     }
 
@@ -38,18 +36,28 @@ public class SurveyService extends MongoCrudService<Survey, String>
         return surveyRepository;
     }
 
-    public List<String> getAvailableSurveys()
+    public List<SurveyInfo> getAvailableSurveysForOktaUserId(String oktaUserId)
     {
-        List<Survey> availableSurveys = surveyRepository.findAll();
-
-        return availableSurveys.stream().map(survey -> survey.name()).collect(Collectors.toList());
+        log.info("Finding user by oktaId: "+oktaUserId);
+        User user = userService.findByOktaUserId(oktaUserId);
+        return getAvailableSurveys(user);
     }
 
-//    public String beginSurvey(User user, String surveyName)
-//    {
-//        Survey survey = findSurveyByName(surveyName);
-//        return surveyResponseService.beginSurvey(user, survey);
-//    }
+    private List<SurveyInfo> getAvailableSurveys(User user)
+    {
+        // get all surveys with general/public visibility
+        List<Survey> publicSurveys = surveyRepository.findAllByVisibility(Visibility.general);
+
+        // find the surveys with private/personal visibility
+        List<Survey> privateSurveys = surveyRepository.findAllByOwnerAndVisibility(user, Visibility.personal);
+
+        // combine the two
+        List<Survey> combinedSurveys = new ArrayList<Survey>(publicSurveys);
+        combinedSurveys.addAll(privateSurveys);
+        // Note: groups not implemented yet
+        return combinedSurveys.stream().map(survey -> SurveyInfo.createFrom(survey)).collect(Collectors.toList());
+
+    }
 
     @Deprecated
     public Survey findSurveyByName(String name)
@@ -115,7 +123,7 @@ public class SurveyService extends MongoCrudService<Survey, String>
 
     public Question getQuestionFromSurvey(Survey survey, int orderNumber)
     {
-        log.info("Retrieving question #" + orderNumber + "from survey "+survey.toString());
+        // log.info("Retrieving question #" + orderNumber + "from survey "+survey.toString());
         return survey.questions().get(orderNumber - 1);
     }
 

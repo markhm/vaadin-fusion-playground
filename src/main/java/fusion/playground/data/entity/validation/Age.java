@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = {AgeValidator.class})
 public @interface Age
 {
-    String message() default "You should be at least {value} years old to join.";
+    String message() default "You need to be at least {value} years old to join.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

@@ -27,10 +27,6 @@ export class UserDetailsView extends LitElement {
         id: "0",
         username: '',
         oktaUserId: '',
-
-        dateOfBirth: '',
-        emailAddress: '',
-        emailConfirmed: false
     };
 
     @internalProperty() oktaUserId : string = '';

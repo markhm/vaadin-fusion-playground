@@ -2,12 +2,15 @@ package fusion.playground.data.service;
 
 import fusion.playground.data.entity.User;
 import fusion.playground.service.OktaService;
+import fusion.playground.views.user.UserVO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.MongoCrudService;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,11 +22,15 @@ public class UserService extends MongoCrudService<User, String>
 
     private OktaService oktaService;
 
+    // private List<User> cachedUsers;
+
     @Autowired
     public UserService( UserRepository userRepository, OktaService oktaService)
     {
         this.userRepository = userRepository;
         this.oktaService = oktaService;
+
+        // cachedUsers = new LinkedList<>();
     }
 
     @Override
@@ -32,45 +39,45 @@ public class UserService extends MongoCrudService<User, String>
         return this.userRepository;
     }
 
-    public User findByOktaUserId(String id)
+    public void createUser(UserVO userVO)
     {
-        return getRepository().findByOktaUserId(id).get();
-    }
-
-    public Optional<User> findByUsername(String username)
-    {
-        return getRepository().findByUsername(username);
-    }
-
-    public User save(User user)
-    {
-        return getRepository().save(user);
-    }
-
-    public User createUser(User user)
-    {
-        Optional<User> optionalUser = userRepository.findByUsername(user.username());
-
-        if (optionalUser.isPresent())
+        try
         {
-            log.warn("A userClaims with username '"+user.username()+"' already exists. Ignoring.");
-            return null;
+            com.okta.sdk.resource.user.User userInOkta = oktaService.createUserInOkta(userVO);
+
+            log.info("Created user in Okta: "+userInOkta);
+        }
+        catch(Exception exception)
+        {
+            log.error("Could not create user in Okta." + exception);
+        }
+    }
+
+    public User findByOktaUserId(String oktaUserId)
+    {
+        User user = null;
+
+        Optional<User> maybeUser = getRepository().findByOktaUserId(oktaUserId);
+
+        if (!maybeUser.isPresent())
+        {
+            com.okta.sdk.resource.user.User oktaUser = oktaService.findByOktaUserId(oktaUserId);
+            user = User.createFrom(oktaUser);
+
+            getRepository().save(user);
+        }
+        else
+        {
+            user = maybeUser.get();
         }
 
-        Optional<User> optionalUser2 = userRepository.findByEmailAddress(user.emailAddress());
-
-        if (optionalUser2.isPresent())
-        {
-            log.warn("A userClaims with emailAddress '"+user.emailAddress()+"' already exists. Ignoring.");
-            return null;
-        }
-
-        com.okta.sdk.resource.user.User userInOkta = oktaService.createUserInOkta(user);
-
-        log.info("Created userClaims in Okta: "+userInOkta);
-
-        return null;
+        return user;
     }
 
+//    public User findByUsername(String username)
+//    {
+//        User result = getRepository().findByUsername(username).get();
+//        return result;
+//    }
 
 }

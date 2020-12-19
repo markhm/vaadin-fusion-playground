@@ -20,13 +20,15 @@ public class Survey extends AbstractEntity
 {
     private @NonNull String category;
     private @NonNull String name;
-
     private String title;
-    private String description = "There is no description available yet for this survey.";
+    private String description = "There is no description available for this survey.";
+    private boolean gradable = false;
+
+    private User owner;
+    private Visibility visibility = Visibility.personal;
+    private List<User> visibleTo;
 
     private List<Question> questions;
-
-    private boolean gradable = false;
 
     public Survey(SurveyCategory category, String name)
     {

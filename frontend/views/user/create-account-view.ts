@@ -18,8 +18,9 @@ import { showNotification } from '@vaadin/flow-frontend/a-notification';
 
 import { EndpointError } from '@vaadin/flow-frontend/Connect';
 import * as UserEndpoint from '../../generated/UserEndpoint';
-import UserModel from '../../generated/fusion/playground/data/entity/UserModel';
+import UserVOModel from '../../generated/fusion/playground/views/user/UserVOModel';
 import { Binder, field } from '@vaadin/form';
+import {Router} from "@vaadin/router";
 
 @customElement('create-account-view')
 export class CreateAccountView extends LitElement {
@@ -33,7 +34,7 @@ export class CreateAccountView extends LitElement {
     `;
   }
 
-  private binder = new Binder(this, UserModel);
+  private binder = new Binder(this, UserVOModel);
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
@@ -44,18 +45,20 @@ export class CreateAccountView extends LitElement {
     return html`        
       <div>Welcome to the Fusion Playground Survey world...!</div></br>
       <div>This is where you complete surveys and get recognition for it. </div><br/>
-      <div>Fill in the form to request an account.</div>
+      <div>Fill in the form to create an account.</div>
       
       <vaadin-form-layout style="width: 100%;">
-        <vaadin-text-field label="Username (anonymous, but one your friends would recognise)"
+        <vaadin-text-field label="Username (anonymous, but your friends would recognise)"
                            ...="${field(this.binder.model.username)}"></vaadin-text-field>
         <vaadin-date-picker label="Date of birth (you should be over 13 to join)" 
                             ...="${field(this.binder.model.dateOfBirth)}"></vaadin-date-picker>
         <vaadin-email-field label="Email" 
                             ...="${field(this.binder.model.emailAddress)}"></vaadin-email-field>
+        <vaadin-password-field label="Password (note: there is no password reset function yet)"
+                            ...="${field(this.binder.model.password)}"></vaadin-password-field>
       </vaadin-form-layout>
-      <div>You will receive an email where you are able to set your password.</div>
       </br>
+      <div>Note: Vaadin Fusion Playground uses Okta, a third party provider that will ask you to confirm your email and set a password. After doing so, you can log in.</div><br/>
       
       <vaadin-horizontal-layout class="button-layout" theme="spacing">
         <vaadin-button theme="primary" ?disabled=${this.binder.invalid || this.binder.submitting} @click="${this.save}">Submit</vaadin-button>
@@ -64,6 +67,9 @@ export class CreateAccountView extends LitElement {
             <span class="label">submitting</span>
             <div class="spinner"></div>` : html``}
       </vaadin-horizontal-layout>
+      
+      </br>
+      <div>After clicking Submit, you will will be routed to the Login page.</div>
     `;
   }
 
@@ -71,7 +77,9 @@ export class CreateAccountView extends LitElement {
     try {
       await this.binder.submitTo(UserEndpoint.createUser);
       this.clearForm();
-        showNotification('Check your mail to confirm your account.', { position: 'bottom-start' });
+        showNotification('Your user was created. You can login now.', { position: 'bottom-start' });
+        Router.go('/login');
+
     } catch (error) {
       if (error instanceof EndpointError) {
         showNotification('Server error. ' + error.message, { position: 'bottom-start' });

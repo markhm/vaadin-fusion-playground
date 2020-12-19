@@ -27,11 +27,11 @@ public class TakeSurveyBackendTest extends AbstractServiceLayerTest
     public void surveyLoading()
     {
         Survey exampleSurvey = surveyService.findSurveyByName("example");
-        assertEquals(exampleSurvey.questions().size(), 8);
+        assertEquals(8, exampleSurvey.questions().size());
         // exampleSurvey.questions().forEach(question -> log.info("Question: "+question));
 
         Survey weatherSurvey = surveyService.findSurveyByName("weather");
-        assertEquals(weatherSurvey.questions().size(), 4);
+        assertEquals(6, weatherSurvey.questions().size());
     }
 
     @Test

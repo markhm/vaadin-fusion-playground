@@ -3,10 +3,11 @@ import '@vaadin/vaadin-combo-box/vaadin-combo-box.js';
 
 import type { ComboBoxElement } from '@vaadin/vaadin-combo-box';
 import type { ComboBoxItemModel } from '@vaadin/vaadin-combo-box/@types/interfaces';
+import SurveyInfo from "../../../generated/fusion/playground/data/entity/SurveyInfo";
 
 class SelectSurveyComboBox extends LitElement {
 
-    @property({ type: Array }) items : string[] = [];
+    @property({ type: Array }) items : SurveyInfo[] = [];
 
     @property() value : string = '';
     @property() label : string = '';
@@ -28,6 +29,9 @@ class SelectSurveyComboBox extends LitElement {
     }
 
     _valueChangedHandler(e: CustomEvent) {
+        console.log('The detail of the CustomEvent is: ' + JSON.stringify(e.detail));
+        console.log('The detail of the CustomEvent is: ' + JSON.stringify(e.detail.value));
+
         this.dispatchEvent(new CustomEvent('value-changed', {
             detail: {...e.detail},
             bubbles: true,
@@ -36,8 +40,8 @@ class SelectSurveyComboBox extends LitElement {
     }
 
     _itemNameRenderer(root: HTMLElement, _comboBox: ComboBoxElement, model: ComboBoxItemModel) {
-        const item = model.item as string;
-        root.innerHTML = `${item}`;
+        const surveyInfo = model.item as SurveyInfo;
+        root.innerHTML = `${surveyInfo.name}`;
     }
 }
 

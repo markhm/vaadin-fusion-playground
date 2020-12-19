@@ -5,6 +5,7 @@ import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import fusion.playground.data.CrudEndpoint;
 import fusion.playground.data.service.UserService;
 import fusion.playground.data.entity.User;
+import fusion.playground.views.user.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Endpoint
@@ -27,9 +28,9 @@ public class UserEndpoint extends CrudEndpoint<User, String>
         return getService().update(user);
     }
 
-    public User createUser(User requestedUser)
+    public void createUser(UserVO userVO)
     {
-        return getService().createUser(requestedUser);
+        getService().createUser(userVO);
     }
 
     public User getUserByOktaId(String oktaId)

@@ -2,6 +2,7 @@ package fusion.playground.data.entity.validation;
 
 
 import fusion.playground.data.entity.User;
+import fusion.playground.views.user.UserVO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.BeforeAll;
@@ -34,11 +35,11 @@ public class AgeValidationTest
     @Test
     public void testAgeValidation()
     {
-        User user = new User();
+        UserVO user = new UserVO();
         user.dateOfBirth(LocalDate.now().minusYears(4));
-        user.emailAddress("something");
+        // user.emailAddress("something");
 
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        Set<ConstraintViolation<UserVO>> violations = validator.validate(user);
 
         log.info("# violations found: " + violations.size());
 

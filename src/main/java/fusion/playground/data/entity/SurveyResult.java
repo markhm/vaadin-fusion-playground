@@ -20,7 +20,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class SurveyResult extends AbstractEntity
 {
-    private static Log log = LogFactory.getLog(SurveyService.class);
+    private static Log log = LogFactory.getLog(SurveyResult.class);
 
     private User user = null;
     private Survey survey;
@@ -65,7 +65,7 @@ public class SurveyResult extends AbstractEntity
         responses.add(response);
         lastCompletedQuestion++;
 
-        log.info("lastCompleted question: " + lastCompletedQuestion);
+        // log.info("lastCompleted question: " + lastCompletedQuestion);
         if (lastCompletedQuestion == survey.questions().size())
         {
             registerCompletion();
@@ -92,6 +92,8 @@ public class SurveyResult extends AbstractEntity
         else
         {
              log.error("Cannot register completion, please investigate.");
+             log.error("status == SurveyResultStatus.in_progress && responses().size() == survey.questions().size(): " +
+                     (status == SurveyResultStatus.in_progress && responses().size() == survey.questions().size()));
         }
     }
 
@@ -103,7 +105,7 @@ public class SurveyResult extends AbstractEntity
         }
         else
         {
-            log.error("Cannot register confirmation, please investigate.");
+            log.error("Cannot register confirmation, please investigate, because status is: '" + status + "'.");
         }
     }
 

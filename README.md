@@ -54,6 +54,7 @@ Developed on macOS (11.0.1)
 - Accessing an url parameter is explained [here](https://www.sitepoint.com/get-url-parameters-with-javascript/).
 - How to access and modify elements in the DOM, e.g. a <vaadin-button>, to set it from disabled to enabled...? -> This should be done with imparative programming.
 - There is no client-side API to create a user in Okta. A new user should be created with the server-side API.
+- How to fix [Error: Typescript: Type 'string | undefined' is not assignable to type 'string'](https://stackoverflow.com/questions/54496398/typescript-type-string-undefined-is-not-assignable-to-type-string).
 
 #### Reminders for building a custom component using Lit element
 - Custom components need an explicit end-tag, even though they might not contain any content in between: `<custom-component-name> </custom-component-name>`.

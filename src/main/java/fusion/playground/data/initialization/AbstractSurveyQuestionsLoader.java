@@ -1,11 +1,10 @@
 package fusion.playground.data.initialization;
 
 import fusion.playground.data.entity.*;
-import fusion.playground.data.service.PossibleAnswerRepository;
-import fusion.playground.data.service.QuestionRepository;
-import fusion.playground.data.service.SurveyRepository;
+import fusion.playground.data.service.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractSurveyQuestionsLoader
 {
@@ -13,19 +12,25 @@ public abstract class AbstractSurveyQuestionsLoader
 
     private int orderCounter = 1;
 
+    protected UserService userService;
     protected SurveyRepository surveyRepository;
     protected QuestionRepository questionRepository;
     protected PossibleAnswerRepository possibleAnswerRepository;
 
     protected Survey survey;
+    protected User defaultOwner;
 
-    public AbstractSurveyQuestionsLoader(SurveyRepository surveyRepository,
+    public AbstractSurveyQuestionsLoader(UserService userService,
+                                         SurveyRepository surveyRepository,
                                          QuestionRepository questionRepository,
                                          PossibleAnswerRepository possibleAnswerRepository)
     {
+        this.userService = userService;
         this.surveyRepository = surveyRepository;
         this.questionRepository = questionRepository;
         this.possibleAnswerRepository = possibleAnswerRepository;
+
+        defaultOwner = userService.findByOktaUserId("00u1f8o0y26HLrrVp5d6");
     }
 
     public abstract void loadQuestions();

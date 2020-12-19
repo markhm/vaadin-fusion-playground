@@ -37,13 +37,13 @@ public class SurveySessionEndpoint extends CrudEndpoint<SurveyResult, String>
         return surveySessionService;
     }
 
-    public String beginSurvey(String surveyName, String oktaUserId)
+    public String beginSurvey(String surveyId, String oktaUserId)
     {
         // EndpointUtil.logPrincipal("SurveyResultEndpoint.beginSurvey(..)");
 
-        log.info("Beginning begin survey " + surveyName + " for userClaims with oktaUserId: "+oktaUserId);
+        log.info("Beginning begin survey " + surveyId + " for userClaims with oktaUserId: "+oktaUserId);
         User user = userService.findByOktaUserId(oktaUserId);
-        Survey survey = surveyService.findSurveyByName(surveyName);
+        Survey survey = surveyService.get(surveyId).get();
         return surveySessionService.beginSurvey(user, survey);
     }
 

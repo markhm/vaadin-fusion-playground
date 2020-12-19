@@ -8,7 +8,15 @@ import {Binder, field} from '@vaadin/form';
 // import { addQuestion, getSurvey } from '../../generated/SurveyEndpoint';
 import * as SurveyEndpoint from '../../generated/SurveyEndpoint';
 import SurveyModel from "../../generated/fusion/playground/data/entity/SurveyModel";
+import User from "../../generated/fusion/playground/data/entity/User";
+import Visibility from "../../generated/fusion/playground/data/entity/Visibility";
 
+
+let dummyUser : User = {
+    id: '',
+    oktaUserId: '-1',
+    username: 'username'
+}
 
 @customElement('add-survey-view')
 export class AddSurveyView extends LitElement {
@@ -19,6 +27,9 @@ export class AddSurveyView extends LitElement {
         name: 'unset',
         title: 'unavailable',
         description: 'unavailable',
+        owner: dummyUser,
+        visibility: Visibility.General,
+        visibleTo: [],
         questions: [],
         gradable: false
     };
@@ -66,6 +77,9 @@ export class AddSurveyView extends LitElement {
                 name: 'unset',
                 title: 'unavailable',
                 description: 'unavailable',
+                owner: dummyUser,
+                visibility: Visibility.General,
+                visibleTo: [],
                 questions: [],
                 gradable: false
             };

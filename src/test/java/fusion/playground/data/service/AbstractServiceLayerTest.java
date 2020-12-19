@@ -27,7 +27,8 @@ public class AbstractServiceLayerTest
     @BeforeEach
     public void before()
     {
-        user = userService.findByUsername("testuser").get();
+        // testuser
+        user = userService.findByOktaUserId("00u28osriV7V5f7pM5d6");
     }
 
 }

@@ -10,6 +10,7 @@ person-form-view,
     max-width: 1024px;
     padding: 0 var(--lumo-space-l);
 }
+
 .button-layout {
     margin-bottom: var(--lumo-space-l);
     margin-top: var(--lumo-space-m);

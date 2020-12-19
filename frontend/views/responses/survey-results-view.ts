@@ -34,8 +34,6 @@ export class ConfirmResponsesView extends LitElement {
 
     return html`       
       <h3>Survey score</h3>
-      <div>Your results were stored under: ${this.surveyResultId}</div>.<br/>
-      
       ${this.questionResponses ? this.questionResponses.map(questionResponse =>
           html`
             ${questionResponse.questionNumber}: ${questionResponse.questionText}
@@ -49,9 +47,12 @@ export class ConfirmResponsesView extends LitElement {
           `) 
           : html`Loading your results.`}
 
-      <br/>You scored ${score} points out of ${this.surveyResult?.survey.questions.length} </a>. <br/>
-      
-      <br/>See your completed surveys <a href='/completed-surveys'>here</a>.
+      <br/>
+      <div>You scored ${score} points out of ${this.surveyResult?.survey.questions.length}.</div>
+      <br/>
+      <div>See your completed surveys <a href='/completed-surveys'>here</a>.</div>
+      <br/>
+      <div>Your results were stored under: ${this.surveyResultId}.</div><br/>
     `;
   }
 
@@ -62,5 +63,6 @@ export class ConfirmResponsesView extends LitElement {
     this.surveyResult = await SurveySessionEndpoint.get(this.surveyResultId);
     this.questionResponses = await SurveySessionEndpoint.getSurveyResponses(this.surveyResultId);
   }
+
 
 }

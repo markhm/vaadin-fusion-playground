@@ -1,9 +1,5 @@
+about-view,
 #about-view {
   display: block;
-  padding: var(--lumo-space-m) var(--lumo-space-l);
-}
-
-:host {
-  display: block;
-  padding: var(--lumo-space-m) var(--lumo-space-l);
+  padding: 1em;
 }

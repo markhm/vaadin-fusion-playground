@@ -13,6 +13,7 @@ import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
 import {EndpointError} from '@vaadin/flow-frontend/Connect';
 import {showNotification} from '@vaadin/flow-frontend/a-notification';
 import {Router} from "@vaadin/router";
+import SurveyInfo from "../../generated/fusion/playground/data/entity/SurveyInfo";
 
 @customElement('select-survey-view')
 export class SelectSurveyView extends LitElement {
@@ -20,17 +21,23 @@ export class SelectSurveyView extends LitElement {
     @internalProperty ()
     private categories: string[] = ['example'];
 
+    // @internalProperty ()
+    // private names: string[] = ['weather', 'maths', 'example'];
+
+    @internalProperty()
+    private surveyInfos: SurveyInfo[] = [];
+
     @internalProperty ()
     selectedCategory: string = this.categories[0];
 
     @internalProperty ()
-    private names: string[] = ['weather', 'maths', 'example'];
-
-    @internalProperty ()
-    private selectedName: string = '';
+    private selectedSurvey: SurveyInfo = undefined!;
 
     @internalProperty ()
     private surveyDescription: string = '';
+
+    @internalProperty ()
+    private oktaUserId: string = '';
 
     @internalProperty ()
     private surveyResultId: string = '';
@@ -57,15 +64,18 @@ export class SelectSurveyView extends LitElement {
                     </string-array-combo-box>
                     
                     <select-survey-combo-box label="Survey name" value="example" 
-                              .items="${this.names}" @value-changed="${this.nameSelected}">
+                              .items="${this.surveyInfos}" @value-changed="${this.surveySelected}">
                     </select-survey-combo-box>
                     
                 </vaadin-horizontal-layout>
-                
-                ${this.selectedCategory && this.selectedName ? html`<br/><br/><div>${this.surveyDescription}</div>` : html``}
+
+                <br/>
+                ${this.selectedSurvey ? html`<div>${this.surveyDescription}</div>` : html``}
                 
                 <br/>
-                <vaadin-button ?disabled=${this.selectedName === ''} @click='() => ${this.startSelectedSurvey}'>Start survey</vaadin-button>
+                <div>
+                    <vaadin-button ?disabled=${this.selectedSurvey === undefined} @click='() => ${this.startSelectedSurvey}'>Start survey</vaadin-button>
+                </div>
             </div>
     `;
     }
@@ -73,31 +83,40 @@ export class SelectSurveyView extends LitElement {
     async connectedCallback() {
         super.connectedCallback();
 
+        // retrieve the oktaUserId to initialize survey for this userClaims
+        let oktaTokenStorage = localStorage.getItem('okta-token-storage') || 'invalid';
+        this.oktaUserId = JSON.parse(oktaTokenStorage).accessToken.claims.uid;
+
         // moved initialization to firstUpdated();
     }
 
     async firstUpdated() {
 
-        // get the list of available surveys from the endpoint
+        // get the list of available surveyInfos from the endpoint
         await this.getAvailableSurveys();
-
-        console.log('received names: ' + this.names);
 
         this.requestUpdate();
     }
-
 
     categorySelected(e: CustomEvent) {
         this.selectedCategory = e.detail.value;
         // console.log('selected category: '+this.selectedCategory);
+
         this.requestUpdate();
     }
 
-    async nameSelected(e: CustomEvent) {
-        this.selectedName = e.detail.value;
-        // console.log('selected name: '+this.selectedName);
+    surveySelected(e: CustomEvent) {
+        let nameSelected = e.detail.value;
 
-        await this.loadSurveyDescription();
+        console.log('surveyInfo returned: ' + JSON.stringify(e.detail.value));
+
+        for (let i = 0; i < this.surveyInfos.length; i++) {
+            if (nameSelected === this.surveyInfos[i].name) {
+                this.selectedSurvey = this.surveyInfos[i];
+                break;
+            }
+        }
+
         this.requestUpdate();
     }
 
@@ -108,53 +127,37 @@ export class SelectSurveyView extends LitElement {
         Router.go('/question');
     }
 
+    async getAvailableSurveys() {
+        try {
+            this.surveyInfos = await SurveyEndpoint.getAvailableSurveys(this.oktaUserId);
+
+        } catch (error) {
+            showNotification('Some error happened. ' + error.message, {position: 'bottom-start'});
+
+            if (error instanceof EndpointError) {
+                showNotification('Server error. ' + error.message, {position: 'bottom-start'});
+            } else {
+                throw error;
+            }
+        }
+    }
+
     async initializeSurvey() {
 
         try {
-            // retrieve the oktaUserId to initialize survey for this userClaims
-            let oktaTokenStorage = localStorage.getItem('okta-token-storage') || 'invalid';
-            let oktaUserId = JSON.parse(oktaTokenStorage).accessToken.claims.uid;
-
-            console.log('Initializing survey ' + this.selectedName + ' for userClaims with oktaUserId: '+oktaUserId);
-            this.surveyResultId = await SurveySessionEndpoint.beginSurvey(this.selectedName, oktaUserId);
+            console.log('Initializing survey ' + this.selectedSurvey.name + ' for userClaims with oktaUserId: ' + this.oktaUserId);
+            this.surveyResultId = await SurveySessionEndpoint.beginSurvey(this.selectedSurvey.surveyId, this.oktaUserId);
 
             // https://medium.com/@nixonaugustine5/localstorage-and-sessionstorage-in-angular-app-65cda19283a0
             localStorage.setItem('surveyResultId', this.surveyResultId);
             console.log('wrote ' + this.surveyResultId + ' to localStorage.surveyResultId: ' + this.surveyResultId);
 
+            // storing the info for the selected survey locally, to pass it to the question-view
+            localStorage.setItem('selectedSurveyInfo', JSON.stringify(this.selectedSurvey));
+
         } catch (error) {
             if (error instanceof EndpointError) {
                 showNotification('Server error. ' + error.message, { position: 'bottom-start' });
-            } else {
-                throw error;
-            }
-        }
-    }
-
-    async getAvailableSurveys() {
-        try {
-            this.names = await SurveyEndpoint.getAvailableSurveys();
-
-        } catch (error) {
-            showNotification('Some error happened. ' + error.message, {position: 'bottom-start'});
-
-            if (error instanceof EndpointError) {
-                showNotification('Server error. ' + error.message, {position: 'bottom-start'});
-            } else {
-                throw error;
-            }
-        }
-    }
-
-    async loadSurveyDescription() {
-        try {
-            this.surveyDescription = await SurveyEndpoint.getSurveyDescription(this.selectedCategory, this.selectedName);
-
-        } catch (error) {
-            showNotification('Some error happened. ' + error.message, {position: 'bottom-start'});
-
-            if (error instanceof EndpointError) {
-                showNotification('Server error. ' + error.message, {position: 'bottom-start'});
             } else {
                 throw error;
             }

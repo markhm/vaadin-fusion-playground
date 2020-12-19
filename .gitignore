@@ -31,3 +31,6 @@ tsconfig.json
 /src/main/resources-filtered/env/application.heroku.properties
 
 /src/main/java/fusion/playground/data/initialization/hidden/*.java
+
+# certain credentials are not in Git
+/src/main/resources/secured_properties.properties

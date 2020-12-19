@@ -46,6 +46,7 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
 
     public String beginSurvey(User user, Survey survey)
     {
+        log.info("Beginning survey "+survey.id() + " for user " + user.id() + ".");
         SurveyResult surveyResult = new SurveyResult();
         surveyResult.user(user);
         surveyResult.survey(survey);
@@ -59,6 +60,7 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
     @Deprecated
     public Question getNextQuestion(String surveyResultId)
     {
+        log.info("Retrieving next question for surverResultId " + surveyResultId + ".");
         Question result = null;
 
         SurveyResult surveyResult = get(surveyResultId).get();

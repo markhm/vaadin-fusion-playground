@@ -4,6 +4,7 @@ import com.vaadin.flow.server.connect.Endpoint;
 import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import fusion.playground.data.CrudEndpoint;
 import fusion.playground.data.entity.Survey;
+import fusion.playground.data.entity.SurveyInfo;
 import fusion.playground.data.entity.SurveyResult;
 import fusion.playground.data.service.SurveySessionService;
 import fusion.playground.data.service.SurveyService;
@@ -34,30 +35,14 @@ public class SurveyEndpoint extends CrudEndpoint<Survey, String>
         return surveyService;
     }
 
-    public String[] getAvailableSurveys()
+    public List<SurveyInfo> getAvailableSurveys(String oktaUserId)
     {
         // EndpointUtil.logPrincipal("getSurveyNames()");
 
-        List<String> availableSurveys = surveyService.getAvailableSurveys();
-        availableSurveys.forEach(survey -> log.info("found surveyName: "+survey));
+        List<SurveyInfo> availableSurveys = surveyService.getAvailableSurveysForOktaUserId(oktaUserId);
+        availableSurveys.forEach(survey -> log.info("Returning surveyInfo: "+survey));
 
-        return availableSurveys.stream().toArray(String[]::new);
+        return availableSurveys;
     }
-
-    public String getSurveyDescription(String category, String name)
-    {
-        return surveyService.getSurveyDescription(category, name);
-    }
-
-    public int getTotalNumberOfQuestions(String surveyResultId)
-    {
-        // EndpointUtil.logPrincipal("getTotalNumberOfQuestions(..)");
-
-        SurveyResult surveyResponse = surveySessionService.get(surveyResultId).get();
-        Survey survey = surveyResponse.survey();
-        return survey.questions().size();
-        // return surveyService.countAllBySurveyName(survey);
-    }
-
 
 }

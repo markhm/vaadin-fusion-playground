@@ -4,10 +4,17 @@ import '@vaadin/vaadin-select'
 import '@vaadin/vaadin-date-picker';
 import '@vaadin/vaadin-grid';
 
+import './components/completed-surveys-grid';
+
 import { css, customElement, html, property, LitElement } from 'lit-element';
 import SurveyResult from "../../generated/fusion/playground/data/entity/SurveyResult";
 import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
 import {Router} from "@vaadin/router";
+// import Response from "../../generated/fusion/playground/data/entity/Response";
+// import SurveyResultStatus from "../../generated/fusion/playground/data/entity/SurveyResult/SurveyResultStatus";
+// import Survey from "../../generated/fusion/playground/data/entity/Survey";
+// import User from "../../generated/fusion/playground/data/entity/User";
+// import Question from "../../generated/fusion/playground/data/entity/Question";
 
 @customElement('completed-surveys-view')
 export class CompletedSurveysView extends LitElement {
@@ -26,34 +33,18 @@ export class CompletedSurveysView extends LitElement {
 
     render() {
 
-        let data = this.completedSurveys;
+        // let data = this.completedSurveys;
         // console.log('Now is the data: '+JSON.stringify(data));
 
         return html`                
             <div>You completed the following surveys.</div>
             <br/>
             
-            <vaadin-grid items="[[data]]>">
+            <completed-surveys-grid .surveyResults='${this.completedSurveys}'>
                 
-                <vaadin-grid-column>
-                    <template class="header">Survey name</template>
-                    <template>[[data.survey.name]]</template>
-                </vaadin-grid-column>
-
-                <vaadin-grid-column>
-                    <template class="header">Completed at</template>
-                    <template>[[data.endTime]]</template>
-                </vaadin-grid-column>
-
-                <vaadin-grid-column>
-                    <template class="header">Results approved</template>
-                    <template>[[data.status]]</template>
-                </vaadin-grid-column>
-            </vaadin-grid>
+            </completed-surveys-grid>
+            
             <br/>
-            ${data.map(dataElement => html`
-                ${dataElement.survey.name} : ${dataElement.endTime}: ${dataElement.status} <br/>
-                        `)}
     `;
     }
 
@@ -64,8 +55,8 @@ export class CompletedSurveysView extends LitElement {
         if (oktaTokenStorage === 'invalid') Router.go('/logout');
 
         let oktaUserId = JSON.parse(oktaTokenStorage).accessToken.claims.uid;
-
         this.completedSurveys = await SurveySessionEndpoint.getCompletedSurveys(oktaUserId);
+
         // console.log('received categories: '+JSON.stringify(this.categories));
     }
 }

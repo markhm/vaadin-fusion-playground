@@ -1,3 +1,3 @@
 #!/bin/sh
 
-mvn test jacoco:report site
+mvn -Ptest-and-docs test jacoco:report site
