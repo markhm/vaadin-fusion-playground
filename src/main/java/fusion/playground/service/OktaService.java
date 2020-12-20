@@ -12,6 +12,7 @@ import fusion.playground.views.user.UserVO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnResource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@ConditionalOnResource(resources = "/secured_properties.properties")
 public class OktaService
 {
     private static Log log = LogFactory.getLog(OktaService.class);
