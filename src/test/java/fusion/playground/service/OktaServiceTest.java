@@ -4,6 +4,8 @@ import com.okta.sdk.resource.user.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,8 +13,9 @@ import org.springframework.context.annotation.Conditional;
 
 import java.time.LocalDate;
 
-@SpringBootTest
-@ConditionalOnProperty("run-integration-test")
+// https://www.baeldung.com/junit-5-conditional-test-execution
+
+// @SpringBootTest
 public class OktaServiceTest
 {
     private static Log log = LogFactory.getLog(OktaServiceTest.class);
@@ -25,7 +28,7 @@ public class OktaServiceTest
         this.oktaService = oktaService;
     }
 
-    @Test
+    // @Test
     public void testFindUserByEmail()
     {
         String username = "testuser@test.com";
@@ -34,32 +37,31 @@ public class OktaServiceTest
         log.info("Found user by username " + username + ": "+user);
     }
 
-    @Test
+    // @Test
     public void testFindUserByOktaUserId()
     {
-        String oktaUserId = "00u28osriV7V5f7pM5d6";
-        User user = oktaService.findByOktaUserId(oktaUserId);
+        User user = oktaService.findByOktaUserId(SomeOktaUser.DEFAULT_USER_OKTA_ID);
 
         Object dateOfBirth = user.getProfile().get(fusion.playground.data.entity.User.DATE_OF_BIRTH);
         Object displayName = user.getProfile().get(fusion.playground.data.entity.User.DISPLAY_NAME);
 
-        log.info("Found user by oktaUserId " + oktaUserId + ": "+user);
+        log.info("Found user by oktaUserId " + SomeOktaUser.DEFAULT_USER_OKTA_ID + ": "+user);
         log.info("");
 
         log.info("dateOfBirth: " + dateOfBirth);
         log.info("displayName: " + displayName);
     }
 
-    @Test
+    // @Test
     public void testSetDateOfBirth()
     {
-        String oktaUserId = "00u28osriV7V5f7pM5d6";
+
         LocalDate localDate = LocalDate.now().minusYears(25);
-        oktaService.setDateOfBirth(oktaUserId, localDate);
+        oktaService.setDateOfBirth(SomeOktaUser.DEFAULT_USER_OKTA_ID, localDate);
 
     }
 
-    @Test
+    // @Test
     public void localDateToString()
     {
         LocalDate localDate = LocalDate.now().minusYears(25);
