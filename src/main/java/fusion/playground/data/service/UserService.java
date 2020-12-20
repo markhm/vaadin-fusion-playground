@@ -20,12 +20,12 @@ public class UserService extends MongoCrudService<User, String>
 
     private UserRepository userRepository;
 
-    private OktaService oktaService;
+    @Autowired(required = false) private OktaService oktaService;
 
     // private List<User> cachedUsers;
 
     @Autowired
-    public UserService( UserRepository userRepository, OktaService oktaService)
+    public UserService(UserRepository userRepository)
     {
         this.userRepository = userRepository;
         this.oktaService = oktaService;

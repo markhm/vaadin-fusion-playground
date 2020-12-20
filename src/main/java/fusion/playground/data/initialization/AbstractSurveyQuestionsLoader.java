@@ -2,10 +2,13 @@ package fusion.playground.data.initialization;
 
 import fusion.playground.data.entity.*;
 import fusion.playground.data.service.*;
+import fusion.playground.service.SomeOktaUser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 
+@DependsOn("databaseInitializer")
 public abstract class AbstractSurveyQuestionsLoader
 {
     private static Log log = LogFactory.getLog(AbstractSurveyQuestionsLoader.class);
@@ -28,7 +31,7 @@ public abstract class AbstractSurveyQuestionsLoader
         this.questionRepository = questionRepository;
         this.possibleAnswerRepository = possibleAnswerRepository;
 
-        defaultOwner = userRepository.findByOktaUserId("00u1f8o0y26HLrrVp5d6").get();
+        defaultOwner = userRepository.findByOktaUserId(SomeOktaUser.VFP_ADMIN_USER_OKTA_ID).get();
     }
 
     public abstract void loadQuestions();

@@ -10,9 +10,9 @@ import org.springframework.context.annotation.PropertySource;
 public class SecuredProperties
 {
     @Value( "${okta_API_TOKEN}" )
-    public String oktaApiToken;
+    public String oktaApiToken = "unset";
 
     @Value( "${okta_OrgUrl}" )
-    public String oktaOrgUrl;
+    public String oktaOrgUrl = "unset";
 
 }

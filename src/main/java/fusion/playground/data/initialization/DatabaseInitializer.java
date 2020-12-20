@@ -75,7 +75,7 @@ public class DatabaseInitializer
 
         User adminUser = new User();
         adminUser.username("admin");
-        adminUser.oktaUserId(SomeOktaUser.ADMIN_USER_OKTA_ID);
+        adminUser.oktaUserId(SomeOktaUser.VFP_ADMIN_USER_OKTA_ID);
 
         List<User> userList = new ArrayList();
         userList.add(regularUser);
