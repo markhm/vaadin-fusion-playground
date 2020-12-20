@@ -2,6 +2,7 @@ package fusion.playground.data.initialization;
 
 import fusion.playground.data.service.*;
 import fusion.playground.data.entity.User;
+import fusion.playground.service.SomeOktaUser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -32,7 +33,7 @@ public class DatabaseInitializer
         return () -> {
 
             // Start with a clean database;
-            dropAllCollections(questionRepository, possibleAnswerRepository, responseRepository);
+            dropAllCollections(userRepository, questionRepository, possibleAnswerRepository, responseRepository);
 
             loadUsers(userRepository);
 
@@ -66,22 +67,35 @@ public class DatabaseInitializer
      *
      * @param userRepository
      */
-    private static void loadUsers(UserRepository userRepository)
+    private void loadUsers(UserRepository userRepository)
     {
         User regularUser = new User();
         regularUser.username("testuser");
-        regularUser.oktaUserId("00u28osriV7V5f7pM5d6");
+        regularUser.oktaUserId(SomeOktaUser.DEFAULT_USER_OKTA_ID);
 
         User adminUser = new User();
         adminUser.username("admin");
-        regularUser.oktaUserId("00u1f8o0y26HLrrVp5d6");
+        adminUser.oktaUserId(SomeOktaUser.ADMIN_USER_OKTA_ID);
 
         List<User> userList = new ArrayList();
         userList.add(regularUser);
         userList.add(adminUser);
 
         userRepository.saveAll(userList);
+
+        printUsers(userRepository);
     }
+
+    private static void printUsers(UserRepository userRepository)
+    {
+        log.info("");
+        log.info("************ ************ ************ ************ ************ ************");
+        log.info("Printing all users. ");
+        userRepository.findAll().forEach(user -> log.info("Found user: "+user));
+        log.info("************ ************ ************ ************ ************ ************");
+        log.info("");
+    }
+
 
     private static void loadQuestions(UserRepository userRepository,
                                       SurveyRepository surveyRepository,
