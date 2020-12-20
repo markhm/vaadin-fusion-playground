@@ -369,13 +369,15 @@
                 </plugins>
             </build>
         </profile>
-        
+
         <!-- This profile is just for testing and generating site documentation -->
         <profile>
             <id>test-and-docs</id> <!-- activate if -Pdev -->
             <properties>
                 <env>dev</env>
                 <vaadin.productionMode>false</vaadin.productionMode>
+                <!-- The integration test is only run locally, since it reaches out to Okta, for which the credentials
+                from secured_properties.properties are needed-->
                 <run-integration-test>true</run-integration-test>
             </properties>
             <build>
