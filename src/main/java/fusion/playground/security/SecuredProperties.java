@@ -7,7 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource(value = "classpath:secured_properties.properties", ignoreResourceNotFound = true)
-@ConditionalOnProperty(name="developmentMode", havingValue="true")
 public class SecuredProperties
 {
     @Value( "${okta_API_TOKEN}" )

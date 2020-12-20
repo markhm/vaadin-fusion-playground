@@ -21,7 +21,7 @@ public class DatabaseInitializer
 
     @Bean
     @Autowired
-    public InitializingBean initializeDatabase(UserService userService,
+    public InitializingBean initializeDatabase(UserRepository userRepository,
                                                SurveyRepository surveyRepository,
                                                QuestionRepository questionRepository,
                                                PossibleAnswerRepository possibleAnswerRepository,
@@ -34,9 +34,9 @@ public class DatabaseInitializer
             // Start with a clean database;
             dropAllCollections(questionRepository, possibleAnswerRepository, responseRepository);
 
-            // loadUsers(userService);
+            loadUsers(userRepository);
 
-            loadQuestions(userService, surveyRepository, questionRepository, possibleAnswerRepository);
+            loadQuestions(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
 
 //            // fetch all users
 //            log.info("Users found with findAll():");
@@ -62,51 +62,45 @@ public class DatabaseInitializer
         }
     }
 
-    /** User authentication is done vs Okta
+    /** User authentication is done vs Okta, but for integration testing, dummy users are loaded
      *
-     * @param userService
+     * @param userRepository
      */
-    private static void loadUsers(UserService userService)
+    private static void loadUsers(UserRepository userRepository)
     {
         User regularUser = new User();
         regularUser.username("testuser");
-//        regularUser.emailAddress("testuser@test.com");
-//        regularUser.emailConfirmed(true);
-        // regularUser.dateOfBirth(LocalDate.now().minusYears(20));
         regularUser.oktaUserId("00u28osriV7V5f7pM5d6");
 
         User adminUser = new User();
         adminUser.username("admin");
-//        adminUser.emailAddress("admin@test.com");
-//        adminUser.emailConfirmed(true);
-        // adminUser.dateOfBirth(LocalDate.now().minusYears(40));
         regularUser.oktaUserId("00u1f8o0y26HLrrVp5d6");
 
         List<User> userList = new ArrayList();
         userList.add(regularUser);
         userList.add(adminUser);
 
-        // userRepository.saveAll(userList);
+        userRepository.saveAll(userList);
     }
 
-    private static void loadQuestions(UserService userService,
+    private static void loadQuestions(UserRepository userRepository,
                                       SurveyRepository surveyRepository,
                                       QuestionRepository questionRepository,
                                       PossibleAnswerRepository possibleAnswerRepository)
     {
         FirstExampleSurveyInitializer exampleQuestions =
-                new FirstExampleSurveyInitializer(userService, surveyRepository, questionRepository, possibleAnswerRepository);
+                new FirstExampleSurveyInitializer(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
         exampleQuestions.loadQuestions();
         exampleQuestions.saveSurvey();
 
         WeatherExampleSurveyInitializer weatherExampleSurveyInitializer =
-                new WeatherExampleSurveyInitializer(userService, surveyRepository, questionRepository, possibleAnswerRepository);
+                new WeatherExampleSurveyInitializer(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
 
         weatherExampleSurveyInitializer.loadQuestions();
         weatherExampleSurveyInitializer.saveSurvey();
 
         MathsExampleSurveyInitializer mathsExampleSurveyInitializer =
-                new MathsExampleSurveyInitializer(userService, surveyRepository, questionRepository, possibleAnswerRepository);
+                new MathsExampleSurveyInitializer(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
         mathsExampleSurveyInitializer.loadQuestions();
         mathsExampleSurveyInitializer.saveSurvey();
     }

@@ -9,11 +9,11 @@ public class WeatherExampleSurveyInitializer extends AbstractSurveyQuestionsLoad
 {
     private static SurveyCategory CATEGORY_EXAMPLE = SurveyCategory.example;
 
-    public WeatherExampleSurveyInitializer(UserService userService, SurveyRepository surveyRepository,
+    public WeatherExampleSurveyInitializer(UserRepository userRepository, SurveyRepository surveyRepository,
                                            QuestionRepository questionRepository,
                                            PossibleAnswerRepository possibleAnswerRepository)
     {
-        super(userService, surveyRepository, questionRepository, possibleAnswerRepository);
+        super(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
 
         createSurvey(SurveyCategory.example, "weather");
 

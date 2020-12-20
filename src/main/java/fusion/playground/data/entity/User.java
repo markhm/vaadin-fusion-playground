@@ -17,7 +17,6 @@ import java.time.LocalDate;
 @Data
 @Document
 @NoArgsConstructor
-@AllArgsConstructor
 @Accessors(fluent=true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)

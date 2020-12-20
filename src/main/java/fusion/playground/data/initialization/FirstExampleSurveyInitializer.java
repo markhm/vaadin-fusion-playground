@@ -9,12 +9,12 @@ public class FirstExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
 {
     private static SurveyCategory CATEGORY_EXAMPLE = SurveyCategory.example;
 
-    public FirstExampleSurveyInitializer(UserService userService,
+    public FirstExampleSurveyInitializer(UserRepository userRepository,
                                          SurveyRepository surveyRepository,
                                          QuestionRepository questionRepository,
                                          PossibleAnswerRepository possibleAnswerRepository)
     {
-        super(userService, surveyRepository, questionRepository, possibleAnswerRepository);
+        super(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
 
         createSurvey(SurveyCategory.example, "example");
 

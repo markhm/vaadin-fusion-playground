@@ -14,7 +14,6 @@ import java.util.List;
 
 @Data
 @Document
-@AllArgsConstructor
 @Accessors(fluent=true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)

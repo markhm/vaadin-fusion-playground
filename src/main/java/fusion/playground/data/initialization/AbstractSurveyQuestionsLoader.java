@@ -12,7 +12,7 @@ public abstract class AbstractSurveyQuestionsLoader
 
     private int orderCounter = 1;
 
-    protected UserService userService;
+    protected UserRepository userRepository;
     protected SurveyRepository surveyRepository;
     protected QuestionRepository questionRepository;
     protected PossibleAnswerRepository possibleAnswerRepository;
@@ -20,17 +20,15 @@ public abstract class AbstractSurveyQuestionsLoader
     protected Survey survey;
     protected User defaultOwner;
 
-    public AbstractSurveyQuestionsLoader(UserService userService,
-                                         SurveyRepository surveyRepository,
-                                         QuestionRepository questionRepository,
-                                         PossibleAnswerRepository possibleAnswerRepository)
+    public AbstractSurveyQuestionsLoader(UserRepository userRepository, SurveyRepository surveyRepository,
+                                         QuestionRepository questionRepository, PossibleAnswerRepository possibleAnswerRepository)
     {
-        this.userService = userService;
+        this.userRepository = userRepository;
         this.surveyRepository = surveyRepository;
         this.questionRepository = questionRepository;
         this.possibleAnswerRepository = possibleAnswerRepository;
 
-        defaultOwner = userService.findByOktaUserId("00u1f8o0y26HLrrVp5d6");
+        defaultOwner = userRepository.findByOktaUserId("00u1f8o0y26HLrrVp5d6").get();
     }
 
     public abstract void loadQuestions();

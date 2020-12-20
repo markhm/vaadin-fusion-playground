@@ -369,13 +369,14 @@
                 </plugins>
             </build>
         </profile>
-
+        
         <!-- This profile is just for testing and generating site documentation -->
         <profile>
             <id>test-and-docs</id> <!-- activate if -Pdev -->
             <properties>
-                <vaadin.productionMode>false</vaadin.productionMode>
                 <env>dev</env>
+                <vaadin.productionMode>false</vaadin.productionMode>
+                <run-integration-test>true</run-integration-test>
             </properties>
             <build>
                 <plugins>
