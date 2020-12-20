@@ -62,6 +62,11 @@ const routes: Route[] = [
 				action: async() => { await import ('./views/about/about-view')}
 			},
 			{
+				path: 'terms-and-conditions',
+				component: 'terms-and-conditions-view',
+				action: async() => { await import ('./views/about/terms-and-conditions-view')}
+			},
+			{
 				path: 'user-details',
 				component: 'user-details-view',
 				action: async (context: Context, commands: Commands) => {
