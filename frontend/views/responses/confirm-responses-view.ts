@@ -1,10 +1,13 @@
+import {css, customElement, html, internalProperty, LitElement, property} from 'lit-element';
+import {Router} from "@vaadin/router";
+
 import '@vaadin/vaadin-button';
 import '@vaadin/vaadin-text-field';
-import {css, customElement, html, internalProperty, LitElement, property} from 'lit-element';
+
+import './completed-responses';
+
 import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
 import QuestionResponse from "../../generated/fusion/playground/data/entity/QuestionResponse";
-import {Router} from "@vaadin/router";
-import SurveyResult from "../../generated/fusion/playground/data/entity/SurveyResult";
 import SurveyInfo from "../../generated/fusion/playground/data/entity/SurveyInfo";
 
 @customElement('confirm-responses-view')
@@ -14,9 +17,6 @@ export class ConfirmResponsesView extends LitElement {
 
   @property({type: String})
   surveyResultId : string = 'unavailable';
-
-  @property({type: Object})
-  surveyResult : SurveyResult | undefined;
 
   @internalProperty()
   selectedSurveyInfo: SurveyInfo = undefined!;
@@ -34,14 +34,10 @@ export class ConfirmResponsesView extends LitElement {
   }
 
   render() {
-    return html`       
-      <h3>Your responses</h3>
-      <div>Survey: "${this.selectedSurveyInfo.name} (${this.selectedSurveyInfo.category})"</div>
-      
-      ${this.questionResponses ? this.questionResponses.map(questionResponse => html`
-            ${questionResponse.questionNumber}: ${questionResponse.questionText} <b>${questionResponse.responseText}</b> </br>
-      `) : html`Loading your answers.`}
-      
+    return html`
+        <h3>Confirm responses</h3>
+        <completed-responses surveyResultId="${this.surveyResultId}"></completed-responses>
+        
       ${this.questionResponses ? html`
         <br/>  
         <div>Do you wish to confirm these answers...? <br/></div>
@@ -65,15 +61,13 @@ export class ConfirmResponsesView extends LitElement {
     super.connectedCallback();
 
     this.surveyResultId = localStorage.getItem('surveyResultId') || 'unavailable';
-    this.selectedSurveyInfo = JSON.parse(localStorage.getItem('selectedSurveyInfo') || undefined!);
-    this.questionResponses = await SurveySessionEndpoint.getSurveyResponses(this.surveyResultId);
   }
 
   async approve() {
     await SurveySessionEndpoint.confirmResponses(this.surveyResultId);
-    this.surveyResult = await SurveySessionEndpoint.confirmResponses(this.surveyResultId);
+    let surveyResult = await SurveySessionEndpoint.confirmResponses(this.surveyResultId);
 
-    if (this.surveyResult.survey.gradable) {
+    if (surveyResult.survey.gradable) {
       Router.go('/survey-results');
     }
     else {
@@ -87,8 +81,7 @@ export class ConfirmResponsesView extends LitElement {
   }
 
   async  reject() {
-    this.surveyResult = await SurveySessionEndpoint.rejectResponses(this.surveyResultId);
-    console.log('surveyResult: '+this.surveyResult);
+    await SurveySessionEndpoint.rejectResponses(this.surveyResultId);
 
     Router.go('/completed-surveys');
   }

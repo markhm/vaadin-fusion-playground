@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Endpoint
-@AnonymousAllowed
 public class SurveySessionEndpoint extends CrudEndpoint<SurveyResult, String>
 {
     private static Log log = LogFactory.getLog(SurveySessionEndpoint.class);
@@ -74,6 +73,11 @@ public class SurveySessionEndpoint extends CrudEndpoint<SurveyResult, String>
         return surveySessionService.rejectResponses(surveyResultId);
     }
 
+    public boolean userHasConfirmedResponses(String surveyResultId)
+    {
+        return surveySessionService.get(surveyResultId).get().userHasConfirmed();
+    }
+
     public List<SurveyResult> getCompletedSurveys(String oktaUserId)
     {
         User user = userService.findByOktaUserId(oktaUserId);
@@ -83,6 +87,13 @@ public class SurveySessionEndpoint extends CrudEndpoint<SurveyResult, String>
     public List<QuestionResponse> getSurveyResponses(String surveyResultId)
     {
         return surveySessionService.getSurveyResponses(surveyResultId);
+    }
+
+    public SurveyInfo getSurveyInfo(String surveyResultId)
+    {
+        SurveyResult surveyResult = surveySessionService.get(surveyResultId).get();
+        Survey survey = surveyResult.survey();
+        return SurveyInfo.createFrom(survey);
     }
 
 }

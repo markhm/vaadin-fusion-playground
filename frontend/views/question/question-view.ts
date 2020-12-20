@@ -31,12 +31,7 @@ export class QuestionView extends LitElement {
   selectedSurveyInfo: SurveyInfo = undefined!;
 
   @internalProperty()
-  question : Question = {
-    id: "0",
-    orderNumber: 0,
-    text: "Loading questions...",
-    possibleAnswers: []
-  };
+  question : Question = undefined!;
 
   @internalProperty()
   questionId : string = "3";
@@ -61,41 +56,36 @@ export class QuestionView extends LitElement {
   render() {
     const question = this.question;
     let possibleAnswers = question.possibleAnswers;
-    let alreadyAnswered = false;
+    let lastQuestionAnswered = false;
 
-    let result;
-    let responseBasis;
+    let questionTextLine;
+    let alternativeText;
     if (question.orderNumber === -1) {
-      alreadyAnswered = true;
-      responseBasis = 'You have finished the last question.';
-    } else if (question.orderNumber === -2)
-    {
-
+      lastQuestionAnswered = true;
+      alternativeText = 'You have finished the last question.';
     }
     else if (question.id === "0") {
-      responseBasis = 'Loading questions...';
-    }
-    else{
+      alternativeText = 'Loading questions...';
     }
 
-    if (alreadyAnswered || question.id == "0") {
-      result = html`${responseBasis}`;
+    if (lastQuestionAnswered || question.id == "0") {
+      questionTextLine = html`${alternativeText}`;
     }
     else {
-      result = html`<div>Question ${question.orderNumber} of ${this.selectedSurveyInfo.numberOfQuestions}:</div> ${question.text} </br></br>
+      questionTextLine = html`<div>Question ${question.orderNumber} of ${this.selectedSurveyInfo.numberOfQuestions}:</div> ${question.text} </br></br>
                <div>Your answer:</div>`
     }
 
     return html`
       <h3>Welcome to this survey</h3>
       <!-- Show questions when they are available, else show loading warning... -->
-      ${result}
+      ${questionTextLine}
       ${possibleAnswers.map(possibleAnswer => html`
             <vaadin-button class="special" @click="${() => this.submitAnswer(possibleAnswer.id)}">${possibleAnswer.text}</vaadin-button> <br/>
             `)}
       <br/>
       
-      ${alreadyAnswered ? html`
+      ${lastQuestionAnswered ? html`
         <br/>
         <div>You can now review and confirm your responses. </div>
         <br/>
@@ -135,7 +125,7 @@ export class QuestionView extends LitElement {
       // console.log('About to submit answer: ' + answerId + ' to question ' + this.questionId + ' for userClaims '+this.userId + '.');
       await SurveySessionEndpoint.saveResponse(this.surveyResultId, this.question.id, responseId);
 
-      showNotification('Response stored.', { position: 'bottom-start' });
+      // showNotification('Response stored.', { position: 'bottom-start' });
 
       await this.loadQuestion();
       await this.requestUpdate();

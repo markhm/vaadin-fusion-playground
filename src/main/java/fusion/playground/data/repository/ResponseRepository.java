@@ -1,4 +1,4 @@
-package fusion.playground.data.service;
+package fusion.playground.data.repository;
 
 import fusion.playground.data.entity.Response;
 import org.springframework.data.mongodb.repository.MongoRepository;

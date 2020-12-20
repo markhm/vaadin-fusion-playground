@@ -77,6 +77,18 @@ public class SurveyResult extends AbstractEntity
         else return true;
     }
 
+    public boolean userHasConfirmed()
+    {
+        if (status == SurveyResultStatus.confirmed)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void registerCompletion()
     {
 //        log.info("status: " + status);
@@ -133,7 +145,7 @@ public class SurveyResult extends AbstractEntity
         complete,
         confirmed,
         rejected,
-        evaluated
+        graded
     }
 
 }

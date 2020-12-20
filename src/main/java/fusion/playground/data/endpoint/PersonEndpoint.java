@@ -10,7 +10,6 @@ import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Endpoint
-@AnonymousAllowed
 public class PersonEndpoint extends CrudEndpoint<Person, String> {
 
     private PersonService service;

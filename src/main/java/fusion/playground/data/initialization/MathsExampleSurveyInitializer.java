@@ -1,9 +1,11 @@
 package fusion.playground.data.initialization;
 
 import fusion.playground.data.entity.SurveyCategory;
-import fusion.playground.data.entity.User;
 import fusion.playground.data.entity.Visibility;
-import fusion.playground.data.service.*;
+import fusion.playground.data.repository.PossibleAnswerRepository;
+import fusion.playground.data.repository.QuestionRepository;
+import fusion.playground.data.repository.SurveyRepository;
+import fusion.playground.data.repository.UserRepository;
 
 public class MathsExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
 {
@@ -27,16 +29,16 @@ public class MathsExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
 
     public void loadQuestions()
     {
-        addFactualQuestion("What is 5 ➕ 7?", 2,
+        addFactualQuestion("What is 5 ➕  7?", 2,
                 "9", "12", "14");
 
-        addFactualQuestion("What is 17 ➖ 13?", 2,
+        addFactualQuestion("What is 17 ➖  13?", 2,
                 "3", "4", "6");
 
-        addFactualQuestion("What is 5 ✖️ 13?️", 3,
+        addFactualQuestion("What is 5 ✖️  13?️", 3,
                 "45", "55", "65");
 
-        addFactualQuestion("What is 20 ➗ 4?", 2,
+        addFactualQuestion("What is 20 ➗  4?", 2,
                 "4", "5", "6");
     }
 }

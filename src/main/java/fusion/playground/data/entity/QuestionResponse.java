@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document
 @NoArgsConstructor
-@AllArgsConstructor
 @Accessors(fluent=true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -18,4 +17,5 @@ public class QuestionResponse extends AbstractEntity
     String questionText;
     String responseText;
     boolean correct;
+
 }

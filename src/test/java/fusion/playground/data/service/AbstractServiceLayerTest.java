@@ -1,14 +1,11 @@
 package fusion.playground.data.service;
 
 import fusion.playground.data.entity.User;
-import fusion.playground.data.initialization.DatabaseInitializer;
+import fusion.playground.data.repository.UserRepository;
 import fusion.playground.service.SomeOktaUser;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.DependsOn;
 
 @SpringBootTest
 public class AbstractServiceLayerTest

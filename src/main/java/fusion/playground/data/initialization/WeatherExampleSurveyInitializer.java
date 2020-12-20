@@ -1,9 +1,11 @@
 package fusion.playground.data.initialization;
 
 import fusion.playground.data.entity.SurveyCategory;
-import fusion.playground.data.entity.User;
 import fusion.playground.data.entity.Visibility;
-import fusion.playground.data.service.*;
+import fusion.playground.data.repository.PossibleAnswerRepository;
+import fusion.playground.data.repository.QuestionRepository;
+import fusion.playground.data.repository.SurveyRepository;
+import fusion.playground.data.repository.UserRepository;
 
 public class WeatherExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
 {

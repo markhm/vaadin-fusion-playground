@@ -2,6 +2,7 @@ package fusion.playground.data.service;
 
 import fusion.playground.data.entity.Person;
 
+import fusion.playground.data.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.MongoCrudService;

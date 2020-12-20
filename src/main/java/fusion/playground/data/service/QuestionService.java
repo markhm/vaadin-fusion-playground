@@ -1,16 +1,12 @@
 package fusion.playground.data.service;
 
 import fusion.playground.data.entity.Question;
-import fusion.playground.data.entity.Survey;
+import fusion.playground.data.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.MongoCrudService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class QuestionService extends MongoCrudService<Question, String>

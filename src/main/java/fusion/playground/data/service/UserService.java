@@ -1,6 +1,7 @@
 package fusion.playground.data.service;
 
 import fusion.playground.data.entity.User;
+import fusion.playground.data.repository.UserRepository;
 import fusion.playground.service.OktaService;
 import fusion.playground.views.user.UserVO;
 import org.apache.commons.logging.Log;
@@ -9,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.MongoCrudService;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 @Service

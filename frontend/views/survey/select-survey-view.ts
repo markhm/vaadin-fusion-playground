@@ -54,7 +54,7 @@ export class SelectSurveyView extends LitElement {
     render() {
         return html`                
             <h3>Available surveys</h3>
-            <div>Choose a survey.</div>
+            <div>Select a survey.</div>
 
             <div class="form">
                 <vaadin-horizontal-layout>

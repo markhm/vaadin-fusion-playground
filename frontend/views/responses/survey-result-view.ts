@@ -1,12 +1,15 @@
+import {css, customElement, html, LitElement, property} from 'lit-element';
+
 import '@vaadin/vaadin-button';
 import '@vaadin/vaadin-text-field';
-import {css, customElement, html, LitElement, property} from 'lit-element';
+
+import './completed-responses';
+
 import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
-import QuestionResponse from "../../generated/fusion/playground/data/entity/QuestionResponse";
 import SurveyResult from "../../generated/fusion/playground/data/entity/SurveyResult";
 
-@customElement('survey-results-view')
-export class ConfirmResponsesView extends LitElement {
+@customElement('survey-result-view')
+export class SurveyResultView extends LitElement {
 
   name: string = '';
 
@@ -15,9 +18,6 @@ export class ConfirmResponsesView extends LitElement {
 
   @property({type: Object})
   surveyResult : SurveyResult | undefined;
-
-  @property({ type: Array })
-  questionResponses : QuestionResponse[] = [];
 
   static get styles() {
     return css`
@@ -34,18 +34,7 @@ export class ConfirmResponsesView extends LitElement {
 
     return html`       
       <h3>Survey score</h3>
-      ${this.questionResponses ? this.questionResponses.map(questionResponse =>
-          html`
-            ${questionResponse.questionNumber}: ${questionResponse.questionText}
-            ${questionResponse.correct ? html`
-                <span style='color:green'> <b>${questionResponse.responseText}</b></span> </br>
-            ` :
-            html`
-                <span style='color:red'> <b>${questionResponse.responseText}</b></span> </br>
-            `}
-            </br>
-          `) 
-          : html`Loading your results.`}
+      <completed-responses surveyResultId="${this.surveyResultId}"> </completed-responses>
 
       <br/>
       <div>You scored ${score} points out of ${this.surveyResult?.survey.questions.length}.</div>
@@ -61,7 +50,6 @@ export class ConfirmResponsesView extends LitElement {
 
     this.surveyResultId = localStorage.getItem('surveyResultId') || 'unavailable';
     this.surveyResult = await SurveySessionEndpoint.get(this.surveyResultId);
-    this.questionResponses = await SurveySessionEndpoint.getSurveyResponses(this.surveyResultId);
   }
 
 

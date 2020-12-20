@@ -1,6 +1,6 @@
 package fusion.playground.data.initialization;
 
-import fusion.playground.data.service.*;
+import fusion.playground.data.repository.*;
 import fusion.playground.data.entity.User;
 import fusion.playground.service.SomeOktaUser;
 import org.apache.commons.logging.Log;
@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

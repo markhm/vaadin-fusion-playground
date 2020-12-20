@@ -1,10 +1,10 @@
 package fusion.playground.data.service;
 
 import fusion.playground.data.entity.*;
+import fusion.playground.data.repository.SurveyRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.MongoCrudService;
 
@@ -38,7 +38,7 @@ public class SurveyService extends MongoCrudService<Survey, String>
 
     public List<SurveyInfo> getAvailableSurveysForOktaUserId(String oktaUserId)
     {
-        log.info("Finding user by oktaId: "+oktaUserId);
+        // log.info("Finding user by oktaId: "+oktaUserId);
         User user = userService.findByOktaUserId(oktaUserId);
         return getAvailableSurveys(user);
     }

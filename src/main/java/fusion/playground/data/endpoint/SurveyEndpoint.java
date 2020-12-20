@@ -11,11 +11,15 @@ import fusion.playground.data.service.SurveyService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @Endpoint
-@AnonymousAllowed
+// @AnonymousAllowed
+// @Secured(value= {"USER"})
+// @RolesAllowed(value = {"openid"})
 public class SurveyEndpoint extends CrudEndpoint<Survey, String>
 {
     private static Log log = LogFactory.getLog(SurveyEndpoint.class);

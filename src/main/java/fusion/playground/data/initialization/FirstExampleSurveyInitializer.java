@@ -1,8 +1,10 @@
 package fusion.playground.data.initialization;
 
-import fusion.playground.data.entity.User;
 import fusion.playground.data.entity.Visibility;
-import fusion.playground.data.service.*;
+import fusion.playground.data.repository.PossibleAnswerRepository;
+import fusion.playground.data.repository.QuestionRepository;
+import fusion.playground.data.repository.SurveyRepository;
+import fusion.playground.data.repository.UserRepository;
 import fusion.playground.data.entity.SurveyCategory;
 
 public class FirstExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
@@ -27,7 +29,7 @@ public class FirstExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
 
     public void loadQuestions()
     {
-        addQuestion("What kind of music do you like? 🎶",
+        addQuestion("What kind of music 🎶 do you like?",
                 "Pop 🎷", "Rock 🎸", "Dance 🕺🏻", "Classical 🎻");
 
         addQuestion("Are you a girl or a boy?",

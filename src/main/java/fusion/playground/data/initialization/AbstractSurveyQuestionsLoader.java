@@ -1,11 +1,13 @@
 package fusion.playground.data.initialization;
 
 import fusion.playground.data.entity.*;
-import fusion.playground.data.service.*;
+import fusion.playground.data.repository.PossibleAnswerRepository;
+import fusion.playground.data.repository.QuestionRepository;
+import fusion.playground.data.repository.SurveyRepository;
+import fusion.playground.data.repository.UserRepository;
 import fusion.playground.service.SomeOktaUser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 
 @DependsOn("databaseInitializer")

@@ -1,14 +1,11 @@
 package fusion.playground.data.generator;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-
-import fusion.playground.data.service.PersonRepository;
+import fusion.playground.data.repository.PersonRepository;
 import fusion.playground.data.entity.Person;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.vaadin.artur.exampledata.DataType;
 import org.vaadin.artur.exampledata.ExampleDataGenerator;

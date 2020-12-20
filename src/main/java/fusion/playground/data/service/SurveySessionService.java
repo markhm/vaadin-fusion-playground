@@ -1,6 +1,7 @@
 package fusion.playground.data.service;
 
 import fusion.playground.data.entity.*;
+import fusion.playground.data.repository.SurveyResultRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
     public String beginSurvey(User user, Survey survey)
     {
         log.info("Beginning survey "+survey.id() + " for user " + user.id() + ".");
+
         SurveyResult surveyResult = new SurveyResult();
         surveyResult.user(user);
         surveyResult.survey(survey);
@@ -57,7 +59,6 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
         return savedSurveyResult.id();
     }
 
-    @Deprecated
     public Question getNextQuestion(String surveyResultId)
     {
         log.info("Retrieving next question for surverResultId " + surveyResultId + ".");
@@ -120,7 +121,10 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
             QuestionResponse questionResponse = new QuestionResponse();
             questionResponse.questionText(response.question().text());
             questionResponse.questionNumber(response.question().orderNumber());
-            questionResponse.correct(response.correct());
+            if (surveyResult.userHasConfirmed())
+            {
+                questionResponse.correct(response.correct());
+            }
 
             PossibleAnswer possibleAnswer = possibleAnswerService.get(response.response()).get();
             questionResponse.responseText(possibleAnswer.text());

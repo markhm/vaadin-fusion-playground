@@ -9,7 +9,6 @@ import fusion.playground.views.user.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Endpoint
-@AnonymousAllowed
 public class UserEndpoint extends CrudEndpoint<User, String>
 {
     private UserService service;

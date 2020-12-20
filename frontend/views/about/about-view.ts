@@ -30,7 +30,7 @@ export class AboutView extends LitElement {
       <div>
       
         <h3>About Survey world</h3>
-        <div>This App was made with <a href="https://vaadin.com/fusion">Vaadin Fusion</a>, a framework that helps to rapidly deliver beautiful reactive client-side web apps with a Java backend. It is part of the open-source <a href="https://vaadin.com/">Vaadin</a> platform.</div> 
+        <div>This App was made with <a href="https://vaadin.com/fusion">Vaadin Fusion</a>, a framework that helps to rapidly deliver beautiful reactive client-side web apps with a Java backend. It is part of the open-source <a href="https://vaadin.com/">Vaadin</a> platform. This App contains a few <a href="fusion-examples">Fusion examples</a>.</a></div> 
         <br/>
         <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Vaadin-logo.svg" height="80"/>
         <br/>

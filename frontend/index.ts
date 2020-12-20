@@ -123,11 +123,11 @@ const routes: Route[] = [
 			},
 			{
 				path: 'survey-results',
-				component: 'survey-results-view',
+				component: 'survey-result-view',
 				action: async (context: Context, commands: Commands) => {
 					const authRedirect = await authGuard(context, commands);
 					if (authRedirect) return authRedirect;
-					await import('./views/responses/survey-results-view');
+					await import('./views/responses/survey-result-view');
 					return undefined;
 				},
 			},

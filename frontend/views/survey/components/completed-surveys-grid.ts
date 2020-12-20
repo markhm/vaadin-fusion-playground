@@ -4,6 +4,8 @@ import { render } from 'lit-html';
 import '@vaadin/vaadin-grid/vaadin-grid.js';
 import '@vaadin/vaadin-checkbox/vaadin-checkbox.js';
 
+import '../../responses/completed-responses';
+
 import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
 import type { GridElement, GridItem, GridItemModel } from '@vaadin/vaadin-grid';
 // import type { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
@@ -29,9 +31,9 @@ class CompletedSurveysGrid extends LitElement {
     render() {
         return html`
       <vaadin-grid .items="${this.surveyResults}" .rowDetailsRenderer="${this._boundRowDetailsRenderer}">
-        <vaadin-grid-column header='Survey name (category)' .renderer="${this._surveyNameCategoryRenderer}"></vaadin-grid-column>
-        <vaadin-grid-column path="endTime" header='Finished'></vaadin-grid-column>
-        <vaadin-grid-column header='Last column' .renderer="${this._boundToggleDetailsRenderer}"></vaadin-grid-column>
+          <vaadin-grid-column header='Survey name (category)' .renderer="${this._surveyNameCategoryRenderer}"></vaadin-grid-column>
+          <vaadin-grid-column header='Finished on' .renderer="${this._finishedOnRenderer}"></vaadin-grid-column>
+          <vaadin-grid-column header='Last column' .renderer="${this._boundToggleDetailsRenderer}"></vaadin-grid-column>
       </vaadin-grid>
     `;
     }
@@ -92,10 +94,21 @@ class CompletedSurveysGrid extends LitElement {
         render(html`${surveyResult.survey.name} (${surveyResult.survey.category})`, root);
     }
 
+    _surveyResultIdRenderer(root: HTMLElement, _grid: GridElement, model: GridItemModel) {
+        const surveyResult = model.item as SurveyResult;
+        render(html`${surveyResult.id}`, root);
+    }
+
+    _finishedOnRenderer(root: HTMLElement, _grid: GridElement, model: GridItemModel) {
+        const surveyResult = model.item as SurveyResult;
+        render(html`${surveyResult.endTime.substring(0, 10)} at ${surveyResult.endTime.substring(11, 16)}`, root);
+    }
+
     _rowDetailsRenderer(root: HTMLElement, _grid: GridElement, model: GridItemModel) {
         const surveyResult = model.item as SurveyResult;
-
-        render(html`${surveyResult.survey.description}`, root);
+        render(html`
+            ${surveyResult.survey.description}
+        `, root);
     }
 }
 
