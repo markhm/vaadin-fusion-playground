@@ -303,10 +303,22 @@
 
     <profiles>
         <profile>
-            <id>dev</id> <!-- activate if -Pdev -->
+            <id>mac</id> <!-- activate if -Pdev -->
             <activation>
                 <!-- this profile is active by default -->
                 <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <vaadin.productionMode>false</vaadin.productionMode>
+                <env>mac</env>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>dev</id> <!-- activate if -Pdev -->
+            <activation>
+                <!-- this profile is active by default -->
+                <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <vaadin.productionMode>false</vaadin.productionMode>

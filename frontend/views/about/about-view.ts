@@ -38,6 +38,8 @@ export class AboutView extends LitElement {
         <div>For authentication and authorization, this App uses <a href="https://www.okta.com/">okta</a>.</div>
         <br/>
         <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Okta_logo.svg" height="60"/>
+        <br/><br/>
+        <div>Note that by using this app, you agree to our <a href="terms-and-conditions-view.ts">Terms and Conditions</a>.</div>
       </div>
 
     `;

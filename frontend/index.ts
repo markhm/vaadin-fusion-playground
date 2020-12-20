@@ -158,6 +158,11 @@ const routes: Route[] = [
 			// },
 			{ path: 'hello', component: 'hello-world-view' },
 			{
+				path: 'fusion-examples',
+				component: 'fusion-examples-view',
+				action: async () => { await import('./views/example/fusion-examples-view'); },
+			},
+			{
 				path: 'people',
 				component: 'people-view',
 				action: async () => { await import('./views/example/people/people-view'); },
