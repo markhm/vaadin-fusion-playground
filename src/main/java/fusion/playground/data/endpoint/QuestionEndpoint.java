@@ -1,20 +1,16 @@
 package fusion.playground.data.endpoint;
 
 import com.vaadin.flow.server.connect.Endpoint;
-import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import fusion.playground.data.CrudEndpoint;
+import fusion.playground.data.entity.PossibleAnswer;
 import fusion.playground.data.entity.Survey;
-import fusion.playground.data.service.ResponseService;
-import fusion.playground.data.service.QuestionService;
-import fusion.playground.data.service.SurveyService;
-import fusion.playground.data.service.UserService;
+import fusion.playground.data.service.*;
 import fusion.playground.data.entity.Question;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
 
 @Endpoint
 public class QuestionEndpoint extends CrudEndpoint<Question, String>
@@ -22,16 +18,17 @@ public class QuestionEndpoint extends CrudEndpoint<Question, String>
     private static Log log = LogFactory.getLog(QuestionEndpoint.class);
 
     private QuestionService questionService;
-    private SurveyService surveyService;
+    private PossibleAnswerService possibleAnswerService = null;
+    // private SurveyService surveyService;
     private UserService userService;
 
     @Autowired
     public QuestionEndpoint(QuestionService questionService,
-                            SurveyService surveyService,
+                            PossibleAnswerService possibleAnswerService,
                             UserService userService)
     {
         this.questionService = questionService;
-        this.surveyService = surveyService;
+        this.possibleAnswerService = possibleAnswerService;
         this.userService = userService;
     }
 
@@ -39,22 +36,20 @@ public class QuestionEndpoint extends CrudEndpoint<Question, String>
         return questionService;
     }
 
-    public List<Question> getQuestions(String surveyId)
+    public PossibleAnswer addPossibleAnswer(String questionId, String possibleAnswerText)
     {
-        return surveyService.get(surveyId).get().questions();
+        log.info("addPossibleAnswer(" + questionId + ", " + possibleAnswerText + ")");
+
+        Question question = questionService.get(questionId).get();
+
+        PossibleAnswer possibleAnswer = new PossibleAnswer(possibleAnswerText);
+        PossibleAnswer savedPossibleAnswer = possibleAnswerService.update(possibleAnswer);
+        question.addPossibleAnswer(savedPossibleAnswer);
+        questionService.update(question);
+
+        // surveyService.rebuildSurvey(question.surveyId());
+
+        return savedPossibleAnswer;
     }
 
-//    public Question addQuestion(Question question)
-//    {
-//        // save the question
-//        questionService.update(question);
-//
-//        // retrieve the survey, add the new question at the right location and update
-//        Survey survey = surveyService.get(question.survey().id()).get();
-//        survey.questions().add(question.orderNumber(), question);
-//        surveyService.update(survey);
-//
-//        // TODO: This messes up the overall ordering of the questions
-//        return question;
-//    }
 }

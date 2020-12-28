@@ -47,7 +47,7 @@ export class CreateAccountView extends LitElement {
       <div>This is where you complete surveys and get recognition for it. </div><br/>
       <div>Fill in the form to create an account.</div>
       
-      <vaadin-form-layout style="width: 100%;">
+      <vaadin-form-layout style="width: 50%;">
         <vaadin-text-field label="Username (anonymous, but your friends would recognise)"
                            ...="${field(this.binder.model.username)}"></vaadin-text-field>
         <vaadin-date-picker label="Date of birth (you should be over 13 to join)" 

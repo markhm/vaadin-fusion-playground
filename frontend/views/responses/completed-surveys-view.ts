@@ -1,15 +1,17 @@
+import { css, customElement, html, property, LitElement } from 'lit-element';
+
 import '@vaadin/vaadin-button';
 import '@vaadin/vaadin-text-field';
 import '@vaadin/vaadin-select'
 import '@vaadin/vaadin-date-picker';
 import '@vaadin/vaadin-grid';
 
-import './components/completed-surveys-grid';
+import './components/survey-results-grid';
 
-import { css, customElement, html, property, LitElement } from 'lit-element';
 import SurveyResult from "../../generated/fusion/playground/data/entity/SurveyResult";
 import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
 import {Router} from "@vaadin/router";
+
 // import Response from "../../generated/fusion/playground/data/entity/Response";
 // import SurveyResultStatus from "../../generated/fusion/playground/data/entity/SurveyResult/SurveyResultStatus";
 // import Survey from "../../generated/fusion/playground/data/entity/Survey";
@@ -32,21 +34,19 @@ export class CompletedSurveysView extends LitElement {
     }
 
     render() {
-
-        // let data = this.completedSurveys;
-        // console.log('Now is the data: '+JSON.stringify(data));
-
         return html`                
             <div>You completed the following surveys.</div>
             <br/>
             
-            <completed-surveys-grid .surveyResults='${this.completedSurveys}'>
-                
-            </completed-surveys-grid>
+            <survey-results-grid .surveyResults='${this.completedSurveys}'>
+
+            </survey-results-grid>
             
             <br/>
     `;
     }
+
+
 
     async connectedCallback() {
         super.connectedCallback();
@@ -60,7 +60,3 @@ export class CompletedSurveysView extends LitElement {
         // console.log('received categories: '+JSON.stringify(this.categories));
     }
 }
-
-
-
-

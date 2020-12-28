@@ -3,33 +3,32 @@ package fusion.playground.data.endpoint;
 import com.vaadin.flow.server.connect.Endpoint;
 import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import fusion.playground.data.CrudEndpoint;
-import fusion.playground.data.entity.Survey;
-import fusion.playground.data.entity.SurveyInfo;
-import fusion.playground.data.entity.SurveyResult;
+import fusion.playground.data.entity.*;
 import fusion.playground.data.service.SurveySessionService;
 import fusion.playground.data.service.SurveyService;
+import fusion.playground.data.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 
-import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @Endpoint
-// @AnonymousAllowed
+@AnonymousAllowed
 // @Secured(value= {"USER"})
 // @RolesAllowed(value = {"openid"})
 public class SurveyEndpoint extends CrudEndpoint<Survey, String>
 {
     private static Log log = LogFactory.getLog(SurveyEndpoint.class);
 
+    private UserService userService;
     private SurveyService surveyService;
     private SurveySessionService surveySessionService;
 
     @Autowired
-    public SurveyEndpoint(SurveyService surveyService, SurveySessionService surveySessionService)
+    public SurveyEndpoint(UserService userService, SurveyService surveyService, SurveySessionService surveySessionService)
     {
+        this.userService = userService;
         this.surveyService = surveyService;
         this.surveySessionService = surveySessionService;
     }
@@ -39,6 +38,11 @@ public class SurveyEndpoint extends CrudEndpoint<Survey, String>
         return surveyService;
     }
 
+    /**
+     * Get the surveys that a user can take
+     * @param oktaUserId
+     * @return
+     */
     public List<SurveyInfo> getAvailableSurveys(String oktaUserId)
     {
         // EndpointUtil.logPrincipal("getSurveyNames()");
@@ -48,5 +52,45 @@ public class SurveyEndpoint extends CrudEndpoint<Survey, String>
 
         return availableSurveys;
     }
+
+    public List<Survey> getOwnedSurveys(String oktaUserId)
+    {
+        List<Survey> ownSurveys = surveyService.getOwnedSurveys(oktaUserId);
+
+        return ownSurveys;
+    }
+
+    public String createSurvey(String oktaUserId, String category, String name)
+    {
+        // EndpointUtil.logAuthenticationContext("createSurvey(..)");
+        User user = userService.findByOktaUserId(oktaUserId);
+
+        return surveyService.createDraftSurvey(user.id(), category, name).id();
+
+    }
+
+    public List<Question> getQuestions(String surveyId)
+    {
+        return get(surveyId).get().questions();
+    }
+
+    public Question addQuestion(Question question)
+    {
+        return surveyService.addQuestion(question);
+    }
+
+    public void publishSurvey(String surveyId)
+    {
+        surveyService.publish(surveyId);
+    }
+
+//    @Override
+//    public Survey update(Survey survey)
+//    {
+//        log.info("Trying to save " + survey);
+//
+//        return super.update(survey);
+//    }
+
 
 }

@@ -12,7 +12,7 @@ import org.vaadin.artur.helpers.GridSorter;
 import org.vaadin.artur.helpers.MongoCrudService;
 import org.vaadin.artur.helpers.PagingUtil;
 
-@AnonymousAllowed
+
 @EndpointExposed
 public abstract class CrudEndpoint<T, ID> {
 

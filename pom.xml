@@ -26,7 +26,7 @@
         <!-- frameworks and components -->
         <lombok.version>1.18.16</lombok.version>
         <okta.spring.version>1.5.1</okta.spring.version>
-        <vaadin.version>18.0.2</vaadin.version>
+        <vaadin.version>18.0.3</vaadin.version>
 
         <!-- testing and documentation generation -->
         <junit.jupiter.version>5.7.0</junit.jupiter.version>
@@ -49,7 +49,7 @@
             <id>vaadin-prereleases</id>
             <url>https://maven.vaadin.com/vaadin-prereleases/</url>
         </repository>
-        <!-- Repository used by many Vaadin add-ons -->
+        <!-- Repository used by many Vaadin addSurvey-ons -->
         <repository>
             <id>Vaadin Directory</id>
             <url>https://maven.vaadin.com/vaadin-addons</url>

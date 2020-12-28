@@ -1,29 +1,32 @@
 package fusion.playground.data.initialization;
 
+import fusion.playground.data.entity.Survey;
 import fusion.playground.data.entity.SurveyCategory;
 import fusion.playground.data.entity.Visibility;
 import fusion.playground.data.repository.PossibleAnswerRepository;
 import fusion.playground.data.repository.QuestionRepository;
 import fusion.playground.data.repository.SurveyRepository;
 import fusion.playground.data.repository.UserRepository;
+import fusion.playground.data.service.SurveyService;
 
-public class WeatherExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
+public class WeatherExampleSurveyInitializer extends AbstractSurveyLoader
 {
     private static SurveyCategory CATEGORY_EXAMPLE = SurveyCategory.example;
 
-    public WeatherExampleSurveyInitializer(UserRepository userRepository, SurveyRepository surveyRepository,
+    public WeatherExampleSurveyInitializer(UserRepository userRepository, SurveyService surveyService,
+                                           SurveyRepository surveyRepository,
                                            QuestionRepository questionRepository,
                                            PossibleAnswerRepository possibleAnswerRepository)
     {
-        super(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
+        super(userRepository, surveyService, surveyRepository, questionRepository, possibleAnswerRepository);
 
-        createSurvey(SurveyCategory.example, "weather");
+        survey = surveyService.createDraftSurvey(hiddenOwnerId, SurveyCategory.example.toString(), "weather");
 
         survey.title("Weather example survey");
         survey.description("This is a short survey with multiple-choice questions about the weather.");
 
+        survey.status(Survey.SurveyStatus.published);
         survey.visibility(Visibility.general);
-        survey.owner(defaultOwner);
     }
 
     public void loadQuestions()

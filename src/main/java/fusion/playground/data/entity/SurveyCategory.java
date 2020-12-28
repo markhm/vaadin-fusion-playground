@@ -6,11 +6,25 @@ public enum SurveyCategory
     daily,
     weekly,
     monthly,
-    lucky
+    lucky;
 
 //    public static String[] names()
 //    {
 //        return Stream.of(QuestionCategory.values()).map(QuestionCategory::name).toArray(String[]::new);
 //    }
+
+    public static SurveyCategory createFrom(String string)
+    {
+        SurveyCategory[] values = SurveyCategory.values();
+        for (SurveyCategory value : values)
+        {
+            if (string.equals(value.toString()))
+            {
+                return value;
+            }
+        }
+
+        return null;
+    }
 
 }

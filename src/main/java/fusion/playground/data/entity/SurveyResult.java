@@ -91,6 +91,8 @@ public class SurveyResult extends AbstractEntity
 
     public void registerCompletion()
     {
+        log.info("");
+        log.info("** -> Registering survey COMPLETION.");
 //        log.info("status: " + status);
 //        log.info("survey.questions().size(): " + survey.questions().size());
 //        log.info("responses().size(): " + responses().size());
@@ -110,6 +112,8 @@ public class SurveyResult extends AbstractEntity
 
     public void registerUserConfirmation()
     {
+        log.info("");
+        log.info("** -> Registering user CONFIRMATION of surveyResult.");
         if (status == SurveyResultStatus.complete)
         {
             status = SurveyResultStatus.confirmed;
@@ -122,6 +126,8 @@ public class SurveyResult extends AbstractEntity
 
     public void registerUserRejection()
     {
+        log.info("");
+        log.info("** -> Registering user REJECTION.");
         if (status == SurveyResultStatus.complete)
         {
             status = SurveyResultStatus.rejected;

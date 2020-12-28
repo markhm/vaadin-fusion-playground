@@ -56,6 +56,7 @@ Developed on macOS (11.0.1)
 - How to access and modify elements in the DOM, e.g. a <vaadin-button>, to set it from disabled to enabled...? -> This should be done with imparative programming.
 - There is no client-side API to create a user in Okta. A new user should be created with the server-side API.
 - How to fix [Error: Typescript: Type 'string | undefined' is not assignable to type 'string'](https://stackoverflow.com/questions/54496398/typescript-type-string-undefined-is-not-assignable-to-type-string).
+- An import always needs a leading dot for the current directory, e.g.: `import './components/surveys-grid';`S
 
 #### Reminders for building a custom component using Lit element
 - Custom components need an explicit end-tag, even though they might not contain any content in between: `<custom-component-name> </custom-component-name>`.
@@ -67,3 +68,5 @@ Developed on macOS (11.0.1)
 - [Fusion Typescript examples](https://github.com/web-padawan/ts-vaadin-examples/)
 - [Lit element lifecycle](https://lit-element.polymer-project.org/guide/lifecycle#firstupdated)
 
+#### Components
+- `<vaadin-text-field label="New survey name" @value-changed='${this.surveyNameChanged}' clear-button-visible>`

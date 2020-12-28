@@ -23,7 +23,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1.6
+      uses: EnricoMi/publishSurvey-unit-test-result-action@v1.6
       if: always()
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}

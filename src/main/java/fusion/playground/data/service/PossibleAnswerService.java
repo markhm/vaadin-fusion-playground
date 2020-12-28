@@ -21,5 +21,4 @@ public class PossibleAnswerService extends MongoCrudService<PossibleAnswer, Stri
         return possibleAnswerRepository;
     }
 
-
 }

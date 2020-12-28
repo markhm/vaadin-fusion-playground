@@ -10,6 +10,7 @@ import org.vaadin.artur.helpers.MongoCrudService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -78,6 +79,12 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
             Survey survey = surveyResult.survey();
             result = surveyService.getQuestionFromSurvey(survey, lastCompletedQuestion + 1);
         }
+
+        // randomize the order of the possible answers
+        List<PossibleAnswer> possibleAnswers = result.possibleAnswers();
+        Collections.shuffle(possibleAnswers);
+        result.possibleAnswers(possibleAnswers);
+
         return result;
     }
 

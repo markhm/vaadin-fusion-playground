@@ -8,21 +8,20 @@ import '@vaadin/vaadin-date-picker';
 import '../../components/string-array-combo-box';
 import './components/select-survey-combo-box';
 
+import { showNotification } from '@vaadin/flow-frontend/a-notification';
 import * as SurveyEndpoint from "../../generated/SurveyEndpoint";
 import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
-import {EndpointError} from '@vaadin/flow-frontend/Connect';
-import {showNotification} from '@vaadin/flow-frontend/a-notification';
-import {Router} from "@vaadin/router";
+import { EndpointError } from '@vaadin/flow-frontend/Connect';
+
+import { Router } from "@vaadin/router";
 import SurveyInfo from "../../generated/fusion/playground/data/entity/SurveyInfo";
+import Survey from "../../generated/fusion/playground/data/entity/Survey";
 
 @customElement('select-survey-view')
 export class SelectSurveyView extends LitElement {
 
     @internalProperty ()
     private categories: string[] = ['example'];
-
-    // @internalProperty ()
-    // private names: string[] = ['weather', 'maths', 'example'];
 
     @internalProperty()
     private surveyInfos: SurveyInfo[] = [];
@@ -41,6 +40,9 @@ export class SelectSurveyView extends LitElement {
 
     @internalProperty ()
     private surveyResultId: string = '';
+
+    @internalProperty ()
+    private survey!: Promise<Survey | undefined> | undefined;
 
     static get styles() {
         return css`
@@ -74,9 +76,18 @@ export class SelectSurveyView extends LitElement {
                 
                 <br/>
                 <div>
-                    <vaadin-button ?disabled=${this.selectedSurvey === undefined} @click='() => ${this.startSelectedSurvey}'>Start survey</vaadin-button>
+                    <vaadin-button ?disabled=${this.selectedSurvey === undefined} 
+                                   @click="${this.startSelectedSurvey}">Start survey</vaadin-button>
                 </div>
             </div>
+            
+            <br/>
+            <hr/>
+            <div>
+                <div>Debug info on the selected survey</div>
+                ${JSON.stringify(this.survey)}
+            </div>
+            <vaadin-button @click="${() => this.reload()}">Update</vaadin-button>
     `;
     }
 
@@ -105,7 +116,7 @@ export class SelectSurveyView extends LitElement {
         this.requestUpdate();
     }
 
-    surveySelected(e: CustomEvent) {
+    async surveySelected(e: CustomEvent) {
         let nameSelected = e.detail.value;
 
         console.log('surveyInfo returned: ' + JSON.stringify(e.detail.value));
@@ -117,6 +128,28 @@ export class SelectSurveyView extends LitElement {
             }
         }
 
+        if (this.selectedSurvey != undefined) {
+            this.loadSurvey();
+        }
+
+
+        this.requestUpdate();
+    }
+
+    async loadSurvey() {
+        try {
+            this.survey = SurveyEndpoint.get(this.selectedSurvey.surveyId) || undefined;
+
+        } catch (error) {
+            if (error instanceof EndpointError) {
+                showNotification('Server error. ' + error.message, { position: 'bottom-start' });
+            } else {
+                throw error;
+            }
+        }
+    }
+
+    reload() {
         this.requestUpdate();
     }
 

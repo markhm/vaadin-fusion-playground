@@ -2,6 +2,7 @@ package fusion.playground.test;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
+import fusion.playground.data.service.AbstractServiceLayerTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,13 +15,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 // @DataMongoTest
 // @ExtendWith(SpringExtension.class)
-@SpringBootTest
-public class MongoDbSpringIntegrationTest
+// @SpringBootTest
+public class MongoDbSpringIntegrationTest extends AbstractServiceLayerTest
 {
     @DisplayName("given object to save"
             + " when save object using MongoDB template"
             + " then object is saved")
-    @Test
+    // @Test
     public void test(@Autowired MongoTemplate mongoTemplate)
     {
         // given

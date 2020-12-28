@@ -1,23 +1,18 @@
 import { LitElement, property, html, query} from 'lit-element';
-
 import { render } from 'lit-html';
+
 import '@vaadin/vaadin-grid/vaadin-grid.js';
 import '@vaadin/vaadin-checkbox/vaadin-checkbox.js';
 
-import '../../responses/completed-responses';
-
 import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
 import type { GridElement, GridItem, GridItemModel } from '@vaadin/vaadin-grid';
-// import type { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
 import type { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
 
 import SurveyResult from "../../../generated/fusion/playground/data/entity/SurveyResult";
 
-// import SurveyResult from "../../../generated/fusion/playground/data/entity/SurveyResult";
-
 const itemCache = new WeakMap<HTMLElement>();
 
-class CompletedSurveysGrid extends LitElement {
+class SurveyResultsGrid extends LitElement {
     @property({ type: Array })
     surveyResults = [];
 
@@ -43,18 +38,6 @@ class CompletedSurveysGrid extends LitElement {
 
         console.log('Found surveyResults: '+JSON.stringify(this.surveyResults));
     }
-
-    // get endpoint() {
-    //     return 'https://demo.vaadin.com/demo-data/1.0';
-    // }
-    //
-    // firstUpdated() {
-    //     fetch(`${this.endpoint}/people?count=200`)
-    //         .then((r) => r.json())
-    //         .then((data) => {
-    //             this.users = data.result;
-    //         });
-    // }
 
     _onCheckboxChange(e: CustomEvent) {
         const checkbox = e.target as HTMLElement;
@@ -101,7 +84,12 @@ class CompletedSurveysGrid extends LitElement {
 
     _finishedOnRenderer(root: HTMLElement, _grid: GridElement, model: GridItemModel) {
         const surveyResult = model.item as SurveyResult;
-        render(html`${surveyResult.endTime.substring(0, 10)} at ${surveyResult.endTime.substring(11, 16)}`, root);
+        if (surveyResult.endTime === null) {
+            render(html`surveyResult.endTime == null, strange`, root);
+        }
+        else {
+            render(html`${surveyResult.endTime.substring(0, 10)} at ${surveyResult.endTime.substring(11, 16)}`, root);
+        }
     }
 
     _rowDetailsRenderer(root: HTMLElement, _grid: GridElement, model: GridItemModel) {
@@ -112,4 +100,4 @@ class CompletedSurveysGrid extends LitElement {
     }
 }
 
-customElements.define('completed-surveys-grid', CompletedSurveysGrid);
+customElements.define('survey-results-grid', SurveyResultsGrid);

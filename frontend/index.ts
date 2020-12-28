@@ -92,16 +92,6 @@ const routes: Route[] = [
 				},
 			},
 			{
-				path: 'add-survey',
-				component: 'add-survey-view',
-				action: async (context: Context, commands: Commands) => {
-					const authRedirect = await authGuard(context, commands);
-					if (authRedirect) return authRedirect;
-					await import('./views/survey/add-survey-view');
-					return undefined;
-				},
-			},
-			{
 				path: 'question',
 				component: 'question-view',
 				action: async (context: Context, commands: Commands) => {
@@ -137,7 +127,7 @@ const routes: Route[] = [
 				action: async (context: Context, commands: Commands) => {
 					const authRedirect = await authGuard(context, commands);
 					if (authRedirect) return authRedirect;
-					await import('./views/survey/completed-surveys-view');
+					await import('./views/responses/completed-surveys-view');
 					return undefined;
 				},
 			},
@@ -148,6 +138,36 @@ const routes: Route[] = [
 					const authRedirect = await authGuard(context, commands);
 					if (authRedirect) return authRedirect;
 					await import('./views/achievement/achievements-view');
+					return undefined;
+				},
+			},
+			{
+				path: 'my-surveys',
+				component: 'my-surveys-view',
+				action: async (context: Context, commands: Commands) => {
+					const authRedirect = await authGuard(context, commands);
+					if (authRedirect) return authRedirect;
+					await import('./views/survey/my-surveys-view');
+					return undefined;
+				},
+			},
+			{
+				path: 'edit-survey',
+				component: 'edit-survey-view',
+				action: async (context: Context, commands: Commands) => {
+					const authRedirect = await authGuard(context, commands);
+					if (authRedirect) return authRedirect;
+					await import('./views/survey/edit-survey-view');
+					return undefined;
+				},
+			},
+			{
+				path: 'edit-question',
+				component: 'edit-question-view',
+				action: async (context: Context, commands: Commands) => {
+					const authRedirect = await authGuard(context, commands);
+					if (authRedirect) return authRedirect;
+					await import('./views/question/edit-question-view');
 					return undefined;
 				},
 			},

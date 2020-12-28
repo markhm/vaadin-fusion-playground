@@ -1,30 +1,34 @@
 package fusion.playground.data.initialization;
 
+import fusion.playground.data.entity.Survey;
 import fusion.playground.data.entity.SurveyCategory;
 import fusion.playground.data.entity.Visibility;
 import fusion.playground.data.repository.PossibleAnswerRepository;
 import fusion.playground.data.repository.QuestionRepository;
 import fusion.playground.data.repository.SurveyRepository;
 import fusion.playground.data.repository.UserRepository;
+import fusion.playground.data.service.SurveyService;
 
-public class MathsExampleSurveyInitializer extends AbstractSurveyQuestionsLoader
+public class MathsExampleSurveyInitializer extends AbstractSurveyLoader
 {
     private static SurveyCategory CATEGORY_EXAMPLE = SurveyCategory.example;
 
     public MathsExampleSurveyInitializer(UserRepository userRepository,
+                                         SurveyService surveyService,
                                          SurveyRepository surveyRepository,
                                          QuestionRepository questionRepository,
                                          PossibleAnswerRepository possibleAnswerRepository)
     {
-        super(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
+        super(userRepository, surveyService, surveyRepository, questionRepository, possibleAnswerRepository);
 
-        createSurvey(SurveyCategory.example, "maths");
+        survey = surveyService.createDraftSurvey(defaultOwnerId, SurveyCategory.example.toString(), "maths");
 
         survey.title("Math example survey");
         survey.description("This is an example survey where questions have a correct answer.");
 
+        survey.status(Survey.SurveyStatus.published);
         survey.visibility(Visibility.general);
-        survey.owner(defaultOwner);
+        survey.ownerId(defaultOwnerId);
     }
 
     public void loadQuestions()

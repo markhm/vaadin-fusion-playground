@@ -20,5 +20,7 @@ public interface SurveyRepository extends MongoRepository<Survey, String>
 
     List<Survey> findAllByVisibility(Visibility visibility);
 
-    List<Survey> findAllByOwnerAndVisibility(User owner, Visibility visibility);
+    List<Survey> findAllByOwnerIdAndVisibility(String ownerId, Visibility visibility);
+
+    List<Survey> findAllByOwnerId(String ownerId);
 }

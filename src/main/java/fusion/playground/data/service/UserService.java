@@ -54,12 +54,14 @@ public class UserService extends MongoCrudService<User, String>
 
     public User findByOktaUserId(String oktaUserId)
     {
+        log.info("Finding user based on OktaUserId: "+oktaUserId);
         User user = null;
 
         Optional<User> maybeUser = getRepository().findByOktaUserId(oktaUserId);
 
         if (!maybeUser.isPresent())
         {
+            log.info("user not yet found in mongoDB repo, so retrieving details from Okta.");
             com.okta.sdk.resource.user.User oktaUser = oktaService.findByOktaUserId(oktaUserId);
             user = User.createFrom(oktaUser);
 
@@ -68,6 +70,7 @@ public class UserService extends MongoCrudService<User, String>
         else
         {
             user = maybeUser.get();
+            log.info("User (" + user.username() + ") was found, returning.");
         }
 
         return user;

@@ -20,14 +20,18 @@ public class SurveyService extends MongoCrudService<Survey, String>
 {
     private static Log log = LogFactory.getLog(SurveyService.class);
 
-    private UserService userService;
     private SurveyRepository surveyRepository;
+    private QuestionService questionService;
+    private UserService userService;
+
 
     @Autowired
-    public SurveyService(SurveyRepository surveyRepository, UserService userService)
+    public SurveyService(SurveyRepository surveyRepository, QuestionService questionService,
+                         UserService userService)
     {
-        this.userService = userService;
         this.surveyRepository = surveyRepository;
+        this.questionService = questionService;
+        this.userService = userService;
     }
 
     @Override
@@ -43,13 +47,21 @@ public class SurveyService extends MongoCrudService<Survey, String>
         return getAvailableSurveys(user);
     }
 
+    public List<Survey> getOwnedSurveys(String oktaUserId)
+    {
+        // log.info("Finding user by oktaId: "+oktaUserId);
+        User user = userService.findByOktaUserId(oktaUserId);
+
+        return surveyRepository.findAllByOwnerId(user.id());
+    }
+
     private List<SurveyInfo> getAvailableSurveys(User user)
     {
         // get all surveys with general/public visibility
         List<Survey> publicSurveys = surveyRepository.findAllByVisibility(Visibility.general);
 
         // find the surveys with private/personal visibility
-        List<Survey> privateSurveys = surveyRepository.findAllByOwnerAndVisibility(user, Visibility.personal);
+        List<Survey> privateSurveys = surveyRepository.findAllByOwnerIdAndVisibility(user.id(), Visibility.personal);
 
         // combine the two
         List<Survey> combinedSurveys = new ArrayList<Survey>(publicSurveys);
@@ -83,6 +95,31 @@ public class SurveyService extends MongoCrudService<Survey, String>
         return this.findAllBySurveyName(surveyName).size();
     }
 
+
+    public void publish(String surveyId)
+    {
+        Survey survey = get(surveyId).get();
+
+        survey.status(Survey.SurveyStatus.published);
+        survey.visibility(Visibility.general);
+
+        log.info("Successfully published survey "+survey.name());
+
+        // save the survey
+        update(survey);
+
+        rebuildSurvey(surveyId);
+    }
+
+    public Survey createDraftSurvey(String ownerId, String category, String name)
+    {
+        Survey survey = Survey.createDraftSurvey(ownerId, SurveyCategory.createFrom(category), name);
+
+        // save the survey, so it gets assigned a surveyId
+        survey = update(survey);
+
+        return survey;
+    }
 
 //    public Question getNextQuestion(SurveyResponse surveyResponse)
 //    {
@@ -134,6 +171,65 @@ public class SurveyService extends MongoCrudService<Survey, String>
     {
         Survey survey = findSurveyByName(name);
         return survey.questions().get(orderNumber - 1);
+    }
+
+    public Question addQuestion(Question question)
+    {
+        log.info("addQuestion(" + question.surveyId() + ", " + question.toString()+")");
+        Survey survey = get(question.surveyId()).get();
+
+        question.orderNumber(survey.questions().size() + 1);
+        if (survey.status() != Survey.SurveyStatus.draft)
+        {
+            throw new RuntimeException("adding a question is not allowed for a Survey that is not in draft");
+        }
+
+        // explicitly set id to null, so the question gets assigned a MongoDB id.
+        // (The question probably got a empty string value from the frontend.)
+        if (question.id().equals(""))
+        {
+            question.id(null);
+            questionService.update(question);
+        }
+
+        // save the question, so it gets an id().
+        Question savedQuestion = questionService.update(question);
+
+        log.info("savedQuestion: " + savedQuestion);
+
+        // retrieve the survey, addSurvey the new question and update
+        List<Question> questions = survey.questions();
+        questions.add(savedQuestion);
+
+        survey.questions(questions);
+        update(survey);
+
+        // This is probably a bit much, but just in case
+//        rebuildSurvey(survey.id());
+
+        log.info("Question was added correctly, survey was updated and can be reloaded. ");
+        return question;
+    }
+
+    /**
+     * This function rebuilds a survey, so the survey document contains all the correct/updated questions.
+     * @param surveyId the survey's identifier
+     */
+    public void rebuildSurvey(String surveyId)
+    {
+        Survey survey = get(surveyId).get();
+        List<Question> currentQuestions = survey.questions();
+
+        List<Question> newQuestions = new ArrayList();
+        for (Question question : currentQuestions)
+        {
+            Question newQuestion = questionService.get(question.id()).get();
+            newQuestions.add(newQuestion);
+        }
+
+        survey.questions(newQuestions);
+
+        update(survey);
     }
 
 }

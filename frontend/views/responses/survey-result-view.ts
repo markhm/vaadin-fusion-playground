@@ -3,7 +3,7 @@ import {css, customElement, html, LitElement, property} from 'lit-element';
 import '@vaadin/vaadin-button';
 import '@vaadin/vaadin-text-field';
 
-import './completed-responses';
+import './components/completed-responses';
 
 import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
 import SurveyResult from "../../generated/fusion/playground/data/entity/SurveyResult";

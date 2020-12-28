@@ -23,16 +23,40 @@ public class Survey extends AbstractEntity
     private String description = "There is no description available for this survey.";
     private boolean gradable = false;
 
-    private User owner;
+    private SurveyStatus status = null;
+
+    /** The owner's userId */
+    private String ownerId;
     private Visibility visibility = Visibility.personal;
-    private List<User> visibleTo;
 
-    private List<Question> questions;
+    /** userId's that this survey is visible to */
+    private List<String> visibleTo = new ArrayList<>();
 
-    public Survey(SurveyCategory category, String name)
+    private List<Question> questions = new ArrayList<>();
+
+    private Survey(String ownerId, SurveyCategory category, String name)
     {
+        this.ownerId = ownerId;
         this.category = category.toString();
         this.name = name;
+    }
+
+    public static Survey createDraftSurvey(String ownerId, SurveyCategory category, String name)
+    {
+        Survey survey = new Survey(ownerId, category, name);
+        survey.status(SurveyStatus.draft);
+        survey.visibility(Visibility.personal);
+
+        return survey;
+    }
+
+    public static Survey createPublishedSurvey(String ownerId, SurveyCategory category, String name)
+    {
+        Survey survey = new Survey(ownerId, category, name);
+        survey.status(SurveyStatus.published);
+        survey.visibility(Visibility.general);
+
+        return survey;
     }
 
     public void addQuestion(Question question)
@@ -47,5 +71,14 @@ public class Survey extends AbstractEntity
     public Question getQuestion(int orderNumber)
     {
         return questions.get(orderNumber - 1);
+    }
+
+    /**
+     * created - newly created
+     * published - published
+     */
+    public enum SurveyStatus {
+        draft,
+        published,
     }
 }

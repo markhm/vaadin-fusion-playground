@@ -2,6 +2,7 @@ package fusion.playground.data.initialization;
 
 import fusion.playground.data.repository.*;
 import fusion.playground.data.entity.User;
+import fusion.playground.data.service.SurveyService;
 import fusion.playground.service.SomeOktaUser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.ArrayList;
@@ -19,10 +21,14 @@ public class DatabaseInitializer
 {
     private static Log log = LogFactory.getLog(DatabaseInitializer.class);
 
+    @Autowired private Environment env;
+
     @Bean
     @Autowired
     public InitializingBean initializeDatabase(UserRepository userRepository,
+                                               SurveyService surveyService,
                                                SurveyRepository surveyRepository,
+                                               SurveyResultRepository surveyResultRepository,
                                                QuestionRepository questionRepository,
                                                PossibleAnswerRepository possibleAnswerRepository,
                                                ResponseRepository responseRepository)
@@ -32,11 +38,21 @@ public class DatabaseInitializer
         return () -> {
 
             // Start with a clean database;
-            dropAllCollections(userRepository, questionRepository, possibleAnswerRepository, responseRepository);
 
-            loadUsers(userRepository);
+            dropAllCollections(userRepository, questionRepository, surveyRepository,
+                    possibleAnswerRepository, responseRepository, surveyResultRepository);
 
-            loadQuestions(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
+            List<User> users = userRepository.findAll();
+            if (users.size() == 0)
+            {
+                loadUsers(userRepository);
+
+                loadQuestions(userRepository, surveyService, surveyRepository, questionRepository, possibleAnswerRepository);
+            }
+
+            if(env.getProperty("system.environment").equals("heroku"))
+            {
+            }
 
 //            // fetch all users
 //            log.info("Users found with findAll():");
@@ -76,9 +92,14 @@ public class DatabaseInitializer
         adminUser.username("admin");
         adminUser.oktaUserId(SomeOktaUser.VFP_ADMIN_USER_OKTA_ID);
 
+        User specialUser = new User();
+        specialUser.username("markhm");
+        specialUser.oktaUserId(SomeOktaUser.HIDDEN_USER_OKTA_ID);
+
         List<User> userList = new ArrayList();
         userList.add(regularUser);
         userList.add(adminUser);
+        userList.add(specialUser);
 
         userRepository.saveAll(userList);
 
@@ -97,25 +118,32 @@ public class DatabaseInitializer
 
 
     private static void loadQuestions(UserRepository userRepository,
+                                      SurveyService surveyService,
                                       SurveyRepository surveyRepository,
                                       QuestionRepository questionRepository,
                                       PossibleAnswerRepository possibleAnswerRepository)
     {
         FirstExampleSurveyInitializer exampleQuestions =
-                new FirstExampleSurveyInitializer(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
+                new FirstExampleSurveyInitializer(userRepository, surveyService,
+                        surveyRepository, questionRepository, possibleAnswerRepository);
         exampleQuestions.loadQuestions();
         exampleQuestions.saveSurvey();
 
         WeatherExampleSurveyInitializer weatherExampleSurveyInitializer =
-                new WeatherExampleSurveyInitializer(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
+                new WeatherExampleSurveyInitializer(userRepository, surveyService, surveyRepository, questionRepository, possibleAnswerRepository);
 
         weatherExampleSurveyInitializer.loadQuestions();
         weatherExampleSurveyInitializer.saveSurvey();
 
         MathsExampleSurveyInitializer mathsExampleSurveyInitializer =
-                new MathsExampleSurveyInitializer(userRepository, surveyRepository, questionRepository, possibleAnswerRepository);
+                new MathsExampleSurveyInitializer(userRepository, surveyService, surveyRepository, questionRepository, possibleAnswerRepository);
         mathsExampleSurveyInitializer.loadQuestions();
         mathsExampleSurveyInitializer.saveSurvey();
+
+        HarryPotterSurveyLoader harryPotterSurveyLoader = new HarryPotterSurveyLoader(userRepository, surveyService,
+                surveyRepository, questionRepository, possibleAnswerRepository);
+        harryPotterSurveyLoader.loadQuestions();
+        harryPotterSurveyLoader.saveSurvey();
     }
 
     private static void printLogStatement(String statement)

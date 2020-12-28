@@ -77,7 +77,7 @@ export class QuestionView extends LitElement {
     }
 
     return html`
-      <h3>Welcome to this survey</h3>
+      <h3>This is the '${this.selectedSurveyInfo.name}' survey</h3>
       <!-- Show questions when they are available, else show loading warning... -->
       ${questionTextLine}
       ${possibleAnswers.map(possibleAnswer => html`
@@ -87,7 +87,7 @@ export class QuestionView extends LitElement {
       
       ${lastQuestionAnswered ? html`
         <br/>
-        <div>You can now review and confirm your responses. </div>
+        <div>You can now review and confirm your answers. </div>
         <br/>
         <div>
             <vaadin-button @click="${() => this.confirmResponses()}">Continue</vaadin-button>

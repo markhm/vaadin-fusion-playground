@@ -4,7 +4,7 @@ import {Router} from "@vaadin/router";
 import '@vaadin/vaadin-button';
 import '@vaadin/vaadin-text-field';
 
-import './completed-responses';
+import './components/completed-responses';
 
 import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
 import QuestionResponse from "../../generated/fusion/playground/data/entity/QuestionResponse";
@@ -35,7 +35,7 @@ export class ConfirmResponsesView extends LitElement {
 
   render() {
     return html`
-        <h3>Confirm responses</h3>
+        <h3>Confirm response</h3>
         <completed-responses surveyResultId="${this.surveyResultId}"></completed-responses>
         
       ${this.questionResponses ? html`
@@ -43,8 +43,8 @@ export class ConfirmResponsesView extends LitElement {
         <div>Do you wish to confirm these answers...? <br/></div>
         <br/>
         <vaadin-horizontal-layout class="button-layout" theme="spacing">
-          <vaadin-button theme="primary" @click="${this.approve}">Confirm</vaadin-button>
-          <vaadin-button @click="${this.reject}">Reject</vaadin-button>
+          <vaadin-button theme="primary" @click="() => ${this.approve}">Confirm</vaadin-button>
+          <vaadin-button @click="() => ${this.reject}">Reject</vaadin-button>
         </vaadin-horizontal-layout>
         <br/><br/>
         

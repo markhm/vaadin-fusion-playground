@@ -10,6 +10,7 @@ class StringArrayComboBox extends LitElement {
 
     @property() value : string = '';
     @property() label : string = '';
+    @property() placeholder : string = '';
 
     private _boundItemRenderer = this._itemRenderer.bind(this);
 
@@ -18,6 +19,7 @@ class StringArrayComboBox extends LitElement {
       <vaadin-combo-box
         label="${this.label}"
         value="${this.value}"
+        placeholder="${this.placeholder}"
         ?disabled=${this.items.length <= 1}
         .items="${this.items}"
         .renderer="${this._boundItemRenderer}"

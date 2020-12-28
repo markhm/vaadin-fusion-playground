@@ -3,9 +3,9 @@ import '@vaadin/vaadin-combo-box/vaadin-combo-box.js';
 
 import type { ComboBoxElement } from '@vaadin/vaadin-combo-box';
 import type { ComboBoxItemModel } from '@vaadin/vaadin-combo-box/@types/interfaces';
-import * as SurveySessionEndpoint from "../../generated/SurveySessionEndpoint";
-import QuestionResponse from "../../generated/fusion/playground/data/entity/QuestionResponse";
-import SurveyInfo from "../../generated/fusion/playground/data/entity/SurveyInfo";
+import * as SurveySessionEndpoint from "../../../generated/SurveySessionEndpoint";
+import QuestionResponse from "../../../generated/fusion/playground/data/entity/QuestionResponse";
+import SurveyInfo from "../../../generated/fusion/playground/data/entity/SurveyInfo";
 
 class CompletedResponses extends LitElement {
 

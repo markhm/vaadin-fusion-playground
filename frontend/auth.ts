@@ -5,7 +5,8 @@ import { AccessToken, OktaAuth } from '@okta/okta-auth-js';
 
 const authClient = new OktaAuth({
     issuer: 'https://dev-8673725.okta.com/oauth2/default', // use your own
-    clientId: '0oa28ltaypSts9p5H5d6', // Vaadin Fusion Playground
+    clientId: '0oa28ltaypSts9p5H5d6', // Vaadin Fusion Playground Single App
+    // clientId: '0oa2wttz5k9NFxRt05d6', // Vaadin Fusion Playground Web
     redirectUri: window.location.origin + '/callback',
     pkce: true
 });
