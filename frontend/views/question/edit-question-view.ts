@@ -80,7 +80,7 @@ export class EditQuestionView extends LitElement {
       <h3>Possible answers to this question</h3>
       <div>Set the allowed multiple-choice answers to this question.</div>
       <ul>
-      ${this.question.possibleAnswers ? html`                 
+      ${this.question.possibleAnswers.length > 0 ? html`                 
              ${this.question.possibleAnswers.map(
               (possibleAnswer) => html`
                          <li>${possibleAnswer.text}
@@ -88,9 +88,9 @@ export class EditQuestionView extends LitElement {
                          </li>
                      `
       )}
-         `: html`No questions found yet. Add your first question.`}
+         `: html`No possible answers found yet. Add your first possible answer.`}
       </ul>
-
+      <div>Note that the allowed answers are always presented in random order.</div>
       <vaadin-text-field label="Add possible answer" 
                          value="${this.newPossibleAnswer}" 
                          @value-changed='${this.newPossibleAnswerChanged}' 
