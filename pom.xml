@@ -26,7 +26,8 @@
         <!-- frameworks and components -->
         <lombok.version>1.18.16</lombok.version>
         <okta.spring.version>1.5.1</okta.spring.version>
-        <vaadin.version>18.0.3</vaadin.version>
+        <vaadin.version>18.0.5</vaadin.version>
+<!--        <vaadin.version>19.0.0.alpha3</vaadin.version>-->
 
         <!-- testing and documentation generation -->
         <junit.jupiter.version>5.7.0</junit.jupiter.version>
