@@ -19,9 +19,9 @@ import java.util.Map;
 
 @Route("server-security-info")
 @PageTitle("Security info")
-public class SecurityView extends VerticalLayout {
+public class SecurityInfoView extends VerticalLayout {
 
-    public SecurityView() {
+    public SecurityInfoView() {
 
         add(new H3("Security overview"));
 
