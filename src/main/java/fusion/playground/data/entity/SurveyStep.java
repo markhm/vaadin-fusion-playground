@@ -15,23 +15,27 @@ import java.util.List;
 @Accessors(fluent=true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class Question extends AbstractEntity
+public class SurveyStep extends AbstractEntity
 {
     private static final long serialVersionUID = 1L;
 
     private String surveyId;
 
-    protected Integer orderNumber;
+    private StepType type;
 
-    /* Description of the question */
+    protected Integer questionNumber;
+
+    protected String introduction;
+
+    /* Description of the surveyStep */
     protected String text;
 
-    /* Possible answers to the question */
+    /* Possible answers to the surveyStep */
     @EqualsAndHashCode.Exclude
     protected List<PossibleAnswer> possibleAnswers = new ArrayList<>();
 
     /**
-     * Add a possible answer to the question.
+     * Add a possible answer to the surveyStep.
     * @param possibleAnswer one of the possible multiple-choice answers
     * */
     public void addPossibleAnswer(PossibleAnswer possibleAnswer)
@@ -40,6 +44,12 @@ public class Question extends AbstractEntity
         {
             possibleAnswers.add(possibleAnswer);
         }
+    }
+
+    public enum StepType
+    {
+        text,
+        question
     }
 
 }

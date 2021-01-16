@@ -4,21 +4,21 @@ import fusion.playground.data.entity.Survey;
 import fusion.playground.data.entity.SurveyCategory;
 import fusion.playground.data.entity.Visibility;
 import fusion.playground.data.repository.PossibleAnswerRepository;
-import fusion.playground.data.repository.QuestionRepository;
+import fusion.playground.data.repository.SurveyStepRepository;
 import fusion.playground.data.repository.SurveyRepository;
 import fusion.playground.data.repository.UserRepository;
 import fusion.playground.data.service.SurveyService;
 
-public class WeatherExampleSurveyInitializer extends AbstractSurveyLoader
+public class WeatherExampleSurveyLoader extends AbstractSurveyLoader
 {
     private static SurveyCategory CATEGORY_EXAMPLE = SurveyCategory.example;
 
-    public WeatherExampleSurveyInitializer(UserRepository userRepository, SurveyService surveyService,
-                                           SurveyRepository surveyRepository,
-                                           QuestionRepository questionRepository,
-                                           PossibleAnswerRepository possibleAnswerRepository)
+    public WeatherExampleSurveyLoader(UserRepository userRepository, SurveyService surveyService,
+                                      SurveyRepository surveyRepository,
+                                      SurveyStepRepository surveyStepRepository,
+                                      PossibleAnswerRepository possibleAnswerRepository)
     {
-        super(userRepository, surveyService, surveyRepository, questionRepository, possibleAnswerRepository);
+        super(userRepository, surveyService, surveyRepository, surveyStepRepository, possibleAnswerRepository);
 
         survey = surveyService.createDraftSurvey(hiddenOwnerId, SurveyCategory.example.toString(), "weather");
 
@@ -29,7 +29,7 @@ public class WeatherExampleSurveyInitializer extends AbstractSurveyLoader
         survey.visibility(Visibility.general);
     }
 
-    public void loadQuestions()
+    public void loadSurveySteps()
     {
         addQuestion("Is it a sunny day today? ☀️",
                 "Yes", "No");

@@ -28,16 +28,18 @@ public abstract class CrudEndpoint<T, ID> {
         return getService().get(id);
     }
 
-    public T update(T entity) {
-        return getService().update(entity);
-    }
-
-    public void delete(ID id) {
-        getService().delete(id);
-    }
-
     public int count() {
         return getService().count();
     }
 
+    // Removed the update and delete features, so all such functions are activated
+    // explicitly and passed on to the actual service
+
+//    public T update(T entity) {
+//        return getService().update(entity);
+//    }
+//
+//    public void delete(ID id) {
+//        getService().delete(id);
+//    }
 }

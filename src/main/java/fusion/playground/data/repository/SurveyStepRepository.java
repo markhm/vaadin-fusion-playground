@@ -1,7 +1,7 @@
 package fusion.playground.data.repository;
 
-import fusion.playground.data.entity.Question;
 import fusion.playground.data.entity.Survey;
+import fusion.playground.data.entity.SurveyStep;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface QuestionRepository extends MongoRepository<Question, String>
+public interface SurveyStepRepository extends MongoRepository<SurveyStep, String>
 {
     // public List<Question> findAllByCategory(String category);
 

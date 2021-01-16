@@ -3,7 +3,7 @@ package fusion.playground.data.initialization;
 import fusion.playground.data.entity.Survey;
 import fusion.playground.data.entity.Visibility;
 import fusion.playground.data.repository.PossibleAnswerRepository;
-import fusion.playground.data.repository.QuestionRepository;
+import fusion.playground.data.repository.SurveyStepRepository;
 import fusion.playground.data.repository.SurveyRepository;
 import fusion.playground.data.repository.UserRepository;
 import fusion.playground.data.entity.SurveyCategory;
@@ -11,19 +11,19 @@ import fusion.playground.data.service.SurveyService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class FirstExampleSurveyInitializer extends AbstractSurveyLoader
+public class FirstExampleSurveyLoader extends AbstractSurveyLoader
 {
-    private static Log log = LogFactory.getLog(FirstExampleSurveyInitializer.class);
+    private static Log log = LogFactory.getLog(FirstExampleSurveyLoader.class);
 
     private static SurveyCategory CATEGORY_EXAMPLE = SurveyCategory.example;
 
-    public FirstExampleSurveyInitializer(UserRepository userRepository,
-                                         SurveyService surveyService,
-                                         SurveyRepository surveyRepository,
-                                         QuestionRepository questionRepository,
-                                         PossibleAnswerRepository possibleAnswerRepository)
+    public FirstExampleSurveyLoader(UserRepository userRepository,
+                                    SurveyService surveyService,
+                                    SurveyRepository surveyRepository,
+                                    SurveyStepRepository surveyStepRepository,
+                                    PossibleAnswerRepository possibleAnswerRepository)
     {
-        super(userRepository, surveyService, surveyRepository, questionRepository, possibleAnswerRepository);
+        super(userRepository, surveyService, surveyRepository, surveyStepRepository, possibleAnswerRepository);
 
         log.info("Default owner is: "+defaultOwnerId);
 
@@ -34,9 +34,10 @@ public class FirstExampleSurveyInitializer extends AbstractSurveyLoader
         survey.visibility(Visibility.general);
         survey.status(Survey.SurveyStatus.published);
 
+        survey.randomizeAnswerOrder(true);
     }
 
-    public void loadQuestions()
+    public void loadSurveySteps()
     {
         addQuestion("What kind of music 🎶 do you like?",
                 "Pop 🎷", "Rock 🎸", "Dance 🕺🏻", "Classical 🎻");

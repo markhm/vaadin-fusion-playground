@@ -1,4 +1,4 @@
-package fusion.playground.security;
+package fusion.playground.security.flow;
 
 import com.vaadin.flow.server.HandlerHelper;
 import com.vaadin.flow.shared.ApplicationConstants;
@@ -34,7 +34,7 @@ public final class SecurityUtils
      * @param request {@link HttpServletRequest}
      * @return true if is an internal framework request. False otherwise.
      */
-    static boolean isFrameworkInternalRequest(HttpServletRequest request)
+    public static boolean isFrameworkInternalRequest(HttpServletRequest request)
     {
         final String parameterValue = request.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER);
         return parameterValue != null

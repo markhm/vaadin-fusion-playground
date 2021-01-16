@@ -4,22 +4,22 @@ import fusion.playground.data.entity.Survey;
 import fusion.playground.data.entity.SurveyCategory;
 import fusion.playground.data.entity.Visibility;
 import fusion.playground.data.repository.PossibleAnswerRepository;
-import fusion.playground.data.repository.QuestionRepository;
+import fusion.playground.data.repository.SurveyStepRepository;
 import fusion.playground.data.repository.SurveyRepository;
 import fusion.playground.data.repository.UserRepository;
 import fusion.playground.data.service.SurveyService;
 
-public class MathsExampleSurveyInitializer extends AbstractSurveyLoader
+public class MathsExampleSurveyLoader extends AbstractSurveyLoader
 {
     private static SurveyCategory CATEGORY_EXAMPLE = SurveyCategory.example;
 
-    public MathsExampleSurveyInitializer(UserRepository userRepository,
-                                         SurveyService surveyService,
-                                         SurveyRepository surveyRepository,
-                                         QuestionRepository questionRepository,
-                                         PossibleAnswerRepository possibleAnswerRepository)
+    public MathsExampleSurveyLoader(UserRepository userRepository,
+                                    SurveyService surveyService,
+                                    SurveyRepository surveyRepository,
+                                    SurveyStepRepository surveyStepRepository,
+                                    PossibleAnswerRepository possibleAnswerRepository)
     {
-        super(userRepository, surveyService, surveyRepository, questionRepository, possibleAnswerRepository);
+        super(userRepository, surveyService, surveyRepository, surveyStepRepository, possibleAnswerRepository);
 
         survey = surveyService.createDraftSurvey(defaultOwnerId, SurveyCategory.example.toString(), "maths");
 
@@ -28,10 +28,10 @@ public class MathsExampleSurveyInitializer extends AbstractSurveyLoader
 
         survey.status(Survey.SurveyStatus.published);
         survey.visibility(Visibility.general);
-        survey.ownerId(defaultOwnerId);
+        survey.randomizeAnswerOrder(true);
     }
 
-    public void loadQuestions()
+    public void loadSurveySteps()
     {
         addFactualQuestion("What is 5 ➕  7?", 2,
                 "9", "12", "14");
