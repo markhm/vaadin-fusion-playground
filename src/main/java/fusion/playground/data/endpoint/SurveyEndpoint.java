@@ -69,12 +69,13 @@ public class SurveyEndpoint extends CrudEndpoint<Survey, String>
 
     }
 
-    public List<Question> getQuestions(String surveyId)
-    {
-        return get(surveyId).get().questions();
-    }
+    // Let's rethink this.
+//    public List<Question> getQuestions(String surveyId)
+//    {
+//        return get(surveyId).get().surveySteps();
+//    }
 
-    public Question addQuestion(Question question)
+    public SurveyStep addQuestion(SurveyStep question)
     {
         return surveyService.addQuestion(question);
     }
@@ -84,13 +85,14 @@ public class SurveyEndpoint extends CrudEndpoint<Survey, String>
         surveyService.publish(surveyId);
     }
 
-//    @Override
-//    public Survey update(Survey survey)
-//    {
-//        log.info("Trying to save " + survey);
-//
-//        return super.update(survey);
-//    }
+    // Moved from the Abstract CrudEndpoint to have better control
+    public Survey update(Survey entity) {
+        return getService().update(entity);
+    }
+
+    public void delete(String surveyId) {
+        getService().delete(surveyId);
+    }
 
 
 }

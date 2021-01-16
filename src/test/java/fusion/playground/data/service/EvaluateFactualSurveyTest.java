@@ -3,9 +3,7 @@ package fusion.playground.data.service;
 import fusion.playground.data.entity.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,17 +26,17 @@ public class EvaluateFactualSurveyTest extends AbstractServiceLayerTest
 
         SurveyResult surveyResult = surveySessionService.get(surveyResultId).get();
 
-        // retrieving the first question
-        Question firstQuestion = surveySessionService.getNextQuestion(surveyResultId);
+        // retrieving the first surveyStep
+        SurveyStep firstQuestion = surveySessionService.getNextSurveyStep(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), firstQuestion.id(), firstQuestion.possibleAnswers().get(0).id());
 
-        Question secondQuestion = surveySessionService.getNextQuestion(surveyResultId);
+        SurveyStep secondQuestion = surveySessionService.getNextSurveyStep(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), secondQuestion.id(), secondQuestion.possibleAnswers().get(1).id());
 
-        Question thirdQuestion = surveySessionService.getNextQuestion(surveyResultId);
+        SurveyStep thirdQuestion = surveySessionService.getNextSurveyStep(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), thirdQuestion.id(), thirdQuestion.possibleAnswers().get(1).id());
 
-        Question fourthQuestion = surveySessionService.getNextQuestion(surveyResultId);
+        SurveyStep fourthQuestion = surveySessionService.getNextSurveyStep(surveyResultId);
         surveySessionService.saveResponse(surveyResult.id(), fourthQuestion.id(), fourthQuestion.possibleAnswers().get(1).id());
 
         // grade the FactualQuestions

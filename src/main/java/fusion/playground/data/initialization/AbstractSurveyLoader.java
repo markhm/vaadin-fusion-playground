@@ -2,13 +2,14 @@ package fusion.playground.data.initialization;
 
 import fusion.playground.data.entity.*;
 import fusion.playground.data.repository.PossibleAnswerRepository;
-import fusion.playground.data.repository.QuestionRepository;
+import fusion.playground.data.repository.SurveyStepRepository;
 import fusion.playground.data.repository.SurveyRepository;
 import fusion.playground.data.repository.UserRepository;
 import fusion.playground.data.service.SurveyService;
 import fusion.playground.service.SomeOktaUser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 
 import java.util.Optional;
@@ -23,22 +24,23 @@ public abstract class AbstractSurveyLoader
     protected UserRepository userRepository;
     protected SurveyService surveyService;
     protected SurveyRepository surveyRepository;
-    protected QuestionRepository questionRepository;
+    protected SurveyStepRepository surveyStepRepository;
     protected PossibleAnswerRepository possibleAnswerRepository;
 
     protected Survey survey;
     protected String defaultOwnerId;
     protected String hiddenOwnerId;
 
+    @Autowired
     public AbstractSurveyLoader(UserRepository userRepository, SurveyService surveyService,
                                 SurveyRepository surveyRepository,
-                                QuestionRepository questionRepository,
+                                SurveyStepRepository surveyStepRepository,
                                 PossibleAnswerRepository possibleAnswerRepository)
     {
         this.userRepository = userRepository;
         this.surveyService = surveyService;
         this.surveyRepository = surveyRepository;
-        this.questionRepository = questionRepository;
+        this.surveyStepRepository = surveyStepRepository;
         this.possibleAnswerRepository = possibleAnswerRepository;
 
         Optional<User> maybeUser = userRepository.findByOktaUserId(SomeOktaUser.VFP_ADMIN_USER_OKTA_ID);
@@ -53,7 +55,7 @@ public abstract class AbstractSurveyLoader
         hiddenOwnerId = maybeUser2.get().id();
     }
 
-    public abstract void loadQuestions();
+    public abstract void loadSurveySteps();
 
 //    protected void createSurvey(SurveyCategory category, String name)
 //    {
@@ -76,17 +78,37 @@ public abstract class AbstractSurveyLoader
         surveyRepository.save(survey);
     }
 
-    protected void addQuestion(String questionText, String... possibleAnswerTexts)
+    protected void addNonQuestionStep(String text)
     {
-        // NB: if the survey is unsaved, we'll do that first, so a question receives the correct surveyId
+        // NB: if the survey is unsaved, we'll do that first, so a surveyStep receives the correct surveyId
         if (survey.id() == null)
         {
             saveSurvey();
         }
 
-        Question question = new Question();
+        SurveyStep surveyStep = new SurveyStep();
+        surveyStep.type(SurveyStep.StepType.text);
+
+        surveyStep.introduction(text);
+
+        surveyStep.surveyId(survey.id());
+
+        surveyStepRepository.save(surveyStep);
+        survey.addSurveyStep(surveyStep);
+    }
+
+    protected void addQuestion(String questionText, String... possibleAnswerTexts)
+    {
+        // NB: if the survey is unsaved, we'll do that first, so a surveyStep receives the correct surveyId
+        if (survey.id() == null)
+        {
+            saveSurvey();
+        }
+
+        SurveyStep question = new SurveyStep();
+        question.type(SurveyStep.StepType.question);
         question.text(questionText);
-        question.orderNumber(orderCounter);
+        question.questionNumber(orderCounter);
         question.surveyId(survey.id());
 
         for (String possibleAnswerText: possibleAnswerTexts)
@@ -95,8 +117,8 @@ public abstract class AbstractSurveyLoader
             question.addPossibleAnswer(possibleAnswerRepository.save(possibleAnswer));
         }
 
-        questionRepository.save(question);
-        survey.addQuestion(question);
+        surveyStepRepository.save(question);
+        survey.addSurveyStep(question);
 
         orderCounter++;
     }
@@ -107,7 +129,7 @@ public abstract class AbstractSurveyLoader
 
         FactualQuestion question = new FactualQuestion();
         question.text(questionText);
-        question.orderNumber(orderCounter);
+        question.questionNumber(orderCounter);
 
         int counter = 1;
         for (String possibleAnswerText: possibleAnswerTexts)
@@ -122,8 +144,8 @@ public abstract class AbstractSurveyLoader
             counter++;
         }
 
-        questionRepository.save(question);
-        survey.addQuestion(question);
+        surveyStepRepository.save(question);
+        survey.addSurveyStep(question);
 
         orderCounter++;
     }

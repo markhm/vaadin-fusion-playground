@@ -150,9 +150,10 @@ export class MainView extends LitElement {
             ${this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('logout')}">Logout</a> </vaadin-tab>` : html``}
 
             <vaadin-tab> <a href="${router.urlForPath('about')}">About</a> </vaadin-tab>
-            ${this.debug ? html`
+            ${true ? html`
               <vaadin-tab>--------</vaadin-tab>
               <vaadin-tab> <a href="#" @click="${() => this.debugSomething()}">debugSomething()</a> </vaadin-tab>
+              <vaadin-tab> <a href="${router.urlForPath('server-security-info')}">Security info</a> </vaadin-tab>
             ` : html``}
 
           </vaadin-tabs>

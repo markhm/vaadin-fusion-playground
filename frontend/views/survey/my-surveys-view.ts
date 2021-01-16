@@ -41,12 +41,9 @@ export class MySurveysView extends LitElement {
 
         return html`                
             <h3>Your surveys</h3>
-            <div>Note carefully: Published surveys no longer be edited.</div>
-            <br/>
-            
             <surveys-grid .surveys='${this.mySurveys}'>
             </surveys-grid>
-            
+            <div>Note carefully: Published surveys can no longer be edited.</div>
             <h3>Create a new Survey</h3>
             <div>Start creating a new survey by selecting a category and survey name.</div>
             <horizontal-layout>

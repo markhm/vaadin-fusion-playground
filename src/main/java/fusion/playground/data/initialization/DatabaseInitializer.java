@@ -29,7 +29,7 @@ public class DatabaseInitializer
                                                SurveyService surveyService,
                                                SurveyRepository surveyRepository,
                                                SurveyResultRepository surveyResultRepository,
-                                               QuestionRepository questionRepository,
+                                               SurveyStepRepository surveyStepRepository,
                                                PossibleAnswerRepository possibleAnswerRepository,
                                                ResponseRepository responseRepository)
     {
@@ -39,7 +39,7 @@ public class DatabaseInitializer
 
             // Start with a clean database;
 
-            dropAllCollections(userRepository, questionRepository, surveyRepository,
+            dropAllCollections(userRepository, surveyStepRepository, surveyRepository,
                     possibleAnswerRepository, responseRepository, surveyResultRepository);
 
             List<User> users = userRepository.findAll();
@@ -47,7 +47,7 @@ public class DatabaseInitializer
             {
                 loadUsers(userRepository);
 
-                loadQuestions(userRepository, surveyService, surveyRepository, questionRepository, possibleAnswerRepository);
+                loadQuestions(userRepository, surveyService, surveyRepository, surveyStepRepository, possibleAnswerRepository);
             }
 
             if(env.getProperty("system.environment").equals("heroku"))
@@ -120,30 +120,35 @@ public class DatabaseInitializer
     private static void loadQuestions(UserRepository userRepository,
                                       SurveyService surveyService,
                                       SurveyRepository surveyRepository,
-                                      QuestionRepository questionRepository,
+                                      SurveyStepRepository surveyStepRepository,
                                       PossibleAnswerRepository possibleAnswerRepository)
     {
-        FirstExampleSurveyInitializer exampleQuestions =
-                new FirstExampleSurveyInitializer(userRepository, surveyService,
-                        surveyRepository, questionRepository, possibleAnswerRepository);
-        exampleQuestions.loadQuestions();
+        FirstExampleSurveyLoader exampleQuestions =
+                new FirstExampleSurveyLoader(userRepository, surveyService,
+                        surveyRepository, surveyStepRepository, possibleAnswerRepository);
+        exampleQuestions.loadSurveySteps();
         exampleQuestions.saveSurvey();
 
-        WeatherExampleSurveyInitializer weatherExampleSurveyInitializer =
-                new WeatherExampleSurveyInitializer(userRepository, surveyService, surveyRepository, questionRepository, possibleAnswerRepository);
+        WeatherExampleSurveyLoader weatherExampleSurveyInitializer =
+                new WeatherExampleSurveyLoader(userRepository, surveyService, surveyRepository, surveyStepRepository, possibleAnswerRepository);
 
-        weatherExampleSurveyInitializer.loadQuestions();
+        weatherExampleSurveyInitializer.loadSurveySteps();
         weatherExampleSurveyInitializer.saveSurvey();
 
-        MathsExampleSurveyInitializer mathsExampleSurveyInitializer =
-                new MathsExampleSurveyInitializer(userRepository, surveyService, surveyRepository, questionRepository, possibleAnswerRepository);
-        mathsExampleSurveyInitializer.loadQuestions();
+        MathsExampleSurveyLoader mathsExampleSurveyInitializer =
+                new MathsExampleSurveyLoader(userRepository, surveyService, surveyRepository, surveyStepRepository, possibleAnswerRepository);
+        mathsExampleSurveyInitializer.loadSurveySteps();
         mathsExampleSurveyInitializer.saveSurvey();
 
         HarryPotterSurveyLoader harryPotterSurveyLoader = new HarryPotterSurveyLoader(userRepository, surveyService,
-                surveyRepository, questionRepository, possibleAnswerRepository);
-        harryPotterSurveyLoader.loadQuestions();
+                surveyRepository, surveyStepRepository, possibleAnswerRepository);
+        harryPotterSurveyLoader.loadSurveySteps();
         harryPotterSurveyLoader.saveSurvey();
+
+        GeoLocationSurveyLoader geoLocationSurveyLoader = new GeoLocationSurveyLoader(userRepository, surveyService,
+                surveyRepository, surveyStepRepository, possibleAnswerRepository);
+        geoLocationSurveyLoader.loadSurveySteps();
+        geoLocationSurveyLoader.saveSurvey();
     }
 
     private static void printLogStatement(String statement)

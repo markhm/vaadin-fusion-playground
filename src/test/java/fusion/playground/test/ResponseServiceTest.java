@@ -23,7 +23,7 @@ public class ResponseServiceTest
     private static UserService userService;
 
     @MockBean
-    private static QuestionService questionService;
+    private static SurveyStepService surveyStepService;
 
     @MockBean
     private static PossibleAnswerService possibleAnswerService;

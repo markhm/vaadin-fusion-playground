@@ -8,7 +8,7 @@ import '@vaadin/vaadin-button';
 import '@vaadin/vaadin-text-field';
 
 import * as SurveyEndpoint from "../../../generated/SurveyEndpoint";
-import QuestionModel from "../../../generated/fusion/playground/data/entity/QuestionModel";
+import SurveyStepModel from "../../../generated/fusion/playground/data/entity/SurveyStepModel";
 
 export class AddQuestion extends LitElement {
     name: string = '';
@@ -16,7 +16,7 @@ export class AddQuestion extends LitElement {
     @internalProperty()
     surveyId! : string;
 
-    private binder = new Binder(this, QuestionModel);
+    private binder = new Binder(this, SurveyStepModel);
 
     static get styles() {
         return css`
@@ -60,9 +60,9 @@ export class AddQuestion extends LitElement {
 
             await this.binder.clear();
 
-            let event = new CustomEvent('question-added-event', {
+            let event = new CustomEvent('surveyStep-added-event', {
                 detail: {
-                    message: 'A question was added, please refresh the view.'
+                    message: 'A surveyStep was added, please refresh the view.'
                 }
             });
             this.dispatchEvent(event);
@@ -95,7 +95,7 @@ customElements.define('add-question', AddQuestion);
 
 
 //
-//     <h2>Add new question</h2>
+//     <h2>Add new surveyStep</h2>
 // <div class="form">
 //     <vaadin-text-field
 // label="First Name"

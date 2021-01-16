@@ -1,7 +1,6 @@
 package fusion.playground.data.entity;
 
 import fusion.playground.data.AbstractEntity;
-import fusion.playground.data.service.SurveyService;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.apache.commons.logging.Log;
@@ -31,6 +30,7 @@ public class SurveyResult extends AbstractEntity
 
     private List<Response> responses;
 
+    private boolean complete;
     private SurveyResultStatus status;
 
     int score;
@@ -38,6 +38,7 @@ public class SurveyResult extends AbstractEntity
     public SurveyResult()
     {
         status = SurveyResultStatus.created;
+        complete = false;
     }
 
     public void addResponse(Response response)
@@ -50,9 +51,9 @@ public class SurveyResult extends AbstractEntity
         if (responses.size() > 0)
         {
             Response previousResponse = responses.get(responses.size() - 1);
-            Question previousQuestion = previousResponse.question();
+            SurveyStep previousQuestion = previousResponse.question();
 
-            // Check if response to question has already been saved
+            // Check if response to surveyStep has already been saved
             if (previousQuestion.equals(response.question()))
             {
                 log.warn("Response already saved. Ignoring. ");
@@ -64,8 +65,8 @@ public class SurveyResult extends AbstractEntity
         responses.add(response);
         lastCompletedQuestion++;
 
-        // log.info("lastCompleted question: " + lastCompletedQuestion);
-        if (lastCompletedQuestion == survey.questions().size())
+        // log.info("lastCompleted surveyStep: " + lastCompletedQuestion);
+        if (lastCompletedQuestion == survey.surveySteps().size())
         {
             registerCompletion();
         }
@@ -73,8 +74,7 @@ public class SurveyResult extends AbstractEntity
 
     public boolean isComplete()
     {
-        if (endTime == null) return false;
-        else return true;
+        return complete;
     }
 
     public boolean userHasConfirmed()
@@ -97,16 +97,17 @@ public class SurveyResult extends AbstractEntity
 //        log.info("survey.questions().size(): " + survey.questions().size());
 //        log.info("responses().size(): " + responses().size());
 
-        if (status == SurveyResultStatus.in_progress && responses().size() == survey.questions().size())
+        if (status == SurveyResultStatus.in_progress && responses().size() == survey.surveySteps().size())
         {
             this.endTime = LocalDateTime.now();
             status = SurveyResultStatus.complete;
+            complete = true;
         }
         else
         {
              log.error("Cannot register completion, please investigate.");
              log.error("status == SurveyResultStatus.in_progress && responses().size() == survey.questions().size(): " +
-                     (status == SurveyResultStatus.in_progress && responses().size() == survey.questions().size()));
+                     (status == SurveyResultStatus.in_progress && responses().size() == survey.surveySteps().size()));
         }
     }
 

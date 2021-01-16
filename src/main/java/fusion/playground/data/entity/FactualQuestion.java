@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Accessors(fluent=true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class FactualQuestion extends Question
+public class FactualQuestion extends SurveyStep
 {
     private PossibleAnswer correctAnswer;
 }

@@ -21,7 +21,7 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
     private static Log log = LogFactory.getLog(SurveySessionService.class);
 
     private UserService userService;
-    private QuestionService questionService;
+    private SurveyStepService surveyStepService;
     private SurveyService surveyService;
     private SurveyResultRepository surveyResultRepository;
     private PossibleAnswerService possibleAnswerService;
@@ -34,12 +34,12 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
     }
 
     @Autowired
-    public SurveySessionService(UserService userService, QuestionService questionService,
+    public SurveySessionService(UserService userService, SurveyStepService surveyStepService,
                                 SurveyService surveyService, PossibleAnswerService possibleAnswerService,
                                 ResponseService responseService, SurveyResultRepository surveyResultRepository)
     {
         this.userService = userService;
-        this.questionService = questionService;
+        this.surveyStepService = surveyStepService;
         this.surveyService = surveyService;
         this.surveyResultRepository = surveyResultRepository;
         this.possibleAnswerService = possibleAnswerService;
@@ -60,30 +60,32 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
         return savedSurveyResult.id();
     }
 
-    public Question getNextQuestion(String surveyResultId)
+    public SurveyStep getNextSurveyStep(String surveyResultId)
     {
-        log.info("Retrieving next question for surverResultId " + surveyResultId + ".");
-        Question result = null;
+        log.info("Retrieving next surveyStep for surverResultId " + surveyResultId + ".");
+        SurveyStep result = null;
 
         SurveyResult surveyResult = get(surveyResultId).get();
         if (surveyResult.isComplete())
         {
-            result = new Question();
-            result.orderNumber(-1);
+            result = new SurveyStep();
+            result.questionNumber(-1);
             result.text("Survey already completed.");
         }
         else
         {
-            int lastCompletedQuestion = surveyResult.lastCompletedQuestion();
+            int lastCompletedStep = surveyResult.lastCompletedQuestion();
 
             Survey survey = surveyResult.survey();
-            result = surveyService.getQuestionFromSurvey(survey, lastCompletedQuestion + 1);
+            result = surveyService.getSurveyStepFromSurvey(survey, lastCompletedStep + 1);
         }
-
-        // randomize the order of the possible answers
-        List<PossibleAnswer> possibleAnswers = result.possibleAnswers();
-        Collections.shuffle(possibleAnswers);
-        result.possibleAnswers(possibleAnswers);
+        if (surveyResult.survey().randomizeAnswerOrder())
+        {
+            // randomize the order of the possible answers
+            List<PossibleAnswer> possibleAnswers = result.possibleAnswers();
+            Collections.shuffle(possibleAnswers);
+            result.possibleAnswers(possibleAnswers);
+        }
 
         return result;
     }
@@ -99,12 +101,12 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
         }
 
         Response response = new Response();
-        Question question = questionService.get(questionId).get();
+        SurveyStep question = surveyStepService.get(questionId).get();
 
         Set<String> possibleAnswerIds = question.possibleAnswers().stream().map(possibleAnswer -> possibleAnswer.id()).collect(Collectors.toSet());
         if (! possibleAnswerIds.contains(responseId))
         {
-            log.error("Impossible response for this question. Ignoring.");
+            log.error("Impossible response for this surveyStep. Ignoring.");
             return null;
         }
 
@@ -127,7 +129,7 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
 
             QuestionResponse questionResponse = new QuestionResponse();
             questionResponse.questionText(response.question().text());
-            questionResponse.questionNumber(response.question().orderNumber());
+            questionResponse.questionNumber(response.question().questionNumber());
             if (surveyResult.userHasConfirmed())
             {
                 questionResponse.correct(response.correct());
@@ -188,9 +190,10 @@ public class SurveySessionService extends MongoCrudService<SurveyResult, String>
         return surveyResult;
     }
 
-    public List<SurveyResult> getCompletedSurveys(User user)
+    public List<SurveyResult> getCompletedSurveys(String userId)
     {
-        return surveyResultRepository.findAllByUser(user);
+        User user = userService.get(userId).get();
+        return surveyResultRepository.findAllByUserAndComplete(user, true);
     }
 
     private Response save(SurveyResult surveyResult, Response response)

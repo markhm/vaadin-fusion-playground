@@ -4,13 +4,10 @@ import fusion.playground.data.entity.*;
 import fusion.playground.service.SomeOktaUser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -21,17 +18,17 @@ public class AddSurveyTest extends AbstractServiceLayerTest
     @Test
     public void addSurvey()
     {
-        // create a new survey and save it, so we get an id
+        // create a new survey and save it to obtain an id
         Optional<User> hiddenOwner = userRepository.findByOktaUserId(SomeOktaUser.HIDDEN_USER_OKTA_ID);
         Survey survey = surveyService.createDraftSurvey(hiddenOwner.get().id(), SurveyCategory.example.toString(), "test");
         Assertions.assertNotNull(survey.id());
 
         String surveyId = survey.id();
-        addQuestion(surveyId, "This is the first question. What is your answer...?", "Yes", "No");
+        addQuestion(surveyId, "This is the first surveyStep. What is your answer...?", "Yes", "No");
         Survey retrievedSurvey = surveyService.get(surveyId).get();
 
-        Question question = retrievedSurvey.questions().get(0);
-        Assertions.assertEquals("This is the first question. What is your answer...?", question.text());
+        SurveyStep question = retrievedSurvey.surveySteps().get(0);
+        Assertions.assertEquals("This is the first surveyStep. What is your answer...?", question.text());
 
         Assertions.assertEquals("Yes", question.possibleAnswers().get(0).text());
         Assertions.assertEquals("No", question.possibleAnswers().get(1).text());
@@ -40,7 +37,7 @@ public class AddSurveyTest extends AbstractServiceLayerTest
 
         assertCompleteness(surveyId);
 
-        addQuestion(surveyId, "This is the second question. Are you happy...?", "Yes", "No");
+        addQuestion(surveyId, "This is the second surveyStep. Are you happy...?", "Yes", "No");
         addQuestion(surveyId, "Are you a desert person or a soup person...?", "Soup", "Desert");
 
         surveyService.rebuildSurvey(surveyId);
@@ -50,20 +47,20 @@ public class AddSurveyTest extends AbstractServiceLayerTest
 
     private void addQuestion(String surveyId, String questionText, String... possibleAnswerTexts)
     {
-        Question unsavedQuestion = new Question();
+        SurveyStep unsavedQuestion = new SurveyStep();
         unsavedQuestion.text(questionText);
         unsavedQuestion.surveyId(surveyId);
 
-        Question question = questionService.update(unsavedQuestion);
+        SurveyStep question = surveyStepService.update(unsavedQuestion);
 
         String questionId = question.id();
 
         for (String possibleAnswerText: possibleAnswerTexts)
         {
-            questionService.addPossibleAnswer(question.id(), possibleAnswerText);
+            surveyStepService.addPossibleAnswer(question.id(), possibleAnswerText);
         }
 
-        question = questionService.get(questionId).get();
+        question = surveyStepService.get(questionId).get();
 
         surveyService.addQuestion(question);
     }
@@ -76,9 +73,9 @@ public class AddSurveyTest extends AbstractServiceLayerTest
         log.info("");
         log.info("Survey: " + survey.name() + " (" + survey.category() + ")");
         log.info("");
-        for (Question question : survey.questions())
+        for (SurveyStep question : survey.surveySteps())
         {
-            log.info("Question " + question.orderNumber() + ": " + question.text());
+            log.info("Question " + question.questionNumber() + ": " + question.text());
 
             for (PossibleAnswer possibleAnswer : question.possibleAnswers())
             {
@@ -97,12 +94,12 @@ public class AddSurveyTest extends AbstractServiceLayerTest
         Assertions.assertNotNull(survey.name(), "The survey name should not be null.");
         Assertions.assertNotNull(survey.category(), "The survey category should not be null.");
 
-        for (Question question : survey.questions())
+        for (SurveyStep question : survey.surveySteps())
         {
-            Assertions.assertNotNull(question.id(), "The question should have been saved.");
-            Assertions.assertNotNull(question.text(), "The question not be null.");
-            Assertions.assertNotNull(question.orderNumber(), "The order number should not be null.");
-            Assertions.assertTrue(question.orderNumber() > 0, "The order number should be > 0.");
+            Assertions.assertNotNull(question.id(), "The surveyStep should have been saved.");
+            Assertions.assertNotNull(question.text(), "The surveyStep not be null.");
+            Assertions.assertNotNull(question.questionNumber(), "The order number should not be null.");
+            Assertions.assertTrue(question.questionNumber() > 0, "The order number should be > 0.");
             Assertions.assertEquals(survey.id(), question.surveyId());
 
             for (PossibleAnswer possibleAnswer : question.possibleAnswers())

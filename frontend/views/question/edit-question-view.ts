@@ -6,7 +6,7 @@ import { EndpointError } from '@vaadin/flow-frontend/Connect';
 import '../../components/string-array-combo-box';
 
 import * as QuestionEndpoint from "../../generated/QuestionEndpoint";
-import Question from "../../generated/fusion/playground/data/entity/Question";
+import SurveyStep from "../../generated/fusion/playground/data/entity/SurveyStep";
 // import {Router} from "@vaadin/router";
 // import * as SurveyEndpoint from "../../generated/SurveyEndpoint";
 
@@ -19,7 +19,7 @@ export class EditQuestionView extends LitElement {
     @property( {type: Boolean }) debug = false;
 
     @internalProperty()
-    question: Question = undefined!;
+    question: SurveyStep = undefined!;
 
     @internalProperty()
     newPossibleAnswer: string = ''!;
@@ -39,29 +39,29 @@ export class EditQuestionView extends LitElement {
     }
 
     render() {
-        // const question = this.question;
-        // let possibleAnswers = question.possibleAnswers;
+        // const surveyStep = this.surveyStep;
+        // let possibleAnswers = surveyStep.possibleAnswers;
         // let lastQuestionAnswered = false;
         //
         // let questionTextLine;
         // let alternativeText;
-        // if (question.orderNumber === -1) {
+        // if (surveyStep.orderNumber === -1) {
         //     lastQuestionAnswered = true;
-        //     alternativeText = 'You have finished the last question.';
+        //     alternativeText = 'You have finished the last surveyStep.';
         // }
-        // else if (question.id === "0") {
+        // else if (surveyStep.id === "0") {
         //     alternativeText = 'Loading questions...';
         // }
         //
-        // if (lastQuestionAnswered || question.id == "0") {
+        // if (lastQuestionAnswered || surveyStep.id == "0") {
         //     questionTextLine = html`${alternativeText}`;
         // }
         // else {
-        //     questionTextLine = html`<div>Question ${question.orderNumber} of ${this.selectedSurveyInfo.numberOfQuestions}:</div> ${question.text} </br></br>
+        //     questionTextLine = html`<div>Question ${surveyStep.orderNumber} of ${this.selectedSurveyInfo.numberOfQuestions}:</div> ${surveyStep.text} </br></br>
         //        <div>Your answer:</div>`
         // }
 
-        let questionTextLine = html`<div>Question ${this.question.orderNumber}:</div> ${this.question.text} </br>
+        let questionTextLine = html`<div>Question ${this.question.questionNumber}:</div> ${this.question.text} </br>
                `
 
         return html`
@@ -109,7 +109,7 @@ export class EditQuestionView extends LitElement {
     async connectedCallback() {
         super.connectedCallback();
 
-        // load the question
+        // load the surveyStep
         await this.loadQuestion();
     }
 
@@ -129,7 +129,7 @@ export class EditQuestionView extends LitElement {
             // clear the field
             this.newPossibleAnswer = '';
 
-            // reload the question
+            // reload the surveyStep
             await this.loadQuestion();
 
         } catch (error) {
@@ -154,7 +154,7 @@ export class EditQuestionView extends LitElement {
         const urlParams = new URLSearchParams(window.location.search);
         let questionId = urlParams.get('questionId')!;
 
-        console.log('About to load question with questionId: ' + questionId + '.');
+        console.log('About to load surveyStep with questionId: ' + questionId + '.');
         console.log('questionId from url: ' + questionId);
 
         if (questionId === 'unavailable') {
@@ -167,11 +167,11 @@ export class EditQuestionView extends LitElement {
 
         this.question = await QuestionEndpoint.get(questionId) || undefined!;
 
-        console.log('loaded question: ' + JSON.stringify(this.question));
+        console.log('loaded surveyStep: ' + JSON.stringify(this.question));
 
         } catch (error) {
             if (error instanceof EndpointError) {
-                showNotification('Server error loading question. ' + error.message, { position: 'bottom-start' });
+                showNotification('Server error loading surveyStep. ' + error.message, { position: 'bottom-start' });
             } else {
                 throw error;
             }
@@ -180,8 +180,8 @@ export class EditQuestionView extends LitElement {
 
     // private async saveQuestion() {
     //     try {
-    //         // console.log('About to submit answer: ' + answerId + ' to question ' + this.questionId + ' for userClaims '+this.userId + '.');
-    //         await QuestionEndpoint.update(this.question);
+    //         // console.log('About to submit answer: ' + answerId + ' to surveyStep ' + this.questionId + ' for userClaims '+this.userId + '.');
+    //         await QuestionEndpoint.update(this.surveyStep);
     //
     //         // showNotification('Response stored.', { position: 'bottom-start' });
     //

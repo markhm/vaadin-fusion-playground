@@ -37,7 +37,7 @@ export class SurveyResultView extends LitElement {
       <completed-responses surveyResultId="${this.surveyResultId}"> </completed-responses>
 
       <br/>
-      <div>You scored ${score} points out of ${this.surveyResult?.survey.questions.length}.</div>
+      <div>You scored ${score} points out of ${this.surveyResult?.survey.surveySteps.length}.</div>
       <br/>
       <div>See your completed surveys <a href='/completed-surveys'>here</a>.</div>
       <br/>

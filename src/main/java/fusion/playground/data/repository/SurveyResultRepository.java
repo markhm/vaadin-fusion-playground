@@ -11,4 +11,8 @@ import java.util.List;
 public interface SurveyResultRepository extends MongoRepository<SurveyResult, String>
 {
     public List<SurveyResult> findAllByUser(User user);
+
+    public List<SurveyResult> findAllByUserAndComplete(User user, boolean complete);
+
+    public List<SurveyResult> findAllByUserAndStatus(User user, SurveyResult.SurveyResultStatus status);
 }

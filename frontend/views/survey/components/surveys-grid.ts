@@ -4,9 +4,9 @@ import { render } from 'lit-html';
 import '@vaadin/vaadin-grid/vaadin-grid.js';
 import '@vaadin/vaadin-checkbox/vaadin-checkbox.js';
 
-import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
+// import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
 import type { GridElement, GridItem, GridItemModel } from '@vaadin/vaadin-grid';
-import type { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
+// import type { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
 
 import Survey from "../../../generated/fusion/playground/data/entity/Survey";
 
@@ -19,7 +19,7 @@ class SurveysGrid extends LitElement {
     @query('vaadin-grid')
     private grid!: GridElement;
 
-    private _boundToggleDetailsRenderer = this._toggleDetailsRenderer.bind(this);
+    // private _boundToggleDetailsRenderer = this._toggleDetailsRenderer.bind(this);
     private _boundRowDetailsRenderer = this._rowDetailsRenderer.bind(this);
 
     //
@@ -28,10 +28,12 @@ class SurveysGrid extends LitElement {
       <vaadin-grid .items="${this.surveys}" .rowDetailsRenderer="${this._boundRowDetailsRenderer}">
           <vaadin-grid-column header='Survey name (category)' .renderer="${this._surveyNameCategoryRenderer}"></vaadin-grid-column>
           <vaadin-grid-column header='Status' .renderer="${this._statusRenderer}"></vaadin-grid-column>
-          <vaadin-grid-column header='Last column' .renderer="${this._boundToggleDetailsRenderer}"></vaadin-grid-column>
       </vaadin-grid>
     `;
     }
+
+    // Deactivated column:
+    // <vaadin-grid-column header='Last column' .renderer="${this._boundToggleDetailsRenderer}"></vaadin-grid-column>
 
     connectedCallback() {
         super.connectedCallback();
@@ -50,25 +52,25 @@ class SurveysGrid extends LitElement {
         }
     }
 
-    _toggleDetailsRenderer(root: HTMLElement, _column: GridColumnElement, model: GridItemModel) {
-        // only render the checkbox once, to avoid re-creating during subsequent calls
-        if (!root.firstElementChild) {
-            render(
-                html`
-          <vaadin-checkbox @checked-changed="${this._onCheckboxChange}">
-            Show description
-          </vaadin-checkbox>
-        `,
-                root,
-                { eventContext: this } // bind event listener properly
-            );
-        }
-        const { item } = model;
-        // store the item to avoid grid virtual scrolling reusing DOM nodes to mess it up
-        itemCache.set(root, item);
-        const detailsOpened = this.grid.detailsOpenedItems || [];
-        (root.firstElementChild as CheckboxElement).checked = detailsOpened.indexOf(item) > -1;
-    }
+    // _toggleDetailsRenderer(root: HTMLElement, _column: GridColumnElement, model: GridItemModel) {
+    //     // only render the checkbox once, to avoid re-creating during subsequent calls
+    //     if (!root.firstElementChild) {
+    //         render(
+    //             html`
+    //       <vaadin-checkbox @checked-changed="${this._onCheckboxChange}">
+    //         Show description
+    //       </vaadin-checkbox>
+    //     `,
+    //             root,
+    //             { eventContext: this } // bind event listener properly
+    //         );
+    //     }
+    //     const { item } = model;
+    //     // store the item to avoid grid virtual scrolling reusing DOM nodes to mess it up
+    //     itemCache.set(root, item);
+    //     const detailsOpened = this.grid.detailsOpenedItems || [];
+    //     (root.firstElementChild as CheckboxElement).checked = detailsOpened.indexOf(item) > -1;
+    // }
 
     editSurvey(surveyId: string) {
         console.log('About to edit survey with Id: '+surveyId);

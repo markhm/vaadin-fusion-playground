@@ -30,7 +30,7 @@ public class SurveyInfo
 
         surveyInfo.description(survey.description());
         surveyInfo.gradable(survey.gradable());
-        surveyInfo.numberOfQuestions(survey.questions().size());
+        surveyInfo.numberOfQuestions(survey.surveySteps().size());
 
         return surveyInfo;
     }

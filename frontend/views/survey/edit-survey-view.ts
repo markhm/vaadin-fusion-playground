@@ -46,10 +46,10 @@ export class EditSurveyView extends LitElement {
          </horizontal-layout>
          
          <h3>Survey questions</h3>
-         ${this.survey.questions.length > 0 ? html`                 
-             ${this.survey.questions.map(
+         ${this.survey.surveySteps.length > 0 ? html`                 
+             ${this.survey.surveySteps.map(
                      (question) => html`
-                         ${question.orderNumber}: ${question.text} <a href="edit-question?questionId=${question.id}">edit</a><br/>
+                         ${question.questionNumber}: ${question.text} <a href="edit-question?questionId=${question.id}">edit</a><br/>
                      `
              )}
          `: html`No questions found yet. Add your first question.`}
@@ -62,20 +62,20 @@ export class EditSurveyView extends LitElement {
      </vaadin-form-layout>
 
      <br/>
-     <br/>
      <vaadin-horizontal-layout class="button-layout" theme="spacing">
          <vaadin-button @click="${this.saveSurvey}" theme="primary" >Save details</vaadin-button>
          <vaadin-button ?disabled="${this.survey.status === SurveyStatus.Published}"
                         @click="${this.publishSurvey}" theme="primary success" >Publish</vaadin-button>
      </vaadin-horizontal-layout>
+     <br/><br/>
+     <div>Note carefully: Published surveys can no longer be edited.</div>
 
      ${this.binder.errors.map((error) => html`${error.property}: ${error.message}`)}
      
      ${this.binder.errors ? html`             
             ${this.binder.errors.map((error) => html`${error.property}: ${error.message}`)}` :
             html``}
-
-`;
+        `;
     }
 
     async connectedCallback() {
@@ -86,7 +86,7 @@ export class EditSurveyView extends LitElement {
 
     async eventFromAddQuestion(e :CustomEvent) {
 
-        console.log('component changed event caught from addSurvey-question' + e.detail.value);
+        console.log('component changed event caught from addSurvey-surveyStep' + e.detail.value);
 
         await this.reloadSurvey();
     }

@@ -1,7 +1,6 @@
 package fusion.playground.data.endpoint;
 
 import com.vaadin.flow.server.connect.Endpoint;
-import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
 import fusion.playground.data.CrudEndpoint;
 import fusion.playground.data.entity.*;
 import fusion.playground.data.service.*;
@@ -19,16 +18,16 @@ public class SurveySessionEndpoint extends CrudEndpoint<SurveyResult, String>
     private SurveyService surveyService;
     private SurveySessionService surveySessionService;
     private UserService userService;
-    private QuestionService questionService;
+    private SurveyStepService surveyStepService;
 
     @Autowired
     public SurveySessionEndpoint(SurveyService surveyService, SurveySessionService surveySessionService,
-                                 UserService userService, QuestionService questionService)
+                                 UserService userService, SurveyStepService surveyStepService)
     {
         this.surveyService = surveyService;
         this.surveySessionService = surveySessionService;
         this.userService = userService;
-        this.questionService = questionService;
+        this.surveyStepService = surveyStepService;
     }
 
     @Override
@@ -46,12 +45,12 @@ public class SurveySessionEndpoint extends CrudEndpoint<SurveyResult, String>
         return surveySessionService.beginSurvey(user, survey);
     }
 
-    public Question getNextQuestion(String surveyResultId)
+    public SurveyStep getNextSurveyStep(String surveyResultId)
     {
         // EndpointUtil.logPrincipal("getNextQuestion(..)");
         log.info("at SurveyEndpoint.getNextQuestion(" + surveyResultId + ")...");
 
-        return surveySessionService.getNextQuestion(surveyResultId);
+        return surveySessionService.getNextSurveyStep(surveyResultId);
 //        SurveyResponse surveyResponse = surveyResponseService.get(surveyResultId).get();
 //        int lastCompletedQuestion = surveyResponse.lastCompletedQuestion();
 //        Survey survey = surveyResponse.survey();
@@ -62,6 +61,12 @@ public class SurveySessionEndpoint extends CrudEndpoint<SurveyResult, String>
     {
         surveySessionService.saveResponse(surveyResponseId, questionId, responseId);
     }
+
+//    public void saveResponse(String surveyResponseId, String questionId, String responseId, String location)
+//    {
+//        log.info("Response was given on location: " + location);
+//        surveySessionService.saveResponse(surveyResponseId, questionId, responseId);
+//    }
 
     public SurveyResult confirmResponses(String surveyResultId)
     {
@@ -81,7 +86,7 @@ public class SurveySessionEndpoint extends CrudEndpoint<SurveyResult, String>
     public List<SurveyResult> getCompletedSurveys(String oktaUserId)
     {
         User user = userService.findByOktaUserId(oktaUserId);
-        return surveySessionService.getCompletedSurveys(user);
+        return surveySessionService.getCompletedSurveys(user.id());
     }
 
     public List<QuestionResponse> getSurveyResponses(String surveyResultId)

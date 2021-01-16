@@ -15,7 +15,7 @@ import { EndpointError } from '@vaadin/flow-frontend/Connect';
 
 import { Router } from "@vaadin/router";
 import SurveyInfo from "../../generated/fusion/playground/data/entity/SurveyInfo";
-import Survey from "../../generated/fusion/playground/data/entity/Survey";
+// import Survey from "../../generated/fusion/playground/data/entity/Survey";
 
 @customElement('select-survey-view')
 export class SelectSurveyView extends LitElement {
@@ -41,8 +41,8 @@ export class SelectSurveyView extends LitElement {
     @internalProperty ()
     private surveyResultId: string = '';
 
-    @internalProperty ()
-    private survey!: Promise<Survey | undefined> | undefined;
+    // @internalProperty ()
+    // private survey!: Promise<Survey | undefined> | undefined;
 
     static get styles() {
         return css`
@@ -82,14 +82,16 @@ export class SelectSurveyView extends LitElement {
             </div>
             
             <br/>
-            <hr/>
-            <div>
-                <div>Debug info on the selected survey</div>
-                ${JSON.stringify(this.survey)}
-            </div>
-            <vaadin-button @click="${() => this.reload()}">Update</vaadin-button>
     `;
     }
+
+    // Debugging functionality
+// <hr/>
+// <div>
+// <div>Debug info on the selected survey</div>
+//     ${JSON.stringify(this.survey)}
+// </div>
+// <vaadin-button @click="${() => this.reload()}">Update</vaadin-button>
 
     async connectedCallback() {
         super.connectedCallback();
@@ -128,26 +130,26 @@ export class SelectSurveyView extends LitElement {
             }
         }
 
-        if (this.selectedSurvey != undefined) {
-            this.loadSurvey();
-        }
+        // if (this.selectedSurvey != undefined) {
+        //     this.loadSurvey();
+        // }
 
 
         this.requestUpdate();
     }
 
-    async loadSurvey() {
-        try {
-            this.survey = SurveyEndpoint.get(this.selectedSurvey.surveyId) || undefined;
-
-        } catch (error) {
-            if (error instanceof EndpointError) {
-                showNotification('Server error. ' + error.message, { position: 'bottom-start' });
-            } else {
-                throw error;
-            }
-        }
-    }
+    // async loadSurvey() {
+    //     try {
+    //         this.survey = SurveyEndpoint.get(this.selectedSurvey.surveyId) || undefined;
+    //
+    //     } catch (error) {
+    //         if (error instanceof EndpointError) {
+    //             showNotification('Server error. ' + error.message, { position: 'bottom-start' });
+    //         } else {
+    //             throw error;
+    //         }
+    //     }
+    // }
 
     reload() {
         this.requestUpdate();
@@ -185,7 +187,7 @@ export class SelectSurveyView extends LitElement {
             localStorage.setItem('surveyResultId', this.surveyResultId);
             console.log('wrote ' + this.surveyResultId + ' to localStorage.surveyResultId: ' + this.surveyResultId);
 
-            // storing the info for the selected survey locally, to pass it to the question-view
+            // storing the info for the selected survey locally, to pass it to the surveyStep-view
             localStorage.setItem('selectedSurveyInfo', JSON.stringify(this.selectedSurvey));
 
         } catch (error) {

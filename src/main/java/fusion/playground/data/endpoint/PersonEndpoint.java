@@ -23,4 +23,8 @@ public class PersonEndpoint extends CrudEndpoint<Person, String> {
         return service;
     }
 
+    public Person update(Person entity) {
+        return getService().update(entity);
+    }
+
 }

@@ -16,7 +16,7 @@ public class AbstractServiceLayerTest
     @Autowired protected UserService userService;
 
     @Autowired protected SurveyService surveyService;
-    @Autowired protected QuestionService questionService;
+    @Autowired protected SurveyStepService surveyStepService;
     @Autowired protected PossibleAnswerService possibleAnswerService;
 
     @Autowired protected SurveySessionService surveySessionService;

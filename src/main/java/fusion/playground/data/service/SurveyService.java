@@ -21,16 +21,16 @@ public class SurveyService extends MongoCrudService<Survey, String>
     private static Log log = LogFactory.getLog(SurveyService.class);
 
     private SurveyRepository surveyRepository;
-    private QuestionService questionService;
+    private SurveyStepService surveyStepService;
     private UserService userService;
 
 
     @Autowired
-    public SurveyService(SurveyRepository surveyRepository, QuestionService questionService,
+    public SurveyService(SurveyRepository surveyRepository, SurveyStepService surveyStepService,
                          UserService userService)
     {
         this.surveyRepository = surveyRepository;
-        this.questionService = questionService;
+        this.surveyStepService = surveyStepService;
         this.userService = userService;
     }
 
@@ -82,18 +82,18 @@ public class SurveyService extends MongoCrudService<Survey, String>
         return surveyRepository.findByCategoryAndName(category, name).description();
     }
 
-    // @Cacheable("questions_by_survey")
-    @Deprecated
-    public List<Question> findAllBySurveyName(String surveyName)
-    {
-        return surveyRepository.findByName(surveyName).questions();
-    }
+//    // @Cacheable("questions_by_survey")
+//    @Deprecated
+//    public List<Question> findAllBySurveyName(String surveyName)
+//    {
+//        return surveyRepository.findByName(surveyName).surveySteps();
+//    }
 
-    @Deprecated
-    public int countAllBySurveyName(String surveyName)
-    {
-        return this.findAllBySurveyName(surveyName).size();
-    }
+//    @Deprecated
+//    public int countAllBySurveyName(String surveyName)
+//    {
+//        return this.findAllBySurveyName(surveyName).size();
+//    }
 
 
     public void publish(String surveyId)
@@ -158,57 +158,57 @@ public class SurveyService extends MongoCrudService<Survey, String>
 //        return nextQuestion;
 //    }
 
-    public Question getQuestionFromSurvey(Survey survey, int orderNumber)
+    public SurveyStep getSurveyStepFromSurvey(Survey survey, int orderNumber)
     {
-        // log.info("Retrieving question #" + orderNumber + "from survey "+survey.toString());
-        return survey.questions().get(orderNumber - 1);
+        // log.info("Retrieving surveyStep #" + orderNumber + "from survey "+survey.toString());
+        return survey.surveySteps().get(orderNumber - 1);
     }
 
 
-    // @Cacheable("question")
-    @Deprecated
-    private Question getByNameAndOrderNumber(String name, int orderNumber)
-    {
-        Survey survey = findSurveyByName(name);
-        return survey.questions().get(orderNumber - 1);
-    }
+//    // @Cacheable("surveyStep")
+//    @Deprecated
+//    private SurveyStep getByNameAndOrderNumber(String name, int orderNumber)
+//    {
+//        Survey survey = findSurveyByName(name);
+//        return survey.surveySteps().get(orderNumber - 1);
+//    }
 
-    public Question addQuestion(Question question)
+    public SurveyStep addQuestion(SurveyStep surveyStep)
     {
-        log.info("addQuestion(" + question.surveyId() + ", " + question.toString()+")");
-        Survey survey = get(question.surveyId()).get();
+        log.info("addQuestion(" + surveyStep.surveyId() + ", " + surveyStep.toString()+")");
+        Survey survey = get(surveyStep.surveyId()).get();
 
-        question.orderNumber(survey.questions().size() + 1);
+        surveyStep.questionNumber(survey.surveySteps().size() + 1);
         if (survey.status() != Survey.SurveyStatus.draft)
         {
-            throw new RuntimeException("adding a question is not allowed for a Survey that is not in draft");
+            throw new RuntimeException("adding a surveyStep is not allowed for a Survey that is not in draft");
         }
 
-        // explicitly set id to null, so the question gets assigned a MongoDB id.
-        // (The question probably got a empty string value from the frontend.)
-        if (question.id().equals(""))
+        // explicitly set id to null, so the surveyStep gets assigned a MongoDB id.
+        // (The surveyStep probably got a empty string value from the frontend.)
+        if (surveyStep.id().equals(""))
         {
-            question.id(null);
-            questionService.update(question);
+            surveyStep.id(null);
+            surveyStepService.update(surveyStep);
         }
 
-        // save the question, so it gets an id().
-        Question savedQuestion = questionService.update(question);
+        // save the surveyStep, so it gets an id().
+        SurveyStep savedSurveyStep = surveyStepService.update(surveyStep);
 
-        log.info("savedQuestion: " + savedQuestion);
+        log.info("savedSurveyStep: " + savedSurveyStep);
 
-        // retrieve the survey, addSurvey the new question and update
-        List<Question> questions = survey.questions();
-        questions.add(savedQuestion);
+        // retrieve the survey, addSurvey the new surveyStep and update
+        List<SurveyStep> surveySteps = survey.surveySteps();
+        surveySteps.add(savedSurveyStep);
 
-        survey.questions(questions);
+        survey.surveySteps(surveySteps);
         update(survey);
 
         // This is probably a bit much, but just in case
 //        rebuildSurvey(survey.id());
 
         log.info("Question was added correctly, survey was updated and can be reloaded. ");
-        return question;
+        return surveyStep;
     }
 
     /**
@@ -218,16 +218,16 @@ public class SurveyService extends MongoCrudService<Survey, String>
     public void rebuildSurvey(String surveyId)
     {
         Survey survey = get(surveyId).get();
-        List<Question> currentQuestions = survey.questions();
+        List<SurveyStep> currentSurveySteps = survey.surveySteps();
 
-        List<Question> newQuestions = new ArrayList();
-        for (Question question : currentQuestions)
+        List<SurveyStep> newQuestions = new ArrayList();
+        for (SurveyStep surveyStep : currentSurveySteps)
         {
-            Question newQuestion = questionService.get(question.id()).get();
+            SurveyStep newQuestion = surveyStepService.get(surveyStep.id()).get();
             newQuestions.add(newQuestion);
         }
 
-        survey.questions(newQuestions);
+        survey.surveySteps(newQuestions);
 
         update(survey);
     }

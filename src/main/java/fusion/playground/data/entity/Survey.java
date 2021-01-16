@@ -3,7 +3,6 @@ package fusion.playground.data.entity;
 import fusion.playground.data.AbstractEntity;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ public class Survey extends AbstractEntity
     private String title;
     private String description = "There is no description available for this survey.";
     private boolean gradable = false;
+    private boolean randomizeAnswerOrder = false;
 
     private SurveyStatus status = null;
 
@@ -32,7 +32,7 @@ public class Survey extends AbstractEntity
     /** userId's that this survey is visible to */
     private List<String> visibleTo = new ArrayList<>();
 
-    private List<Question> questions = new ArrayList<>();
+    private List<SurveyStep> surveySteps = new ArrayList<>();
 
     private Survey(String ownerId, SurveyCategory category, String name)
     {
@@ -59,18 +59,18 @@ public class Survey extends AbstractEntity
         return survey;
     }
 
-    public void addQuestion(Question question)
+    public void addSurveyStep(SurveyStep surveyStep)
     {
-        if (questions == null) {
-            questions = new ArrayList<>();
+        if (surveySteps == null) {
+            surveySteps = new ArrayList<>();
         }
 
-        questions.add(question);
+        surveySteps.add(surveyStep);
     }
 
-    public Question getQuestion(int orderNumber)
+    public SurveyStep getStep(int orderNumber)
     {
-        return questions.get(orderNumber - 1);
+        return surveySteps.get(orderNumber - 1);
     }
 
     /**

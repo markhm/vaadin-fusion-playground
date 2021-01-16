@@ -1,7 +1,6 @@
 package fusion.playground.data.entity;
 
 import fusion.playground.data.service.AbstractServiceLayerTest;
-import fusion.playground.data.service.SurveySessionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Assertions;
@@ -14,10 +13,10 @@ public class QuestionTest extends AbstractServiceLayerTest
     @Test
     public void testEqualsHashcode()
     {
-        Question question1 = new Question();
+        SurveyStep question1 = new SurveyStep();
         question1.text("example");
 
-        questionService.update(question1);
+        surveyStepService.update(question1);
 
         log.info("question1: "+question1);
 
@@ -26,10 +25,10 @@ public class QuestionTest extends AbstractServiceLayerTest
 
         // ----------------------------------------
 
-        Question question2 = new Question();
+        SurveyStep question2 = new SurveyStep();
         question2.text("example");
 
-        questionService.update(question2);
+        surveyStepService.update(question2);
 
         log.info("question2: "+question2);
 

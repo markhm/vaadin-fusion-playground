@@ -42,7 +42,7 @@ export class CreateAccountView extends LitElement {
   }
 
   render() {
-    return html`        
+    return html`
       <div>Welcome to the Fusion Playground Survey world...!</div></br>
       <div>This is where you complete surveys and get recognition for it. </div><br/>
       <div>Fill in the form to create an account.</div>

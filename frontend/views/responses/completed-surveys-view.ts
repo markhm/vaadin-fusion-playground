@@ -41,7 +41,8 @@ export class CompletedSurveysView extends LitElement {
             <survey-results-grid .surveyResults='${this.completedSurveys}'>
 
             </survey-results-grid>
-            
+            <br/>
+            <div>Note: Only completed surveys are shown here.</div>
             <br/>
     `;
     }

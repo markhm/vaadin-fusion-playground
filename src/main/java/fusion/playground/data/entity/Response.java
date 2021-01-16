@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Response extends AbstractEntity
 {
     private User user;
-    private Question question;
+    private SurveyStep question;
 
     /** This should probably be the id of the possibleAnswer */
     private String response;
