@@ -109,30 +109,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 
                 // Restrict access to our application.
                 .and()
-                .authorizeRequests()
+                    .authorizeRequests()
 
-                // Allow all flow internal requests.
-                .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
+                    // Allow all flow internal requests.
+                    .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
 
-                // (Inspired by: https://stackoverflow.com/questions/22767205/spring-security-exclude-url-patterns-in-security-annotation-configurartion)
+                    // (Inspired by: https://stackoverflow.com/questions/22767205/spring-security-exclude-url-patterns-in-security-annotation-configurartion)
 
-                // Added this one at the top.
-                // .antMatchers("/VAADIN/**").permitAll()
+                    // Added this one at the top.
+                    // .antMatchers("/VAADIN/**").permitAll()
 
-                // Allow all requests by logged in users.
-                .anyRequest().authenticated()
+                    // Allow all requests by logged in users.
+                    .anyRequest().authenticated()
 
                 // Configure the login page and the failure and success pages
                 .and()
-                .formLogin().loginPage(LOGIN_URL).permitAll()
-                .loginProcessingUrl(LOGIN_PROCESSING_URL)
-                .failureUrl(LOGIN_FAILURE_URL)
-                .successForwardUrl(LOGOUT_SUCCESS_FORWARD_URL)
+                    .formLogin().loginPage(LOGIN_URL).permitAll()
+                    .loginProcessingUrl(LOGIN_PROCESSING_URL)
+                    .failureUrl(LOGIN_FAILURE_URL)
+                    .successForwardUrl(LOGOUT_SUCCESS_FORWARD_URL)
 
                 // Configure logout
                 .and()
-                .logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
-        ;
+                    .logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+                ;
     }
 
     private static final String LOGIN_PROCESSING_URL = "/" + LoginView.ROUTE;
