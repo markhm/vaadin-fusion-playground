@@ -144,17 +144,21 @@ export class MainView extends LitElement {
     )}
             <vaadin-tab>...</vaadin-tab>
 
-            ${!this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('login')}">Login</a> </vaadin-tab>` : html``}
+            ${!this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('login')}">Login Fusion</a> </vaadin-tab>` : html``}
+            <vaadin-tab><a href="${router.urlForPath('server-login')}">Login Flow</a></vaadin-tab>
+
             ${!this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('create-account')}">Create account</a> </vaadin-tab>` : html``}
             ${this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('user-details')}">User details</a> </vaadin-tab>` : html``}
             ${this.isAuthenticated ? html`<vaadin-tab> <a href="${router.urlForPath('logout')}">Logout</a> </vaadin-tab>` : html``}
 
             <vaadin-tab> <a href="${router.urlForPath('about')}">About</a> </vaadin-tab>
-            ${true ? html`
+            ${this.debug ? html`
               <vaadin-tab>--------</vaadin-tab>
               <vaadin-tab> <a href="#" @click="${() => this.debugSomething()}">debugSomething()</a> </vaadin-tab>
-              <vaadin-tab> <a href="${router.urlForPath('server-security-info')}">Security info</a> </vaadin-tab>
             ` : html``}
+
+            <vaadin-tab> <a href="${router.urlForPath('server-security-info')}">Security info</a> </vaadin-tab>
+            <vaadin-tab><a href="${router.urlForPath('logout')}">Logout Fusion</a></vaadin-tab>
 
           </vaadin-tabs>
         </div>
